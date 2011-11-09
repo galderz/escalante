@@ -1,0 +1,86 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>org.jboss</groupId>
+      <artifactId>jboss-parent</artifactId>
+      <version>6-beta-1</version>
+   </parent>
+
+   <groupId>org.scalabox</groupId>
+   <artifactId>scalabox-parent</artifactId>
+   <version>1.0-SNAPSHOT</version>
+   <packaging>pom</packaging>
+   <name>ScalaBox</name>
+
+   <description>
+      The ScalaBox Parent POM
+   </description>
+
+   <properties>
+      <version.jboss.as>7.0.1.Final</version.jboss.as>
+      <version.junit>4.8.2</version.junit>
+      <version.scala>2.9.1</version.scala>
+      <version.scalatest>1.6.1</version.scalatest>
+      <module.name>org.scalabox.lift</module.name>
+   </properties>
+
+   <modules>
+      <module>modules</module>
+   </modules>
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-controller</artifactId>
+            <version>${version.jboss.as}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-server</artifactId>
+            <version>${version.jboss.as}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${version.scala}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_2.9.0</artifactId>
+            <version>${version.scalatest}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-subsystem-test</artifactId>
+            <version>${version.jboss.as}</version>
+            <scope>test</scope>
+         </dependency>
+         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+            <version>${version.junit}</version>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
+
+   <build>
+      <sourceDirectory>src/main/scala</sourceDirectory>
+      <testSourceDirectory>src/test/scala</testSourceDirectory>
+      <plugins>
+         <plugin>
+            <groupId>org.scala-tools</groupId>
+            <artifactId>maven-scala-plugin</artifactId>
+            <configuration>
+               <scalaVersion>${version.scala}</scalaVersion>
+            </configuration>
+         </plugin>
+      </plugins>
+   </build>
+
+</project>

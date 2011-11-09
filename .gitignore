@@ -1,0 +1,9 @@
+# ignore IDEA files 
+*.iml
+*.ipr
+*.iws
+.idea
+# ignore Maven generated files
+target
+# log files
+*.log
