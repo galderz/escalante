@@ -1,9 +1,9 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="urn:org.scalabox:lift:1.0"
-            xmlns="urn:org.scalabox:lift:1.0"
-            elementFormDefault="qualified"
-            attributeFormDefault="unqualified"
-            version="1.0">
+           targetNamespace="urn:org.scalabox:lift:1.0"
+           xmlns="urn:org.scalabox:lift:1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           version="1.0">
 
    <!-- The subsystem root element -->
    <xs:element name="subsystem" type="subsystemType"/>

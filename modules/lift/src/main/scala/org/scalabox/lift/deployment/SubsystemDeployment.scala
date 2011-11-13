@@ -37,7 +37,7 @@ class SubsystemDeployment extends DeploymentUnitProcessor {
       val suffix = name.split('.').last
       val container = reg.getService(LiftService.createServiceName(suffix))
       if (container != null)
-         container.asInstanceOf[LiftService].getValue
+         container.getValue.asInstanceOf[LiftService]
       else
          null
    }

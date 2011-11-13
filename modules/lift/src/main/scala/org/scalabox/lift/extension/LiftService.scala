@@ -28,8 +28,9 @@ class LiftService(suffix: String, tick: Long) extends Service[LiftService] {
          while (true) {
             try {
                Thread.sleep(currentTick.get)
-               print("""|Current deployments deployed while %s tracking active:
-                        |Cool: %d""".format(suffix, coolDeployments.size).stripMargin)
+               println("""|Current deployments deployed while %s tracking active: %s
+                        |Cool: %d""".format(suffix, deployments,
+                                            coolDeployments.size).stripMargin)
             }
             catch {
                case e: InterruptedException => Thread.interrupted()

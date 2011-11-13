@@ -6,12 +6,12 @@
 
    <parent>
       <groupId>org.scalabox</groupId>
-      <artifactId>scalabox-parent</artifactId>
+      <artifactId>scalabox</artifactId>
       <version>1.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <artifactId>scalabox-modules-parent</artifactId>
+   <artifactId>scalabox-modules</artifactId>
    <packaging>pom</packaging>
    <name>ScalaBox Modules Parent</name>
    <description/>
