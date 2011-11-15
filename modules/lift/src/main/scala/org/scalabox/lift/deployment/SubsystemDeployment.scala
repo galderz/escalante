@@ -6,7 +6,7 @@ import org.jboss.as.server.deployment._
 import org.jboss.vfs.VirtualFile
 
 /**
- * // TODO: Document this
+ * // TODO: Change name and document!
  * @author Galder Zamarreño
  * @since // TODO
  */

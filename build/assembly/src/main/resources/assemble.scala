@@ -135,11 +135,14 @@ copy("%1$s/%2$s/%3$s/scala-library-%3$s.jar"
 println("ScalaBox third-party modules copied to JBoss AS")
 
 // 4. Add extension(s) to configuration file
-val standaloneCfg = XML.loadFile(
-   "%s/standalone/configuration/standalone.xml".format(jbossTarget))
+val stdCfg = new File("%s/standalone/configuration/standalone.xml".format(jbossTarget))
+val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
+if (!stdCfgOriginal.exists())
+   copy(stdCfg, stdCfgOriginal) // Backup original standalone config
+
 val withExtension = new RuleTransformer(
    new AddChildrenTo("extensions", <extension module="org.scalabox.lift"/>))
-        .transform(standaloneCfg).head
+        .transform(XML.loadFile(stdCfgOriginal)).head
 val withSubsystem = new RuleTransformer(
    new AddChildrenTo("profile",
             <subsystem xmlns="urn:org.scalabox:lift:1.0">
@@ -149,8 +152,7 @@ val withSubsystem = new RuleTransformer(
                </deployment-types>
             </subsystem>))
       .transform(withExtension).head
-XML.save("%s/standalone/configuration/standalone.xml".format(jbossTarget),
-         withSubsystem, "UTF-8", true, null)
+XML.save(stdCfg.getCanonicalPath, withSubsystem, "UTF-8", true, null)
 println("Scalabox Lift extension added to configuration file")
 
 
