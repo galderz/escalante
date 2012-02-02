@@ -21,18 +21,17 @@
    </description>
 
    <properties>
-      <version.jboss.as>7.0.2.Final</version.jboss.as>
+      <version.jboss.as>7.1.0.CR1b</version.jboss.as>
       <version.scala>2.9.1</version.scala>
       <version.junit>4.8.2</version.junit>
       <version.scala.test>1.6.1</version.scala.test>
       <version.scala.tools>2.15.2</version.scala.tools>
-      <version.arquillian>1.0.0.CR5</version.arquillian>
+      <version.arquillian>1.0.0.CR7</version.arquillian>
       <version.shrinkwrap>1.1.0-alpha-1</version.shrinkwrap>
       <version.lift>2.4-M5</version.lift>
       <version.org.sonatype.aether>1.12</version.org.sonatype.aether>
       <version.org.apache.maven>3.0.3</version.org.apache.maven>
       <version.org.sonatype.sisu.inject.plexus>2.2.2</version.org.sonatype.sisu.inject.plexus>
-      <module.name>org.scalabox.lift</module.name>
    </properties>
 
    <modules>
@@ -54,6 +53,11 @@
             <version>${version.jboss.as}</version>
          </dependency>
          <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-ee</artifactId>
+            <version>${version.jboss.as}</version>
+         </dependency>
+         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${version.scala}</version>
@@ -67,13 +71,32 @@
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-subsystem-test</artifactId>
             <version>${version.jboss.as}</version>
-            <scope>test</scope>
          </dependency>
          <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
             <version>${version.junit}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.jboss.arquillian</groupId>
+            <artifactId>arquillian-bom</artifactId>
+            <version>${version.arquillian}</version>
+            <scope>import</scope>
+            <type>pom</type>
+            <exclusions>
+               <exclusion>
+                  <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                  <artifactId>shrinkwrap-resolver-api</artifactId>
+               </exclusion>
+               <exclusion>
+                  <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                  <artifactId>shrinkwrap-resolver-api-maven</artifactId>
+               </exclusion>
+               <exclusion>
+                  <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                  <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+               </exclusion>
+            </exclusions>
          </dependency>
       </dependencies>
    </dependencyManagement>

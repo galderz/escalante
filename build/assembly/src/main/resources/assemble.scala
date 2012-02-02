@@ -119,41 +119,36 @@ val executables = new File("%s/bin".format(jbossTarget)).listFiles(
    })
 executables.foreach(_.setExecutable(true))
 
-// 2. Copy over ScalaBox modules
-val root = "%s/../..".format(baseDir)
-copy("%s/modules/lift/target/module".format(root),
-     "%s/modules".format(jbossTarget))
-println("ScalaBox modules copied to JBoss AS")
-
-// 3. Copy over third party modules
-copy("%s/classes/modules".format(targetDir), "%s/modules".format(jbossTarget))
-val scalaPath = "org/scala-lang/scala-library"
-copy("%1$s/%2$s/%3$s/scala-library-%3$s.jar"
-           .format(m2Repo, scalaPath, scalaVersion),
-     "%s/modules/%s/main/scala-library.jar"
-           .format(jbossTarget, scalaPath))
-println("ScalaBox third-party modules copied to JBoss AS")
-
-// 4. Add extension(s) to configuration file
-val stdCfg = new File("%s/standalone/configuration/standalone.xml".format(jbossTarget))
-val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
-if (!stdCfgOriginal.exists())
-   copy(stdCfg, stdCfgOriginal) // Backup original standalone config
-
-val withExtension = new RuleTransformer(
-   new AddChildrenTo("extensions", <extension module="org.scalabox.lift"/>))
-        .transform(XML.loadFile(stdCfgOriginal)).head
-val withSubsystem = new RuleTransformer(
-   new AddChildrenTo("profile",
-            <subsystem xmlns="urn:org.scalabox:lift:1.0">
-               <deployment-types>
-                  <deployment-type suffix="sar" tick="10000"/>
-                  <deployment-type suffix="war" tick="10000"/>
-               </deployment-types>
-            </subsystem>))
-      .transform(withExtension).head
-XML.save(stdCfg.getCanonicalPath, withSubsystem, "UTF-8", true, null)
-println("Scalabox Lift extension added to configuration file")
+//// 2. Copy over ScalaBox modules
+//val root = "%s/../..".format(baseDir)
+//copy("%s/modules/lift/target/module".format(root),
+//     "%s/modules".format(jbossTarget))
+//println("ScalaBox modules copied to JBoss AS")
+//
+//// 3. Copy over third party modules
+//copy("%s/classes/modules".format(targetDir), "%s/modules".format(jbossTarget))
+//val scalaPath = "org/scala-lang/scala-library"
+//copy("%1$s/%2$s/%3$s/scala-library-%3$s.jar"
+//           .format(m2Repo, scalaPath, scalaVersion),
+//     "%s/modules/%s/main/scala-library.jar"
+//           .format(jbossTarget, scalaPath))
+//println("ScalaBox third-party modules copied to JBoss AS")
+//
+//// 4. Add extension(s) to configuration file
+//val stdCfg = new File("%s/standalone/configuration/standalone.xml".format(jbossTarget))
+//val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
+//if (!stdCfgOriginal.exists())
+//   copy(stdCfg, stdCfgOriginal) // Backup original standalone config
+//
+//val withExtension = new RuleTransformer(
+//   new AddChildrenTo("extensions", <extension module="org.scalabox.lift"/>))
+//        .transform(XML.loadFile(stdCfgOriginal)).head
+//val withSubsystem = new RuleTransformer(
+//   new AddChildrenTo("profile",
+//            <subsystem xmlns="urn:scalabox:lift:1.0" />))
+//      .transform(withExtension).head
+//XML.save(stdCfg.getCanonicalPath, withSubsystem, "UTF-8", true, null)
+//println("Scalabox Lift extension added to configuration file")
 
 
 

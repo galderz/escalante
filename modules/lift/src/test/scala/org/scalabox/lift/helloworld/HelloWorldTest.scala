@@ -10,12 +10,13 @@ import xml.Elem
 import bootstrap.liftweb.Boot
 import java.net.URL
 import java.io.{BufferedInputStream, StringWriter}
-import org.junit.Test
-import org.scalatest.junit.AssertionsForJUnit
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver
 import org.jboss.shrinkwrap.api.{GenericArchive, ShrinkWrap}
+import org.scalabox.util.Closeable
 import org.scalabox.util.Closeable._
+import org.scalabox.logging.Log
+import org.junit.Test
 
 /**
  * // TODO: Document this
@@ -23,7 +24,7 @@ import org.scalabox.util.Closeable._
  * @since // TODO
  */
 @RunWith(classOf[Arquillian])
-class HelloWorldTest extends AssertionsForJUnit {
+class HelloWorldTest {
 
    @Test def testHelloWorld = performHttpCall("localhost", 8080, "helloworld")
 
@@ -38,7 +39,8 @@ class HelloWorldTest extends AssertionsForJUnit {
                writer.write(i.asInstanceOf[Char])
                i = in.read
             }
-            assert(writer.toString.indexOf("Hello World!") > -1)
+            val rsp = writer.toString
+            assert(rsp.indexOf("Hello World!") > -1, rsp)
             println("OK")
          }
       }
@@ -46,9 +48,11 @@ class HelloWorldTest extends AssertionsForJUnit {
 
 }
 
-object HelloWorldTest {
+object HelloWorldTest extends Log {
 
    @Deployment def deployment: WebArchive = {
+      info("Create war deployment")
+
       val war = ShrinkWrap.create(classOf[WebArchive], "helloworld.war")
       val indexHtml = xml {
          <lift:surround with="default" at="content">
@@ -77,16 +81,24 @@ object HelloWorldTest {
             </body>
          </html>
       }
+      
+      val liftXml = xml {
+         <lift-app version="2.4" />
+      }
 
       // TODO: How avoid duplicating library version?? Load from a pom...
       war.addAsWebResource(indexHtml, "index.html")
          .addAsWebResource(defaultHtml, "templates-hidden/default.html")
-         .addClasses(classOf[Boot], classOf[HelloWorld])
+         .addAsWebResource(liftXml, "WEB-INF/lift.xml")
+         // TODO Why do I need to add test superclass manually?? - classOf[AbstractLiftTest]
+         .addClasses(classOf[Boot], classOf[HelloWorld], classOf[Closeable])
          .addAsLibraries(DependencyResolvers.use(classOf[MavenDependencyResolver])
             .artifacts("org.scalatest:scalatest_2.9.0:1.6.1")
                   .exclusion("org.scala-lang:scala-library")
             .resolveAs(classOf[GenericArchive])
          )
+
+      info("War deployment created")
 
       return war
    }
