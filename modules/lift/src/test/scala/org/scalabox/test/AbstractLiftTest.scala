@@ -18,7 +18,8 @@ import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset
 import org.scalatest.junit.AssertionsForJUnit
 import org.jboss.as.controller.operations.common.Util
 import org.jboss.as.controller.{ControlledProcessState, PathAddress, Extension}
-import xml.{Null, Text, Attribute, XML}
+import xml.transform.{RewriteRule, RuleTransformer}
+import xml._
 
 
 /**
@@ -57,12 +58,36 @@ object AbstractLiftTest extends AssertionsForJUnit with Log {
       copyModuleDeps("org.scala-lang", "scala-library", "2.9.1",
             "scala-library.jar", destDir)
       // Copy module dependencies for Lift
-      copyModuleDeps("net.liftweb", "lift-mapper_2.9.1", "2.4-M5",
-            "lift-mapper_2.9.1-2.4-M5.jar", destDir)
+      copyLiftDeps(destDir)
    }
-   
+
+   private def copyLiftDeps(destDir: File) {
+      // Copy apache dependency first
+      copyModuleDeps("commons-fileupload", "commons-fileupload", "1.2.2",
+         "commons-fileupload-1.2.2.jar", destDir,
+         Some(List(new Module("javax.servlet.api"))))
+
+      val moduleDeps = Map(
+         "common" -> List(new Module("org.slf4j")),
+         "json" -> List(),
+         "actor" -> List(new Module("net.liftweb.lift-common_2_9_1", true)),
+         "util" -> List(new Module("net.liftweb.lift-actor_2_9_1", true),
+               new Module("org.joda.time")),
+         "webkit" -> List(new Module("javax.servlet.api"),
+               new Module("commons-fileupload.commons-fileupload"),
+               new Module("net.liftweb.lift-json_2_9_1", true),
+               new Module("net.liftweb.lift-util_2_9_1", true),
+               // TODO: Is this sane?
+               new Module("org.scalabox.lift"))
+      )
+      moduleDeps.foreach { case (module, deps) =>
+         copyModuleDeps("net.liftweb", "lift-%s_2.9.1".format(module), "2.4-M5",
+            "lift-%s_2.9.1-2.4-M5.jar".format(module), destDir, Some(deps))
+      }
+   }
+
    private def copyModuleDeps(groupId: String, artifactId: String,
-                              version: String, jarName: String, destDir: File) {
+         version: String, jarName: String, destDir: File, deps: Option[List[Module]]) {
       val jar = DependencyResolvers.use(classOf[MavenDependencyResolver])
             .artifact("%s:%s:%s".format(groupId, artifactId, version))
             .resolveAsFiles()(0)
@@ -71,16 +96,36 @@ object AbstractLiftTest extends AssertionsForJUnit with Log {
       val validArtifactId = artifactId.replace('.', '_')
       val dir = mkDirs(destDir,
          "%s/%s/main".format(moduleDir, validArtifactId))
-      copy(jar, new File(dir, "%s".format(jarName)))
-      val moduleXml =
+      copy(jar, new File(dir, jarName))
+      val templateModuleXml =
          <module xmlns="urn:jboss:module:1.0">
             <resources>
-               {<resource-root /> % Attribute(None, "path", Text("%s".format(jarName)), Null)}
+               {<resource-root /> % Attribute(None, "path", Text(jarName), Null)}
             </resources>
-            <dependencies />
+               <dependencies />
          </module> % Attribute(None, "name", Text("%s.%s".format(groupId, validArtifactId)), Null)
+
+      val moduleXml = deps match {
+         case Some(d) => {
+            val allDeps = new Module("org.scala-lang.scala-library", false) :: d
+            val children = allDeps.map { dep =>
+               new AddChildrenTo("dependencies", <module /> %
+                     Attribute(None, "name", Text(dep.name), Null) %
+                     Attribute(None, "export", Text(dep.export.toString), Null)
+               )
+            }
+            new RuleTransformer(children : _*).transform(templateModuleXml).head
+         }
+         case None => templateModuleXml
+      }
+
       XML.save(new File(dir, "module.xml").getCanonicalPath,
          moduleXml, "UTF-8", true, null)
+   }
+
+   private def copyModuleDeps(groupId: String, artifactId: String,
+         version: String, jarName: String, destDir: File) {
+      copyModuleDeps(groupId, artifactId, version, jarName, destDir, None)
    }
 
    def installExtension {
@@ -171,13 +216,34 @@ object AbstractLiftTest extends AssertionsForJUnit with Log {
             // If duplicate resource found, it could be due to test not
             // having finished properly, so clean up before propagating failure
             info("Duplicate extension found, carry on...")
-            // uninstallExtension
+            uninstallExtension
          }
          fail(r.toString)
       } else {
          assert(SUCCESS === outcome, r)
          r.get(RESULT)
       }
+   }
+
+   private class Module(val name: String, val export: Boolean) {
+
+      def this(name: String) = this(name, false)
+
+   }
+
+   private class AddChildrenTo(label: String, newChild: Node) extends RewriteRule {
+
+      override def transform(n: Node) = n match {
+         case n @ Elem(_, `label`, _, _, _*) => addChild(n, newChild)
+         case other => other
+      }
+
+      def addChild(n: Node, newChild: Node) = n match {
+         case Elem(prefix, label, attribs, scope, child @ _*) =>
+            Elem(prefix, label, attribs, scope, child ++ newChild : _*)
+         case _ => error("Can only add children to elements!")
+      }
+
    }
 
 }

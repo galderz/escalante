@@ -16,7 +16,7 @@ object FileSystem {
 
    def mkDirs(parent: File, child: String, deleteIfPresent: Boolean): File = {
       val f = new File(parent, child)
-      if (deleteIfPresent) deleteDirectory(f)
+      if (deleteIfPresent & f.exists()) deleteDirectory(f)
       f.mkdirs()
       f
    }

@@ -81,7 +81,7 @@ object HelloWorldTest extends Log {
             </body>
          </html>
       }
-      
+
       val liftXml = xml {
          <lift-app version="2.4" />
       }
@@ -90,7 +90,6 @@ object HelloWorldTest extends Log {
       war.addAsWebResource(indexHtml, "index.html")
          .addAsWebResource(defaultHtml, "templates-hidden/default.html")
          .addAsWebResource(liftXml, "WEB-INF/lift.xml")
-         // TODO Why do I need to add test superclass manually?? - classOf[AbstractLiftTest]
          .addClasses(classOf[Boot], classOf[HelloWorld], classOf[Closeable])
          .addAsLibraries(DependencyResolvers.use(classOf[MavenDependencyResolver])
             .artifacts("org.scalatest:scalatest_2.9.0:1.6.1")

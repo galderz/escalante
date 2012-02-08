@@ -57,6 +57,11 @@
             <artifactId>jboss-as-ee</artifactId>
             <version>${version.jboss.as}</version>
          </dependency>
+          <dependency>
+              <groupId>org.jboss.as</groupId>
+              <artifactId>jboss-as-web</artifactId>
+              <version>${version.jboss.as}</version>
+          </dependency>
          <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>

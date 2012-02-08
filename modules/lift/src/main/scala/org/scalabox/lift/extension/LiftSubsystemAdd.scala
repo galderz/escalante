@@ -5,18 +5,23 @@ import java.util.List
 import org.jboss.msc.service.ServiceController
 import org.jboss.as.server.{DeploymentProcessorTarget, AbstractDeploymentChainStep}
 import org.jboss.as.server.deployment.Phase._
-import org.scalabox.lift.deployment.{LiftParsingProcessor, LiftDependencyProcessor}
 import org.scalabox.logging.Log
 import org.jboss.as.controller.{AbstractAddStepHandler, ServiceVerificationHandler, OperationContext, AbstractBoottimeAddStepHandler}
+import org.scalabox.lift.deployment.{LiftDeploymentProcessor, LiftParsingProcessor, LiftDependencyProcessor}
 
 /**
  * // TODO: Document this
  * @author Galder Zamarreño
  * @since // TODO
  */
-object LiftSubsystemAdd extends AbstractAddStepHandler with Log {
+object LiftSubsystemAdd extends AbstractBoottimeAddStepHandler with Log {
 
-   override def performRuntime(ctx: OperationContext, op: ModelNode,
+   def populateModel(operation: ModelNode, model: ModelNode) {
+      info("Populate Lift model")
+      model.setEmptyObject
+   }
+
+   override def performBoottime(ctx: OperationContext, op: ModelNode,
             model: ModelNode, verificationHandler: ServiceVerificationHandler,
             newControllers: List[ServiceController[_]]) {
       // Add deployment processors here
@@ -26,15 +31,12 @@ object LiftSubsystemAdd extends AbstractAddStepHandler with Log {
                PARSE, PARSE_WEB_DEPLOYMENT, new LiftParsingProcessor)
             target.addDeploymentProcessor(
                DEPENDENCIES, DEPENDENCIES_WAR_MODULE, new LiftDependencyProcessor)
+            target.addDeploymentProcessor(
+               INSTALL, INSTALL_WAR_DEPLOYMENT, new LiftDeploymentProcessor)
          }
       }, OperationContext.Stage.RUNTIME)
 
       info("Lift deployment processors added")
-   }
-
-   def populateModel(operation: ModelNode, model: ModelNode) {
-      info("Populate Lift model")
-      model.setEmptyObject
    }
 
 }

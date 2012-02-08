@@ -120,6 +120,11 @@
          <artifactId>jboss-as-ee</artifactId>
          <scope>provided</scope>
       </dependency>
+       <dependency>
+           <groupId>org.jboss.as</groupId>
+           <artifactId>jboss-as-web</artifactId>
+           <scope>provided</scope>
+       </dependency>
       <!--<dependency>-->
           <!--<groupId>org.jboss.metadata</groupId>-->
           <!--<artifactId>jboss-metadata-common</artifactId>-->
