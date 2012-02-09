@@ -35,9 +35,8 @@
    </properties>
 
    <modules>
-      <module>modules</module>
-      <module>build</module>
-      <module>testsuite</module>
+      <module>lift</module>
+      <module>assembly</module>
    </modules>
 
    <dependencyManagement>
