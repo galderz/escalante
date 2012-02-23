@@ -3,7 +3,6 @@ package org.scalabox.lift
 import org.scalabox.util.FileSystem._
 import org.jboss.shrinkwrap.api.ShrinkWrap
 import org.jboss.shrinkwrap.api.spec.JavaArchive
-import org.scalabox.lift.LiftExtension
 import org.jboss.shrinkwrap.api.exporter.ZipExporter
 import java.io.{File, FileOutputStream}
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers
@@ -33,6 +32,10 @@ class AbstractLiftTest extends AssertionsForJUnit {
 
 object AbstractLiftTest extends AssertionsForJUnit with Log {
 
+   val SCALA_VERSION = "2.9.1"
+   val LIFT_VERSION = "2.4"
+   val INPATH_SCALA_VERSION = SCALA_VERSION.replace('.', '_')
+
    def buildExtension {
       info("Build Lift extension and copy to container")
 
@@ -55,7 +58,7 @@ object AbstractLiftTest extends AssertionsForJUnit with Log {
          new File(destDir, "org/scalabox/lift/main/scalabox-lift.jar")))
 
       // Copy module dependencies for Scala
-      copyModuleDeps("org.scala-lang", "scala-library", "2.9.1",
+      copyModuleDeps("org.scala-lang", "scala-library", SCALA_VERSION,
          "scala-library.jar", destDir)
       // Copy module dependencies for Lift
       copyLiftDeps(destDir)
@@ -70,20 +73,22 @@ object AbstractLiftTest extends AssertionsForJUnit with Log {
       val moduleDeps = Map(
          "common" -> List(new Module("org.slf4j")),
          "json" -> List(),
-         "actor" -> List(new Module("net.liftweb.lift-common_2_9_1", true)),
-         "util" -> List(new Module("net.liftweb.lift-actor_2_9_1", true),
+         "actor" -> List(
+            new Module("net.liftweb.lift-common_%s".format(INPATH_SCALA_VERSION), true)),
+         "util" -> List(
+            new Module("net.liftweb.lift-actor_%s".format(INPATH_SCALA_VERSION), true),
             new Module("org.joda.time")),
          "webkit" -> List(new Module("javax.servlet.api"),
             new Module("commons-fileupload.commons-fileupload"),
-            new Module("net.liftweb.lift-json_2_9_1", true),
-            new Module("net.liftweb.lift-util_2_9_1", true),
+            new Module("net.liftweb.lift-json_%s".format(INPATH_SCALA_VERSION), true),
+            new Module("net.liftweb.lift-util_%s".format(INPATH_SCALA_VERSION), true),
             // TODO: Is this sane?
             new Module("org.scalabox.lift"))
       )
       moduleDeps.foreach {
          case (module, deps) =>
-            copyModuleDeps("net.liftweb", "lift-%s_2.9.1".format(module), "2.4-M5",
-               "lift-%s_2.9.1-2.4-M5.jar".format(module), destDir, Some(deps))
+            copyModuleDeps("net.liftweb", "lift-%s_%s".format(module, SCALA_VERSION), LIFT_VERSION,
+               "lift-%s_%s-%s.jar".format(module, SCALA_VERSION, LIFT_VERSION), destDir, Some(deps))
       }
    }
 

@@ -27,7 +27,7 @@
 
    <parent>
       <groupId>org.scalabox</groupId>
-      <artifactId>scalabox-modules</artifactId>
+      <artifactId>scalabox</artifactId>
       <version>1.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
@@ -61,6 +61,21 @@
                </descriptors>
             </configuration>
          </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <systemProperties>
+                  <property>
+                     <name>surefire.jboss.home</name>
+                     <value>
+                        ${basedir}/../build/target/jboss-as-${version.jboss.as}
+                     </value>
+                  </property>
+               </systemProperties>
+            </configuration>
+         </plugin>
+         <!-- TODO: Use python instead??? -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
@@ -106,6 +121,12 @@
 
    <dependencies>
       <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>scalabox-build</artifactId>
+         <scope>provided</scope>
+         <type>pom</type>
+      </dependency>
+      <dependency>
          <groupId>org.jboss.as</groupId>
          <artifactId>jboss-as-controller</artifactId>
          <scope>provided</scope>
@@ -125,16 +146,6 @@
            <artifactId>jboss-as-web</artifactId>
            <scope>provided</scope>
        </dependency>
-      <!--<dependency>-->
-          <!--<groupId>org.jboss.metadata</groupId>-->
-          <!--<artifactId>jboss-metadata-common</artifactId>-->
-          <!--<version>7.0.0.Beta31</version>-->
-      <!--</dependency>-->
-       <!--<dependency>-->
-           <!--<groupId>org.jboss.as</groupId>-->
-           <!--<artifactId>jboss-as-web</artifactId>-->
-           <!--<scope>provided</scope>-->
-       <!--</dependency>-->
       <dependency>
          <groupId>org.scala-lang</groupId>
          <artifactId>scala-library</artifactId>

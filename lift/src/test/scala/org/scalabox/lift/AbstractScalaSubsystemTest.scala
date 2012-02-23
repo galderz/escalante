@@ -6,7 +6,6 @@ import xml.Elem
 import collection.JavaConversions._
 import org.jboss.as.subsystem.test.{AbstractSubsystemTest}
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
-import org.scalabox.lift.LiftExtension
 
 /**
  * // TODO: Document this

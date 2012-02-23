@@ -28,19 +28,37 @@
       <version.scala.tools>2.15.2</version.scala.tools>
       <version.arquillian>1.0.0.CR7</version.arquillian>
       <version.shrinkwrap>1.1.0-alpha-1</version.shrinkwrap>
-      <version.lift>2.4-M5</version.lift>
+      <version.lift>2.4</version.lift>
       <version.org.sonatype.aether>1.12</version.org.sonatype.aether>
       <version.org.apache.maven>3.0.3</version.org.apache.maven>
       <version.org.sonatype.sisu.inject.plexus>2.2.2</version.org.sonatype.sisu.inject.plexus>
    </properties>
 
    <modules>
+      <module>build</module>
       <module>lift</module>
-      <module>assembly</module>
+      <!--<module>assembly</module>-->
    </modules>
 
    <dependencyManagement>
       <dependencies>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scalabox-build</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scalabox-lift</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>scalabox-assembly</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+         </dependency>
          <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-controller</artifactId>

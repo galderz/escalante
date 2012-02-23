@@ -5,12 +5,14 @@
 
 	<container qualifier="jboss" default="true">
 		<configuration>
-			<property name="jbossHome">${jboss.home:assembly/target/jboss-as-7.1.0.CR1b}</property>
-            <property name="modulePath">lift/target/test-module:${jboss.home:assembly/target/jboss-as-7.1.0.CR1b}/modules</property>
+			<property name="jbossHome">${surefire.jboss.home:build/target/jboss-as-7.1.0.CR1b}</property>
+         <!--<property name="jbossHome">${basedir:.}/build/target/jboss-as-7.1.0.CR1b</property>-->
+         <property name="modulePath">lift/target/test-module:${surefire.jboss.home:build/target/jboss-as-7.1.0.CR1b}/modules</property>
+         <!--<property name="modulePath">lift/target/test-module:${basedir:.}/build/target/jboss-as-7.1.0.CR1b/modules</property>-->
 			<property name="allowConnectingToRunningServer">true</property>
-            <!--
-            <property name="javaVmArguments">-Xmx512m -XX:MaxPermSize=128m -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</property>
-            -->
+         <!--
+         <property name="javaVmArguments">-Xmx512m -XX:MaxPermSize=128m -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</property>
+         -->
 		</configuration>
 	</container>
 

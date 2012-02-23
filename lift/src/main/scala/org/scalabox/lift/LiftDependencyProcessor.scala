@@ -5,13 +5,8 @@ import org.scalabox.logging.Log
 import java.io.File
 import org.jboss.vfs.{VFS, VirtualFile}
 import org.jboss.as.server.deployment.module._
-import net.liftweb.http.LiftSession
 import org.jboss.modules.{Module, ModuleIdentifier}
-import java.net.JarURLConnection
-import net.liftweb.common.Loggable
-import net.liftweb.util.HasParams
-import net.liftweb.json.Printer
-import net.liftweb.actor.{ILAExecute}
+import java.net.URL
 
 /**
  * A deployment processor that hooks the right dependencies for the Lift
@@ -60,24 +55,44 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       val resourceRoot = deployment.getAttachment(Attachments.DEPLOYMENT_ROOT)
       val root = resourceRoot.getRoot()
 
-      val classes = List(
-         classOf[LiftSession], // net.liftweb.lift-webkit
-         classOf[Loggable], // net.liftweb.lift-common
-         classOf[HasParams], // net.liftweb.lift-util
-         classOf[Printer], // net.liftweb.lift-json
-         classOf[ILAExecute] // net.liftweb.lift-actor
+      val thisUrl = classOf[LiftDependencyProcessor].getProtectionDomain.getCodeSource.getLocation
+      val thisUrlElems = thisUrl.getPath.split(System.getProperty("file.separator"))
+      val rootPath = thisUrlElems.take(thisUrlElems.length - 5).mkString(System.getProperty("file.separator"))
+
+//      val classes = List(
+//         classOf[LiftSession], // net.liftweb.lift-webkit
+//         classOf[Loggable], // net.liftweb.lift-common
+//         classOf[HasParams], // net.liftweb.lift-util
+//         classOf[Printer], // net.liftweb.lift-json
+//         classOf[ILAExecute] // net.liftweb.lift-actor
+//      )
+//
+//      classes.foreach { clazz =>
+//         // Hack alert!!!
+//         val url = clazz.getProtectionDomain.getCodeSource.getLocation
+//         val conn = url.openConnection().asInstanceOf[JarURLConnection]
+//         val file = new File(conn.getJarFileURL.toURI)
+//         val temp = root.getChild("temp") // Virtual temp mount point
+//         val repackagedJar = createZipRoot(temp, file)
+//         ModuleRootMarker.mark(repackagedJar)
+//         deployment.addToAttachmentList(Attachments.RESOURCE_ROOTS, repackagedJar)
+//      }
+
+      val jarPaths = List(
+         "net/liftweb/lift-webkit_2_9_1/main/lift-webkit_2.9.1-2.4.jar",
+         "net/liftweb/lift-common_2_9_1/main/lift-common_2.9.1-2.4.jar",
+         "net/liftweb/lift-util_2_9_1/main/lift-util_2.9.1-2.4.jar",
+         "net/liftweb/lift-json_2_9_1/main/lift-json_2.9.1-2.4.jar",
+         "net/liftweb/lift-actor_2_9_1/main/lift-actor_2.9.1-2.4.jar"
       )
 
-      classes.foreach {
-         clazz =>
-         // Hack alert!!!
-            val url = clazz.getProtectionDomain.getCodeSource.getLocation
-            val conn = url.openConnection().asInstanceOf[JarURLConnection]
-            val file = new File(conn.getJarFileURL.toURI)
-            val temp = root.getChild("temp") // Virtual temp mount point
-            val repackagedJar = createZipRoot(temp, file)
-            ModuleRootMarker.mark(repackagedJar)
-            deployment.addToAttachmentList(Attachments.RESOURCE_ROOTS, repackagedJar)
+      jarPaths.foreach { jarPath =>
+         val url = new URL("%s/%s".format(rootPath, jarPath))
+         val file = new File(url.toURI)
+         val temp = root.getChild("temp") // Virtual temp mount point
+         val repackagedJar = createZipRoot(temp, file)
+         ModuleRootMarker.mark(repackagedJar)
+         deployment.addToAttachmentList(Attachments.RESOURCE_ROOTS, repackagedJar)
       }
 
    }

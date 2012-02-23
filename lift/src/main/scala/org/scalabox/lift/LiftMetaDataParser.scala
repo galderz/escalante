@@ -3,7 +3,6 @@ package org.scalabox.lift
 import javax.xml.stream.XMLStreamReader
 import javax.xml.stream.XMLStreamConstants._
 import org.scalabox.util.XmlParser._
-import org.scalabox.lift.{SCALA_291, LiftVersionResolver, LiftMetaData}
 
 /**
  * // TODO: Document this

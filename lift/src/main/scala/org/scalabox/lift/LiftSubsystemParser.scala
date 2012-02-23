@@ -4,7 +4,6 @@ import org.jboss.dmr.ModelNode
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext
 import org.jboss.staxmapper.{XMLExtendedStreamWriter, XMLExtendedStreamReader, XMLElementWriter, XMLElementReader}
 import org.jboss.as.controller.parsing.ParseUtils
-import org.scalabox.lift.LiftExtension
 import org.scalabox.logging.Log
 
 /**

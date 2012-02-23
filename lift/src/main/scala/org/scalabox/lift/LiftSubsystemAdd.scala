@@ -7,7 +7,6 @@ import org.jboss.as.server.{DeploymentProcessorTarget, AbstractDeploymentChainSt
 import org.jboss.as.server.deployment.Phase._
 import org.scalabox.logging.Log
 import org.jboss.as.controller.{ServiceVerificationHandler, OperationContext, AbstractBoottimeAddStepHandler}
-import org.scalabox.lift.{LiftParsingProcessor, LiftDependencyProcessor}
 
 /**
  * // TODO: Document this

@@ -1,11 +1,11 @@
-// Assemble ScalaBox
+// TODO: Consider doing this in Python which is much faster to execute
 
 import java.io._
 import java.lang.String
 import java.util.jar._
 import collection.JavaConversions._
 import xml._
-import transform.{RuleTransformer, RewriteRule}
+import transform.RewriteRule
 
 def use[T <: { def close(): Unit }](closable: T)(block: T => Unit) {
    try {
@@ -90,79 +90,31 @@ val jbossPrefix = "jboss-as-"
 
 // 0. Log startup
 println()
-println("""|------------------
-           | Assemble ScalaBox
-           |------------------
+println("""|--------------------------------------
+           | Explode base JBoss Application Server
+           |--------------------------------------
            | baseDir = %s
            | jbossVersion = %s
            | scalaVersion = %s
            """.format(baseDir, jbossVersion, scalaVersion).stripMargin)
 
-//// 1. Extract JBoss AS distro, if necessary...
-//val target = new File(targetDir)
-//val jbossDirs = target.listFiles(new FilenameFilter {
-//   def accept(dir: File, name: String) = name.startsWith(jbossPrefix)
-//})
-//if (jbossDirs == null)
-//   sys.error("Base dir %s does not exist!".format(baseDir))
-//if (jbossDirs.length > 0) {
-//   println("JBoss AS distribution already extracted")
-//} else {
-//   println("Unzip JBoss AS distribution to %s".format(target.getCanonicalPath))
-//   unzip(new File(jbossZip), target)
-//}
-//val jbossTarget = "%s/%s%s".format(targetDir, jbossPrefix, jbossVersion)
-//// Change permissions of .sh files
-//val executables = new File("%s/bin".format(jbossTarget)).listFiles(
-//   new FilenameFilter {
-//      def accept(dir: File, name: String) = name.endsWith(".sh")
-//   })
-//executables.foreach(_.setExecutable(true))
-
-//// 2. Copy over ScalaBox modules
-//val root = "%s/../..".format(baseDir)
-//copy("%s/modules/lift/target/module".format(root),
-//     "%s/modules".format(jbossTarget))
-//println("ScalaBox modules copied to JBoss AS")
-//
-//// 3. Copy over third party modules
-//copy("%s/classes/modules".format(targetDir), "%s/modules".format(jbossTarget))
-//val scalaPath = "org/scala-lang/scala-library"
-//copy("%1$s/%2$s/%3$s/scala-library-%3$s.jar"
-//           .format(m2Repo, scalaPath, scalaVersion),
-//     "%s/modules/%s/main/scala-library.jar"
-//           .format(jbossTarget, scalaPath))
-//println("ScalaBox third-party modules copied to JBoss AS")
-//
-//// 4. Add extension(s) to configuration file
-//val stdCfg = new File("%s/standalone/configuration/standalone.xml".format(jbossTarget))
-//val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
-//if (!stdCfgOriginal.exists())
-//   copy(stdCfg, stdCfgOriginal) // Backup original standalone config
-//
-//val withExtension = new RuleTransformer(
-//   new AddChildrenTo("extensions", <extension module="org.scalabox.lift"/>))
-//        .transform(XML.loadFile(stdCfgOriginal)).head
-//val withSubsystem = new RuleTransformer(
-//   new AddChildrenTo("profile",
-//            <subsystem xmlns="urn:scalabox:lift:1.0" />))
-//      .transform(withExtension).head
-//XML.save(stdCfg.getCanonicalPath, withSubsystem, "UTF-8", true, null)
-//println("Scalabox Lift extension added to configuration file")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// 1. Extract JBoss AS distro, if necessary...
+val target = new File(targetDir)
+val jbossDirs = target.listFiles(new FilenameFilter {
+   def accept(dir: File, name: String) = name.startsWith(jbossPrefix)
+})
+if (jbossDirs == null)
+   sys.error("Base dir %s does not exist!".format(baseDir))
+if (jbossDirs.length > 0) {
+   println("JBoss AS distribution already extracted")
+} else {
+   println("Unzip JBoss AS distribution to %s".format(target.getCanonicalPath))
+   unzip(new File(jbossZip), target)
+}
+val jbossTarget = "%s/%s%s".format(targetDir, jbossPrefix, jbossVersion)
+// Change permissions of .sh files
+val executables = new File("%s/bin".format(jbossTarget)).listFiles(
+   new FilenameFilter {
+      def accept(dir: File, name: String) = name.endsWith(".sh")
+   })
+executables.foreach(_.setExecutable(true))

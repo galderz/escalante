@@ -11,17 +11,12 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <artifactId>scalabox-assembly</artifactId>
-   <name>ScalaBox Assembly</name>
+   <artifactId>scalabox-build</artifactId>
+   <name>ScalaBox Build</name>
    <packaging>pom</packaging>
    <description/>
 
    <dependencies>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>scalabox-lift</artifactId>
-         <scope>provided</scope>
-      </dependency>
       <dependency>
          <groupId>org.scala-lang</groupId>
          <artifactId>scala-library</artifactId>
@@ -62,7 +57,7 @@
                   </goals>
                   <configuration>
                      <keepGeneratedScript>true</keepGeneratedScript>
-                     <scriptFile>src/main/resources/assemble.scala</scriptFile>
+                     <scriptFile>build.scala</scriptFile>
                   </configuration>
                </execution>
             </executions>
