@@ -1,12 +1,8 @@
 package org.scalabox.lift.helloworld
 
-import org.jboss.arquillian.junit.Arquillian
-import org.junit.runner.RunWith
 import org.jboss.shrinkwrap.api.spec.WebArchive
-import org.jboss.arquillian.container.test.api.Deployment
 import org.jboss.shrinkwrap.api.asset.{StringAsset, Asset}
 import snippet.HelloWorld
-import xml.Elem
 import bootstrap.liftweb.Boot
 import java.net.URL
 import java.io.{BufferedInputStream, StringWriter}
@@ -17,14 +13,14 @@ import org.scalabox.util.Closeable
 import org.scalabox.util.Closeable._
 import org.scalabox.logging.Log
 import org.junit.Test
+import xml.{Null, Text, Attribute, Elem}
 
 /**
  * // TODO: Document this
  * @author Galder Zamarreño
  * @since // TODO
  */
-@RunWith(classOf[Arquillian])
-class HelloWorldTest {
+abstract class AbstractHelloWorldTest {
 
    @Test def testHelloWorld = performHttpCall("localhost", 8080, "helloworld")
 
@@ -48,9 +44,9 @@ class HelloWorldTest {
 
 }
 
-object HelloWorldTest extends Log {
+object AbstractHelloWorldTest extends Log {
 
-   @Deployment def deployment: WebArchive = {
+   def deployment(liftVersion: String): WebArchive = {
       info("Create war deployment")
 
       val war = ShrinkWrap.create(classOf[WebArchive], "helloworld.war")
@@ -83,14 +79,15 @@ object HelloWorldTest extends Log {
       }
 
       val liftXml = xml {
-         <lift-app version="2.4" />
+         {<lift-app/> % Attribute(None, "version", Text(liftVersion), Null)}
       }
 
       // TODO: How avoid duplicating library version?? Load from a pom...
       war.addAsWebResource(indexHtml, "index.html")
          .addAsWebResource(defaultHtml, "templates-hidden/default.html")
          .addAsWebResource(liftXml, "WEB-INF/lift.xml")
-         .addClasses(classOf[Boot], classOf[HelloWorld], classOf[Closeable])
+         .addClasses(classOf[Boot], classOf[Closeable],
+                     classOf[HelloWorld], classOf[AbstractHelloWorldTest])
          .addAsLibraries(DependencyResolvers.use(classOf[MavenDependencyResolver])
             .artifacts("org.scalatest:scalatest_2.9.0:1.6.1")
                   .exclusion("org.scala-lang:scala-library")

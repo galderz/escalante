@@ -45,6 +45,8 @@
    </properties>
 
    <build>
+      <sourceDirectory>src/main/scala</sourceDirectory>
+      <testSourceDirectory>src/test/scala</testSourceDirectory>
       <!-- Maven will append the version to the finalName (which is the name
          given to the generated war, and hence the context root) -->
       <finalName>${project.artifactId}</finalName>
@@ -67,54 +69,41 @@
             <configuration>
                <systemProperties>
                   <property>
-                     <name>surefire.jboss.home</name>
-                     <value>
-                        ${basedir}/../build/target/jboss-as-${version.jboss.as}
-                     </value>
+                     <name>surefire.basedir</name>
+                     <value>${basedir}/..</value>
                   </property>
                </systemProperties>
             </configuration>
          </plugin>
-         <!-- TODO: Use python instead??? -->
          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <inherited>false</inherited>
-            <version>1.6</version>
+            <groupId>org.scala-tools</groupId>
+            <artifactId>maven-scala-plugin</artifactId>
+            <version>2.15.2</version>
             <executions>
                <execution>
-                  <id>build-dist</id>
+                  <id>compile</id>
                   <goals>
-                     <goal>run</goal>
+                     <goal>compile</goal>
                   </goals>
-                  <phase>package</phase>
-                  <configuration>
-                     <target>
-                        <!-- Replace the '.' in ${module.name} with '/' to get its path  -->
-                        <tempfile property="temp.file"/>
-                        <echo message="${module.name}" file="${temp.file}"/>
-                        <replace file="${temp.file}" token="." value="/"/>
-                        <loadfile srcfile="${temp.file}"
-                                  property="module.path"/>
-                        <delete file="${temp.file}"/>
-
-                        <delete dir="target/module"/>
-                        <property name="module.dir"
-                                  value="target/module/${module.path}/main"/>
-
-                        <copy file="src/main/resources/module/main/module.xml"
-                              tofile="${module.dir}/module.xml"/>
-                        <copy file="target/${project.artifactId}.jar"
-                              todir="${module.dir}"/>
-
-                        <echo>Module ${module.name} has been created in the
-                           target/module directory. Copy to your JBoss AS 7
-                           installation.
-                        </echo>
-                     </target>
-                  </configuration>
+                  <phase>compile</phase>
+               </execution>
+               <execution>
+                  <id>test-compile</id>
+                  <goals>
+                     <goal>testCompile</goal>
+                  </goals>
+                  <phase>test-compile</phase>
+               </execution>
+               <execution>
+                  <phase>process-resources</phase>
+                  <goals>
+                     <goal>compile</goal>
+                  </goals>
                </execution>
             </executions>
+            <configuration>
+               <scalaVersion>${version.scala}</scalaVersion>
+            </configuration>
          </plugin>
       </plugins>
    </build>
@@ -220,6 +209,5 @@
       </dependency>
 
    </dependencies>
-
 
 </project>

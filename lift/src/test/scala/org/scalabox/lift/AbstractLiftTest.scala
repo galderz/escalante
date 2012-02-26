@@ -26,7 +26,7 @@ import xml._
  * @author Galder Zamarreño
  * @since // TODO
  */
-class AbstractLiftTest extends AssertionsForJUnit {
+abstract class AbstractLiftTest extends AssertionsForJUnit {
 
 }
 

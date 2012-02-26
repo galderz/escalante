@@ -12,7 +12,7 @@ import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
  * @author Galder Zamarreño
  * @since // TODO
  */
-class AbstractScalaSubsystemTest extends AbstractSubsystemTest(
+abstract class AbstractScalaSubsystemTest extends AbstractSubsystemTest(
    LiftExtension.SUBSYSTEM_NAME, new LiftExtension()) with AssertionsForJUnit {
 
    def parse(e: Elem): Iterable[ModelNode] =

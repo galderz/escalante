@@ -1,15 +1,16 @@
 package org.scalabox.lift
 
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
-import org.junit.Test
 import org.jboss.dmr.ModelNode
 import org.jboss.as.controller.{PathElement, PathAddress}
+import org.junit.{Ignore, Test}
 
 /**
  * // TODO: Document this
  * @author Galder Zamarreño
  * @since // TODO
  */
+@Ignore("Temporarily")
 class LiftSubsystemUnitTest extends AbstractScalaSubsystemTest {
 
    /**
