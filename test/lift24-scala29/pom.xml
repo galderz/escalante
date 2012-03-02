@@ -29,28 +29,71 @@
       <groupId>org.scalabox</groupId>
       <artifactId>scalabox-core</artifactId>
       <version>1.0-SNAPSHOT</version>
-      <relativePath>../core/pom.xml</relativePath>
+      <relativePath>../../core/pom.xml</relativePath>
    </parent>
 
    <groupId>org.scalabox</groupId>
-   <artifactId>scalabox-lift</artifactId>
+   <artifactId>test-lift24-scala29</artifactId>
    <version>1.0-SNAPSHOT</version>
 
-   <name>ScalaBox Lift Module</name>
+   <name>ScalaBox Testsuite for Lift 2.4 and Scala 2.9</name>
 
    <packaging>jar</packaging>
 
+   <properties>
+      <version.scala>2.9.1</version.scala>
+   </properties>
+
    <dependencies>
       <dependency>
-         <groupId>org.scalatest</groupId>
-         <artifactId>scalatest_${version.scala}</artifactId>
-         <scope>test</scope>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>scalabox-lift</artifactId>
+         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>net.liftweb</groupId>
          <artifactId>lift-mapper_${version.scala}</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>org.scalatest</groupId>
+         <artifactId>scalatest_${version.scala}</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>scalabox-lift</artifactId>
+         <type>test-jar</type>
+         <scope>test</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>org.scalatest</groupId>
+               <artifactId>scalatest_2.8.2</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>net.liftweb</groupId>
+               <artifactId>lift-mapper_2.8.2</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
    </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+               <systemProperties>
+                  <property>
+                     <name>surefire.basedir</name>
+                     <value>${basedir}/../..</value>
+                  </property>
+               </systemProperties>
+            </configuration>
+         </plugin>
+      </plugins>
+
+   </build>
 
 </project>

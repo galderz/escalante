@@ -7,7 +7,7 @@ import org.jboss.as.server.deployment.AttachmentKey
  * @author Galder Zamarreño
  * @since // TODO
  */
-case class LiftMetaData(liftVersion: LiftVersion, scalaVersion: ScalaVersion)
+case class LiftMetaData(liftVersion: Lift, scalaVersion: Scala)
 
 object LiftMetaData {
 

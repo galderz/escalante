@@ -27,18 +27,45 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       if (liftMetaData == null)
          return
 
-      // Hack Lift jars into the war file cos Lift framework is currently
-      // designed to be solely used by one web-app in (class loader) isolation
-      addLiftJars(deployment)
-
       val moduleSpec = deployment.getAttachment(Attachments.MODULE_SPECIFICATION)
 
+      // TODO: Make it more sane...
+
       liftMetaData match {
-         case LiftMetaData(LIFT_24, SCALA_291) =>
+         case LiftMetaData(LIFT_24, scala) =>
             moduleSpec.addSystemDependency(createDependency(JODA_TIME_MODULE_ID))
             moduleSpec.addSystemDependency(createDependency(SLF4J_MODULE_ID))
             moduleSpec.addSystemDependency(createDependency(COMMONS_FILEUPLOAD_MODULE_ID))
+         case _ => info("Unknown Lift deployment")
+      }
+
+      liftMetaData match {
+         case LiftMetaData(lift, SCALA_291) =>
             moduleSpec.addSystemDependency(createDependency(SCALA_291_MODULE_ID))
+         case LiftMetaData(lift, SCALA_282) =>
+            moduleSpec.addSystemDependency(createDependency(SCALA_282_MODULE_ID))
+         case _ => info("Unknown Lift deployment")
+      }
+
+      // Hack Lift jars into the war file cos Lift framework is currently
+      // designed to be solely used by one web-app in (class loader) isolation
+      liftMetaData match {
+         case LiftMetaData(LIFT_24, SCALA_291) =>
+            addLiftJars(deployment, List(
+               "net/liftweb/lift-webkit_2_9_1/main/lift-webkit_2.9.1-2.4.jar",
+               "net/liftweb/lift-common_2_9_1/main/lift-common_2.9.1-2.4.jar",
+               "net/liftweb/lift-util_2_9_1/main/lift-util_2.9.1-2.4.jar",
+               "net/liftweb/lift-json_2_9_1/main/lift-json_2.9.1-2.4.jar",
+               "net/liftweb/lift-actor_2_9_1/main/lift-actor_2.9.1-2.4.jar"
+            ))
+         case LiftMetaData(LIFT_24, SCALA_282) =>
+            addLiftJars(deployment, List(
+               "net/liftweb/lift-webkit_2_8_2/main/lift-webkit_2.8.2-2.4.jar",
+               "net/liftweb/lift-common_2_8_2/main/lift-common_2.8.2-2.4.jar",
+               "net/liftweb/lift-util_2_8_2/main/lift-util_2.8.2-2.4.jar",
+               "net/liftweb/lift-json_2_8_2/main/lift-json_2.8.2-2.4.jar",
+               "net/liftweb/lift-actor_2_8_2/main/lift-actor_2.8.2-2.4.jar"
+            ))
          case _ => info("Unknown Lift deployment")
       }
    }
@@ -51,40 +78,13 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       new ModuleDependency(
          Module.getBootModuleLoader(), id, false, false, false)
 
-   private def addLiftJars(deployment: DeploymentUnit) {
+   private def addLiftJars(deployment: DeploymentUnit, jarPaths: List[String]) {
       val resourceRoot = deployment.getAttachment(Attachments.DEPLOYMENT_ROOT)
       val root = resourceRoot.getRoot()
 
       val thisUrl = classOf[LiftDependencyProcessor].getProtectionDomain.getCodeSource.getLocation
       val thisUrlElems = thisUrl.getPath.split(System.getProperty("file.separator"))
       val rootPath = thisUrlElems.take(thisUrlElems.length - 5).mkString(System.getProperty("file.separator"))
-
-//      val classes = List(
-//         classOf[LiftSession], // net.liftweb.lift-webkit
-//         classOf[Loggable], // net.liftweb.lift-common
-//         classOf[HasParams], // net.liftweb.lift-util
-//         classOf[Printer], // net.liftweb.lift-json
-//         classOf[ILAExecute] // net.liftweb.lift-actor
-//      )
-//
-//      classes.foreach { clazz =>
-//         // Hack alert!!!
-//         val url = clazz.getProtectionDomain.getCodeSource.getLocation
-//         val conn = url.openConnection().asInstanceOf[JarURLConnection]
-//         val file = new File(conn.getJarFileURL.toURI)
-//         val temp = root.getChild("temp") // Virtual temp mount point
-//         val repackagedJar = createZipRoot(temp, file)
-//         ModuleRootMarker.mark(repackagedJar)
-//         deployment.addToAttachmentList(Attachments.RESOURCE_ROOTS, repackagedJar)
-//      }
-
-      val jarPaths = List(
-         "net/liftweb/lift-webkit_2_9_1/main/lift-webkit_2.9.1-2.4.jar",
-         "net/liftweb/lift-common_2_9_1/main/lift-common_2.9.1-2.4.jar",
-         "net/liftweb/lift-util_2_9_1/main/lift-util_2.9.1-2.4.jar",
-         "net/liftweb/lift-json_2_9_1/main/lift-json_2.9.1-2.4.jar",
-         "net/liftweb/lift-actor_2_9_1/main/lift-actor_2.9.1-2.4.jar"
-      )
 
       jarPaths.foreach { jarPath =>
          val url = new URL("%s/%s".format(rootPath, jarPath))
@@ -107,9 +107,11 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
 
 object LiftDependencyProcessor extends Log {
 
-   // TODO: Add version slot...
    val SCALA_291_MODULE_ID =
       ModuleIdentifier.create("org.scala-lang.scala-library")
+
+   val SCALA_282_MODULE_ID =
+      ModuleIdentifier.create("org.scala-lang.scala-library", "2.8.2")
 
    //   // TODO: Add version slot...
    //   val LIFT_24_MAPPER_MODULE_ID =

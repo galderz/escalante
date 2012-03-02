@@ -22,8 +22,9 @@ object XmlParser {
 
    /**
     * Consumes the remainder of the current element, throwing an
-    * {@link javax.xml.stream.XMLStreamException} if it contains any child
+    * javax.xml.stream.XMLStreamException if it contains any child
     * elements.
+    *
     * @param reader the reader
     * @throws javax.xml.stream.XMLStreamException if an error occurs
     */
@@ -35,6 +36,7 @@ object XmlParser {
 
    /**
     * Read an element which contains only a single string attribute.
+    *
     * @param reader the reader
     * @param attributeName the attribute name, usually "value" or "name"
     * @return the string value
@@ -67,6 +69,28 @@ object XmlParser {
       if (count > 1) {
          throw unexpectedAttribute(reader, 1)
       }
+   }
+
+//   /**
+//    *
+//    * @param reader
+//    * @param attributeName
+//    * @return
+//    */
+//   def readOptionalStringAttributeElement(
+//            reader: XMLStreamReader, attributeName: String): Option[String] = {
+//      if (reader.isAttributeSpecified(0)) {
+//         val value = reader.getAttributeValue(0)
+//         requireNoContent(reader);
+//         Some(value);
+//      } else None
+//   }
+
+   def readOptionalStringAttributeElement(reader: XMLStreamReader,
+         attributeName: String):  Option[String] = {
+      val attributeValue = reader.getAttributeValue(null, attributeName)
+      if (attributeValue != null) Some(attributeValue)
+      else None
    }
 
    /**

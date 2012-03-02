@@ -13,7 +13,10 @@ import org.scalabox.util.Closeable
 import org.scalabox.util.Closeable._
 import org.scalabox.logging.Log
 import org.junit.Test
-import xml.{Null, Text, Attribute, Elem}
+import scala.xml.Attribute
+import scala.xml.Text
+import scala.xml.Null
+import scala.xml.Elem
 
 /**
  * // TODO: Document this
@@ -46,7 +49,12 @@ abstract class AbstractHelloWorldTest {
 
 object AbstractHelloWorldTest extends Log {
 
-   def deployment(liftVersion: String): WebArchive = {
+   def deployment(): WebArchive = deployment(None, None)
+
+   def deployment(lift: Option[String], scala: Option[String]): WebArchive =
+      deployment(lift, scala, classOf[Boot])
+
+   def deployment(lift: Option[String], scala: Option[String], bootClass: Class[_ <: AnyRef]): WebArchive = {
       info("Create war deployment")
 
       val war = ShrinkWrap.create(classOf[WebArchive], "helloworld.war")
@@ -79,17 +87,27 @@ object AbstractHelloWorldTest extends Log {
       }
 
       val liftXml = xml {
-         {<lift-app/> % Attribute(None, "version", Text(liftVersion), Null)}
+         (lift, scala) match {
+            case (Some(lift), Some(scala)) =>
+               <lift-app/> %
+                     Attribute(None, "version", Text(lift), Null) %
+                     Attribute(None, "scalaVersion", Text(scala), Null)
+            case (Some(lift), None) =>
+               <lift-app/> % Attribute(None, "version", Text(lift), Null)
+            case (None, Some(scala)) =>
+               <lift-app/> % Attribute(None, "scalaVersion", Text(scala), Null)
+            case (None, None) => <lift-app/>
+         }
       }
 
       // TODO: How avoid duplicating library version?? Load from a pom...
       war.addAsWebResource(indexHtml, "index.html")
          .addAsWebResource(defaultHtml, "templates-hidden/default.html")
          .addAsWebResource(liftXml, "WEB-INF/lift.xml")
-         .addClasses(classOf[Boot], classOf[Closeable],
+         .addClasses(bootClass, classOf[Closeable],
                      classOf[HelloWorld], classOf[AbstractHelloWorldTest])
          .addAsLibraries(DependencyResolvers.use(classOf[MavenDependencyResolver])
-            .artifacts("org.scalatest:scalatest_2.9.0:1.6.1")
+            .artifacts("org.scalatest:scalatest_2.9.0:1.7.1")
                   .exclusion("org.scala-lang:scala-library")
             .resolveAs(classOf[GenericArchive])
          )

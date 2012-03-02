@@ -1,11 +1,11 @@
 package org.scalabox.lift
 
 import org.jboss.dmr.ModelNode
-import org.scalatest.junit.AssertionsForJUnit
-import xml.Elem
+import scala.xml.Elem
 import collection.JavaConversions._
 import org.jboss.as.subsystem.test.{AbstractSubsystemTest}
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
+import org.scalatest.junit.AssertionsForJUnit
 
 /**
  * // TODO: Document this
@@ -16,7 +16,7 @@ abstract class AbstractScalaSubsystemTest extends AbstractSubsystemTest(
    LiftExtension.SUBSYSTEM_NAME, new LiftExtension()) with AssertionsForJUnit {
 
    def parse(e: Elem): Iterable[ModelNode] =
-      collectionAsScalaIterable(super.parse(e.toString()))
+      asScalaIterable(super.parse(e.toString()))
 
    def installInController(e: Elem) = super.installInController(e.toString())
 
