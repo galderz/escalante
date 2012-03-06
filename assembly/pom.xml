@@ -16,27 +16,48 @@
    <packaging>pom</packaging>
    <description/>
 
+   <!-- Provided scopes won't work here!!! -->
    <dependencies>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>scalabox-lift</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.scala-lang</groupId>
-         <artifactId>scala-library</artifactId>
-      </dependency>
       <dependency>
          <groupId>org.scala-tools</groupId>
          <artifactId>maven-scala-plugin</artifactId>
-         <version>${version.scala.tools}</version>
-         <exclusions>
-            <exclusion>
-               <groupId>org.codehaus.plexus</groupId>
-               <artifactId>plexus-container-default</artifactId>
-            </exclusion>
-         </exclusions>
-         <!-- Provided scope won't work -->
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>scalabox-lift</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>scalabox-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.resolver</groupId>
+         <artifactId>shrinkwrap-resolver-api</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.resolver</groupId>
+         <artifactId>shrinkwrap-resolver-api-maven</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.resolver</groupId>
+         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-api</artifactId>
+         <version>${version.shrinkwrap}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-impl-base</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.logging</groupId>
+         <artifactId>jboss-logging</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.as</groupId>
+         <artifactId>jboss-as-controller</artifactId>
       </dependency>
       <dependency>
          <groupId>org.jboss.as</groupId>
@@ -52,7 +73,8 @@
          <plugin>
             <groupId>org.scala-tools</groupId>
             <artifactId>maven-scala-plugin</artifactId>
-            <version>${version.scala.tools}</version>
+            <!--<version>${version.scala.tools}</version>-->
+            <version>2.15.3-SNAPSHOT</version>
             <executions>
                <execution>
                   <id>scala-magic</id>
@@ -62,7 +84,8 @@
                   </goals>
                   <configuration>
                      <keepGeneratedScript>true</keepGeneratedScript>
-                     <scriptFile>src/main/resources/assemble.scala</scriptFile>
+                     <!-- To debug script, run with: mvnDebug -->
+                     <scriptFile>assemble.scala</scriptFile>
                   </configuration>
                </execution>
             </executions>

@@ -19,6 +19,7 @@ import org.jboss.as.controller.{ControlledProcessState, PathAddress, Extension}
 import scala.xml.transform.{RewriteRule, RuleTransformer}
 import scala.xml._
 import org.scalatest.junit.AssertionsForJUnit
+import org.scalabox.assembly.ScalaBox
 
 /**
  * // TODO: Document this
@@ -36,37 +37,41 @@ object AbstractLiftTest extends AssertionsForJUnit with Log {
    val LIFT_VERSION = "2.4"
    val INPATH_SCALA_VERSION = SCALA_VERSION.replace('.', '_')
 
+   // TODO: Use core build classes
+
    def buildExtension {
       info("Build Lift extension and copy to container")
 
       // Set up test module path
       val destDir = mkDirs(getTarget, "test-module", true)
-      val moduleDir = mkDirs(destDir, "org/scalabox/lift/main")
+      ScalaBox.build(destDir, LiftModule)
 
-      // Create jar with the extension
-      val archive = ShrinkWrap.create(classOf[JavaArchive], "scalabox-lift.jar")
-      archive.addPackages(true, "org/scalabox")
-      archive.addAsServiceProvider(classOf[Extension], classOf[LiftExtension])
-      val jarInput = archive.as(classOf[ZipExporter]).exportAsInputStream()
-
-      // Copy over the module descriptor
-      copy(new ClassLoaderAsset("module/main/module.xml").openStream(),
-         new FileOutputStream(new File(moduleDir, "module.xml")))
-
-      // Copy over the module jar
-      copy(jarInput, new FileOutputStream(
-         new File(destDir, "org/scalabox/lift/main/scalabox-lift.jar")))
-
-      // Copy module dependencies for Scala
-      copyModuleDeps("org.scala-lang", "scala-library", SCALA_VERSION,
-         "scala-library.jar", destDir, "main")
-      copyModuleDeps("org.scala-lang", "scala-library", SCALA_282_VERSION,
-         "scala-library.jar", destDir, SCALA_282_VERSION)
-
-      // Copy module dependencies for Lift
-      copyLiftDeps(destDir, SCALA_VERSION, "main")
-      // Copy module dependencies for Lift
-      copyLiftDeps(destDir, SCALA_282_VERSION, SCALA_282_VERSION)
+//      val moduleDir = mkDirs(destDir, "org/scalabox/lift/main")
+//
+//      // Create jar with the extension
+//      val archive = ShrinkWrap.create(classOf[JavaArchive], "scalabox-lift.jar")
+//      archive.addPackages(true, "org/scalabox")
+//      archive.addAsServiceProvider(classOf[Extension], classOf[LiftExtension])
+//      val jarInput = archive.as(classOf[ZipExporter]).exportAsInputStream()
+//
+//      // Copy over the module descriptor
+//      copy(new ClassLoaderAsset("module/main/module.xml").openStream(),
+//         new FileOutputStream(new File(moduleDir, "module.xml")))
+//
+//      // Copy over the module jar
+//      copy(jarInput, new FileOutputStream(
+//         new File(destDir, "org/scalabox/lift/main/scalabox-lift.jar")))
+//
+//      // Copy module dependencies for Scala
+//      copyModuleDeps("org.scala-lang", "scala-library", SCALA_VERSION,
+//         "scala-library.jar", destDir, "main")
+//      copyModuleDeps("org.scala-lang", "scala-library", SCALA_282_VERSION,
+//         "scala-library.jar", destDir, SCALA_282_VERSION)
+//
+//      // Copy module dependencies for Lift
+//      copyLiftDeps(destDir, SCALA_VERSION, "main")
+//      // Copy module dependencies for Lift
+//      copyLiftDeps(destDir, SCALA_282_VERSION, SCALA_282_VERSION)
    }
 
    private def copyLiftDeps(destDir: File, scalaVersion: String, scalaSlot: String) {

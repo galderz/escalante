@@ -9,7 +9,6 @@ import java.io.{BufferedInputStream, StringWriter}
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver
 import org.jboss.shrinkwrap.api.{GenericArchive, ShrinkWrap}
-import org.scalabox.util.Closeable
 import org.scalabox.util.Closeable._
 import org.scalabox.logging.Log
 import org.junit.Test
@@ -17,6 +16,7 @@ import scala.xml.Attribute
 import scala.xml.Text
 import scala.xml.Null
 import scala.xml.Elem
+import org.scalabox.util.Closeable
 
 /**
  * // TODO: Document this

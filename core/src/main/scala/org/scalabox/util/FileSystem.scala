@@ -4,13 +4,14 @@ import collection.JavaConversions._
 import java.io._
 import org.scalabox.util.Closeable._
 import java.net.URISyntaxException
+import org.scalabox.logging.Log
 
 /**
  * // TODO: Document this
  * @author Galder Zamarreño
  * @since // TODO
  */
-object FileSystem {
+object FileSystem extends Log {
 
    def mkDirs(parent: File, child: String): File = mkDirs(parent, child, false)
 
@@ -26,8 +27,8 @@ object FileSystem {
     */
    def getTarget: File = {
       try {
-         new File(new File(
-            this.getClass.getProtectionDomain.getCodeSource.getLocation.toURI).getParent)
+         new File(new File(this.getClass.getProtectionDomain
+               .getCodeSource.getLocation.toURI).getParent)
       } catch {
          case e: URISyntaxException => {
             throw new RuntimeException("Could not obtain the target URI", e)
@@ -39,12 +40,13 @@ object FileSystem {
       copy(new File(srcPath), new File(destPath))
    }
 
-   def copy(src: File,  dest: File) {
-      if (src.isDirectory) { // if directory not exists, create it
+   def copy(src: File, dest: File) {
+      if (src.isDirectory) {
+         // if directory not exists, create it
          if (!dest.exists()) {
             dest.mkdir();
-            println("Directory copied from %s to %s"
-                  .format(src.getCanonicalPath, dest.getCanonicalPath))
+            debug("Directory copied from %s to %s",
+               src.getCanonicalPath, dest.getCanonicalPath)
          }
          // List all the directory contents
          asScalaIterator(src.list().iterator).foreach { file =>
@@ -53,8 +55,8 @@ object FileSystem {
          }
       } else {
          copy(new FileInputStream(src), new FileOutputStream(dest))
-         println("File copied from %s to %s"
-               .format(src.getCanonicalPath, dest.getCanonicalPath))
+         debug("File copied from %s to %s",
+            src.getCanonicalPath, dest.getCanonicalPath)
       }
    }
 
@@ -64,7 +66,9 @@ object FileSystem {
             val buffer = new Array[Byte](1024)
             Iterator.continually(in.read(buffer))
                .takeWhile(_ != -1)
-               .foreach { out.write(buffer, 0 , _) }
+               .foreach {
+                  out.write(buffer, 0, _)
+               }
          }
       }
    }
@@ -93,7 +97,8 @@ object FileSystem {
       }
       else {
          throw new RuntimeException(("Unable to delete directory: %s.  " +
-               "It is either not a directory or does not exist.").format(directory))
+               "It is either not a directory or does not exist.")
+               .format(directory))
       }
    }
 

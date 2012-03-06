@@ -14,7 +14,7 @@
    <artifactId>scalabox-build</artifactId>
    <name>ScalaBox Build</name>
    <packaging>pom</packaging>
-   <description/>
+   <description>ScalaBox Build</description>
 
    <dependencies>
       <dependency>

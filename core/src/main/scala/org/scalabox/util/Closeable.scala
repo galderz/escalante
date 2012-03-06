@@ -6,16 +6,15 @@ package org.scalabox.util
  * @since // TODO
  */
 class Closeable {
-   // Empty
+   // Empty - do not delete!
 }
 
 object Closeable {
 
-   def use[T <: { def close(): Unit }](closable: T)(block: T => Unit) {
+   def use[T <: {def close() : Unit}](closable: T)(block: T => Unit) {
       try {
          block(closable)
-      }
-      finally {
+      } finally {
          closable.close()
       }
    }
