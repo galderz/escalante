@@ -19,8 +19,12 @@
    <!-- Provided scopes won't work here!!! -->
    <dependencies>
       <dependency>
-         <groupId>org.scala-tools</groupId>
-         <artifactId>maven-scala-plugin</artifactId>
+         <groupId>org.scala-lang</groupId>
+         <artifactId>scala-library</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>net.alchim31.maven</groupId>
+         <artifactId>scala-maven-plugin</artifactId>
       </dependency>
       <dependency>
          <groupId>${project.groupId}</groupId>
@@ -29,6 +33,11 @@
       <dependency>
          <groupId>${project.groupId}</groupId>
          <artifactId>scalabox-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>test-lift24-scala29</artifactId>
+         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>org.jboss.shrinkwrap.resolver</groupId>
@@ -71,10 +80,9 @@
    <build>
       <plugins>
          <plugin>
-            <groupId>org.scala-tools</groupId>
-            <artifactId>maven-scala-plugin</artifactId>
-            <!--<version>${version.scala.tools}</version>-->
-            <version>2.15.3-SNAPSHOT</version>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>scala-maven-plugin</artifactId>
+            <version>${version.scala.tools}</version>
             <executions>
                <execution>
                   <id>scala-magic</id>

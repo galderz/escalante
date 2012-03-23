@@ -91,11 +91,11 @@ object AbstractHelloWorldTest extends Log {
             case (Some(lift), Some(scala)) =>
                <lift-app/> %
                      Attribute(None, "version", Text(lift), Null) %
-                     Attribute(None, "scalaVersion", Text(scala), Null)
+                     Attribute(None, "scala-version", Text(scala), Null)
             case (Some(lift), None) =>
                <lift-app/> % Attribute(None, "version", Text(lift), Null)
             case (None, Some(scala)) =>
-               <lift-app/> % Attribute(None, "scalaVersion", Text(scala), Null)
+               <lift-app/> % Attribute(None, "scala-version", Text(scala), Null)
             case (None, None) => <lift-app/>
          }
       }

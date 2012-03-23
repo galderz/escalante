@@ -11,17 +11,4 @@ trait JBossModule {
 
    def build(destDir: File)
 
-//   /**
-//    * Build a
-//    *
-//    * @return
-//    */
-//   def buildJar: JavaArchive
-//
-//   /**
-//    *
-//    * @return
-//    */
-//   def moduleXml: Node
-
 }

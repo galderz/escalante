@@ -15,9 +15,7 @@ import org.scalabox.util.Closeable._
  * @since // TODO
  */
 @RunWith(classOf[Arquillian])
-class LiftInstallTest extends AbstractLiftTest {
-
-   import AbstractLiftTest._
+class LiftInstallTest {
 
    @Test def testCheckInstall() {
       use(ModelControllerClient.Factory.create(
@@ -26,7 +24,7 @@ class LiftInstallTest extends AbstractLiftTest {
             val op = new ModelNode()
             op.get(OP).set(READ_RESOURCE_DESCRIPTION_OPERATION)
             op.get(OP_ADDR).add("extension", "org.scalabox.lift")
-            val resp = validateResponse(client.execute(op))
+            val resp = TestLiftExtension.validateResponse(client.execute(op))
             assert(!resp.asString().isEmpty)
       }
    }

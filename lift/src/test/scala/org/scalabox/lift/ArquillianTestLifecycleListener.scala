@@ -14,13 +14,13 @@ import org.jboss.arquillian.core.spi.LoadableExtension.ExtensionBuilder
 class ArquillianTestLifecycleListener {
 
    def executeBeforeStart(@Observes event: BeforeStart) =
-      AbstractLiftTest.buildExtension
+      TestLiftExtension.buildExtension
 
    def executeBeforeDeploy(@Observes event: BeforeDeploy, testClass: TestClass) =
-      AbstractLiftTest.installExtension
+      TestLiftExtension.installExtension
 
    def executeAfterUnDeploy(@Observes event: AfterUnDeploy, testClass: TestClass) =
-      AbstractLiftTest.uninstallExtension
+      TestLiftExtension.uninstallExtension
 
 }
 

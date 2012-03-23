@@ -64,7 +64,6 @@ object ScalaBox extends Log {
 
       val moduleXml = deps match {
          case Some(d) => {
-            //            val allDeps = new Module("org.scala-lang.scala-library", false) :: d
             val children = d.map {
                dep =>
                   new AddChildrenTo("dependencies", <module/> %
@@ -127,6 +126,8 @@ object ScalaBox extends Log {
       def this(name: String, export: Boolean) = this(name, export, "main")
 
    }
+
+   // TODO: Refactor this class and other methods into ScalaXmlParser
 
    private class AddChildrenTo(label: String, newChild: Node) extends RewriteRule {
 

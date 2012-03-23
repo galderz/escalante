@@ -8,7 +8,7 @@ import javax.xml.stream.XMLStreamConstants._
  * @author Galder Zamarreño
  * @since // TODO
  */
-object XmlParser {
+object JavaXmlParser {
 
    /**
     * Get an exception reporting an unexpected XML element.
@@ -70,21 +70,6 @@ object XmlParser {
          throw unexpectedAttribute(reader, 1)
       }
    }
-
-//   /**
-//    *
-//    * @param reader
-//    * @param attributeName
-//    * @return
-//    */
-//   def readOptionalStringAttributeElement(
-//            reader: XMLStreamReader, attributeName: String): Option[String] = {
-//      if (reader.isAttributeSpecified(0)) {
-//         val value = reader.getAttributeValue(0)
-//         requireNoContent(reader);
-//         Some(value);
-//      } else None
-//   }
 
    def readOptionalStringAttributeElement(reader: XMLStreamReader,
          attributeName: String):  Option[String] = {

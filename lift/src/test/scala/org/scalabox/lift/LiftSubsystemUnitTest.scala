@@ -18,14 +18,7 @@ class LiftSubsystemUnitTest extends AbstractScalaSubsystemTest {
     */
    @Test def testParseSubsystem {
       // Parse the subsystem xml into operations
-      val subsystemXml =
-         <subsystem xmlns={LiftExtension.NAMESPACE}>
-            <!--
-            <deployment-types>
-               <deployment-type suffix="tst" tick="12345"/>
-            </deployment-types>
-            -->
-         </subsystem>
+      val subsystemXml = <subsystem xmlns={LiftExtension.NAMESPACE} />
 
       val operations = super.parse(subsystemXml)
 
@@ -40,19 +33,6 @@ class LiftSubsystemUnitTest extends AbstractScalaSubsystemTest {
       val element = addr.getElement(0)
       assert(SUBSYSTEM === element.getKey)
       assert(LiftExtension.SUBSYSTEM_NAME === element.getValue)
-
-      //      // Then we will get the add type operation
-      //      val addType = operations.tail.head
-      //      assert(ADD === addType.get(OP).asString)
-      //      assert(12345 == addType.get("tick").asLong)
-      //      addr = PathAddress.pathAddress(addType.get(OP_ADDR))
-      //      assert(2 === addr.size)
-      //      element = addr.getElement(0)
-      //      assert(SUBSYSTEM === element.getKey)
-      //      assert(LiftExtension.SUBSYSTEM_NAME === element.getValue)
-      //      element = addr.getElement(1)
-      //      assert("type" === element.getKey)
-      //      assert("tst"=== element.getValue)
    }
 
    /**
@@ -60,22 +40,11 @@ class LiftSubsystemUnitTest extends AbstractScalaSubsystemTest {
     */
    @Test def testInstallIntoController {
       // Parse the subsystem xml and install into the controller
-      val subsystemXml =
-         <subsystem xmlns={LiftExtension.NAMESPACE}>
-            <!--
-            <deployment-types>
-               <deployment-type suffix="tst" tick="12345"/>
-            </deployment-types>
-            -->
-         </subsystem>
+      val subsystemXml = <subsystem xmlns={LiftExtension.NAMESPACE} />
 
       val services = super.installInController(subsystemXml)
       val model = services.readWholeModel
       assert(model.get(SUBSYSTEM).hasDefined(LiftExtension.SUBSYSTEM_NAME))
-      //      assert(model.get(SUBSYSTEM, LiftExtension.SUBSYSTEM_NAME).hasDefined("type"))
-      //      assert(model.get(SUBSYSTEM, LiftExtension.SUBSYSTEM_NAME, "type").hasDefined("tst"))
-      //      assert(model.get(SUBSYSTEM, LiftExtension.SUBSYSTEM_NAME, "type", "tst").hasDefined("tick"))
-      //      assert(12345 === model.get(SUBSYSTEM, LiftExtension.SUBSYSTEM_NAME, "type", "tst", "tick").asLong)
    }
 
    /**

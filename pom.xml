@@ -27,7 +27,7 @@
       <version.jboss.as>7.1.0.CR1b</version.jboss.as>
       <version.jboss.logging>3.1.0.CR2</version.jboss.logging>
       <version.junit>4.8.2</version.junit>
-      <version.scala.tools>2.15.2</version.scala.tools>
+      <version.scala.tools>3.0.1</version.scala.tools>
       <version.arquillian>1.0.0.CR7</version.arquillian>
       <version.shrinkwrap>1.0.0-cr-1</version.shrinkwrap>
       <version.shrinkwrap.resolver>1.1.0-alpha-1</version.shrinkwrap.resolver>
@@ -38,11 +38,11 @@
    </properties>
 
    <modules>
-      <module>assembly</module>
       <module>build</module>
       <module>core</module>
       <module>lift</module>
       <module>test/lift24-scala29</module>
+      <module>assembly</module>
    </modules>
 
    <dependencyManagement>
@@ -53,8 +53,8 @@
             <version>${version.scala}</version>
          </dependency>
          <dependency>
-            <groupId>org.scala-tools</groupId>
-            <artifactId>maven-scala-plugin</artifactId>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>scala-maven-plugin</artifactId>
             <version>${version.scala.tools}</version>
             <exclusions>
                <exclusion>
@@ -91,6 +91,11 @@
             <artifactId>scalabox-lift</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>test-lift24-scala29</artifactId>
+            <version>${project.version}</version>
          </dependency>
 
          <dependency>

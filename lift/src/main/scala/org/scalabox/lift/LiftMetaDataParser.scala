@@ -2,7 +2,7 @@ package org.scalabox.lift
 
 import javax.xml.stream.XMLStreamReader
 import javax.xml.stream.XMLStreamConstants._
-import org.scalabox.util.XmlParser._
+import org.scalabox.util.JavaXmlParser._
 
 /**
  * // TODO: Document this
@@ -23,28 +23,9 @@ object LiftMetaDataParser {
          readOptionalStringAttributeElement(reader, "version"))
 
       val scalaVersion = ScalaVersion.forName(
-         readOptionalStringAttributeElement(reader, "scalaVersion"))
+         readOptionalStringAttributeElement(reader, "scala-version"))
 
       new LiftMetaData(version, scalaVersion)
    }
 
 }
-
-//sealed trait Attribute
-//case object VERSION extends Attribute
-//case object SCALA_VERSION extends Attribute
-//case class UnknownAttribute(attribute: String) extends Attribute
-//
-//object AttributeResolver {
-//
-//   // If this grows big, convert to a map for more efficient lookup
-//
-//   def forName(attribute: String): Attribute = {
-//      attribute match {
-//         case "version" => VERSION
-//         case "scalaVersion" => SCALA_VERSION
-//         case a => new UnknownAttribute(a)
-//      }
-//   }
-//
-//}

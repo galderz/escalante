@@ -67,7 +67,6 @@
          <artifactId>jboss-as-web</artifactId>
          <scope>provided</scope>
       </dependency>
-      <!-- TODO: Don't Shrinkwrap dependencies need to be test? -->
       <dependency>
          <groupId>org.jboss.shrinkwrap.resolver</groupId>
          <artifactId>shrinkwrap-resolver-api</artifactId>
@@ -123,6 +122,8 @@
    </dependencies>
 
    <build>
+      <sourceDirectory>src/main/scala</sourceDirectory>
+      <testSourceDirectory>src/test/scala</testSourceDirectory>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -137,9 +138,9 @@
             </configuration>
          </plugin>
          <plugin>
-            <groupId>org.scala-tools</groupId>
-            <artifactId>maven-scala-plugin</artifactId>
-            <version>2.15.2</version>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>scala-maven-plugin</artifactId>
+            <version>${version.scala.tools}</version>
             <executions>
                <execution>
                   <id>compile</id>

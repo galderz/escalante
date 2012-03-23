@@ -5,11 +5,13 @@ import java.io._
 import org.scalabox.util.Closeable._
 import java.net.URISyntaxException
 import org.scalabox.logging.Log
+import java.util.jar.JarFile
 
 /**
- * // TODO: Document this
+ * Filesystem related utility methods
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object FileSystem extends Log {
 
@@ -25,9 +27,9 @@ object FileSystem extends Log {
    /**
     * Returns the target directory
     */
-   def getTarget: File = {
+   def getTarget(clazz: Class[_]): File = {
       try {
-         new File(new File(this.getClass.getProtectionDomain
+         new File(new File(clazz.getProtectionDomain
                .getCodeSource.getLocation.toURI).getParent)
       } catch {
          case e: URISyntaxException => {
@@ -99,6 +101,20 @@ object FileSystem extends Log {
          throw new RuntimeException(("Unable to delete directory: %s.  " +
                "It is either not a directory or does not exist.")
                .format(directory))
+      }
+   }
+
+   def unzip(file: File, target: File) {
+      val zip = new JarFile(file)
+      enumerationAsScalaIterator(zip.entries).foreach { entry =>
+         val entryPath = entry.getName
+         println("Extracting to " + target.getCanonicalPath + "/" + entryPath)
+         if (entry.isDirectory) {
+            new File(target, entryPath).mkdirs
+         } else {
+            copy(zip.getInputStream(entry),
+               new FileOutputStream(new File(target, entryPath)))
+         }
       }
    }
 
