@@ -26,9 +26,6 @@ object TestLiftExtension extends AssertionsForJUnit with Log {
 
    def buildExtension {
       info("Build Lift extension and copy to container")
-      // Set up test module path
-//      val destDir = mkDirs(getTarget(this.getClass), "test-module", true)
-
       val tmpFile = new File(System.getProperty("java.io.tmpdir"))
       val destDir = mkDirs(tmpFile, "test-module", true) // Delete if present!
       info("Build Lift module into %s", destDir)
