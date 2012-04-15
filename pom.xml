@@ -41,7 +41,8 @@
       <module>build</module>
       <module>core</module>
       <module>lift</module>
-      <module>test/lift24-scala29</module>
+      <module>testsuite/lift24-scala28</module>
+      <module>testsuite/lift24-scala29</module>
       <module>assembly</module>
    </modules>
 
@@ -96,6 +97,12 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>test-lift24-scala29</artifactId>
             <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>test-lift24-scala28</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
          </dependency>
 
          <dependency>

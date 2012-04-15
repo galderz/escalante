@@ -33,71 +33,38 @@
    </parent>
 
    <groupId>org.scalabox</groupId>
-   <artifactId>scalabox-lift</artifactId>
-   <version>1.0-SNAPSHOT</version>
+   <artifactId>scalabox-testsuite</artifactId>
 
-   <name>ScalaBox Lift Module</name>
+   <name>ScalaBox Testsuite</name>
 
-   <packaging>jar</packaging>
+   <packaging>pom</packaging>
 
    <dependencies>
       <dependency>
          <groupId>${project.groupId}</groupId>
          <artifactId>scalabox-core</artifactId>
-         <scope>provided</scope>
-      </dependency>
-
-      <dependency>
-         <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-controller</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-server</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-ee</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-web</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.shrinkwrap.resolver</groupId>
-         <artifactId>shrinkwrap-resolver-api</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.shrinkwrap.resolver</groupId>
-         <artifactId>shrinkwrap-resolver-api-maven</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.shrinkwrap.resolver</groupId>
-         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-         <scope>provided</scope>
-      </dependency>
-
-      <dependency>
-         <groupId>org.scalatest</groupId>
-         <artifactId>scalatest_${version.scala}</artifactId>
-         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-         <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-subsystem-test</artifactId>
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>scalabox-lift</artifactId>
          <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>scalabox-lift</artifactId>
+         <type>test-jar</type>
+         <scope>test</scope>
+         <exclusions>
+            <exclusion>
+               <groupId>org.scalatest</groupId>
+               <artifactId>scalatest_2.8.2</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>net.liftweb</groupId>
+               <artifactId>lift-mapper_2.8.2</artifactId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
          <groupId>org.jboss.arquillian.container</groupId>
@@ -114,11 +81,24 @@
          <artifactId>jboss-as-arquillian-container-managed</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.resolver</groupId>
+         <artifactId>shrinkwrap-resolver-api-maven</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.resolver</groupId>
+         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+         <scope>test</scope>
+      </dependency>
    </dependencies>
 
    <build>
-      <sourceDirectory>src/main/scala</sourceDirectory>
-      <testSourceDirectory>src/test/scala</testSourceDirectory>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -127,39 +107,9 @@
                <systemProperties>
                   <property>
                      <name>surefire.basedir</name>
-                     <value>${basedir}/..</value>
+                     <value>${basedir}/../..</value>
                   </property>
                </systemProperties>
-            </configuration>
-         </plugin>
-         <plugin>
-            <groupId>net.alchim31.maven</groupId>
-            <artifactId>scala-maven-plugin</artifactId>
-            <version>${version.scala.tools}</version>
-            <executions>
-               <execution>
-                  <id>compile</id>
-                  <goals>
-                     <goal>compile</goal>
-                  </goals>
-                  <phase>compile</phase>
-               </execution>
-               <execution>
-                  <id>test-compile</id>
-                  <goals>
-                     <goal>testCompile</goal>
-                  </goals>
-                  <phase>test-compile</phase>
-               </execution>
-               <execution>
-                  <phase>process-resources</phase>
-                  <goals>
-                     <goal>compile</goal>
-                  </goals>
-               </execution>
-            </executions>
-            <configuration>
-               <scalaVersion>${version.scala}</scalaVersion>
             </configuration>
          </plugin>
          <plugin>

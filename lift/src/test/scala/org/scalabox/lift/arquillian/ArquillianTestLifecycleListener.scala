@@ -1,10 +1,11 @@
-package org.scalabox.lift
+package org.scalabox.lift.arquillian
 
 import org.jboss.arquillian.core.api.annotation.Observes
 import org.jboss.arquillian.test.spi.TestClass
 import org.jboss.arquillian.container.spi.event.container.{BeforeStart, AfterUnDeploy, BeforeDeploy}
 import org.jboss.arquillian.core.spi.LoadableExtension
 import org.jboss.arquillian.core.spi.LoadableExtension.ExtensionBuilder
+import org.scalabox.lift.LiftTestSetup
 
 /**
  * // TODO: Document this
@@ -14,13 +15,13 @@ import org.jboss.arquillian.core.spi.LoadableExtension.ExtensionBuilder
 class ArquillianTestLifecycleListener {
 
    def executeBeforeStart(@Observes event: BeforeStart) =
-      TestLiftExtension.buildExtension
+      LiftTestSetup.buildExtension
 
    def executeBeforeDeploy(@Observes event: BeforeDeploy, testClass: TestClass) =
-      TestLiftExtension.installExtension
+      LiftTestSetup.installExtension
 
    def executeAfterUnDeploy(@Observes event: AfterUnDeploy, testClass: TestClass) =
-      TestLiftExtension.uninstallExtension
+      LiftTestSetup.uninstallExtension
 
 }
 

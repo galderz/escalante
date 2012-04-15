@@ -104,6 +104,10 @@ object FileSystem extends Log {
       }
    }
 
+   def deleteDirectoryIfPresent(directory: File) {
+      if (directory.exists()) deleteDirectory(directory)
+   }
+
    def unzip(file: File, target: File) {
       val zip = new JarFile(file)
       enumerationAsScalaIterator(zip.entries).foreach { entry =>
@@ -116,6 +120,30 @@ object FileSystem extends Log {
                new FileOutputStream(new File(target, entryPath)))
          }
       }
+   }
+
+   def fileToString(file: File, encoding: String): String = {
+      val inStream = new FileInputStream(file)
+      val outStream = new ByteArrayOutputStream
+      try {
+         var reading = true
+         while ( reading ) {
+            inStream.read() match {
+               case -1 => reading = false
+               case c => outStream.write(c)
+            }
+         }
+         outStream.flush()
+      }
+      finally {
+         inStream.close()
+      }
+      new String(outStream.toByteArray(), encoding)
+   }
+
+   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {
+      val p = new java.io.PrintWriter(f)
+      try { op(p) } finally { p.close() }
    }
 
 }

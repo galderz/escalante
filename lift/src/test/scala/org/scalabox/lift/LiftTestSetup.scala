@@ -10,7 +10,7 @@ import org.scalabox.logging.Log
 import org.jboss.as.controller.operations.common.Util
 import org.jboss.as.controller.{ControlledProcessState, PathAddress}
 import org.scalatest.junit.AssertionsForJUnit
-import org.scalabox.assembly.ScalaBox
+import org.scalabox.assembly.RuntimeAssembly
 import java.io.File
 
 /**
@@ -18,18 +18,23 @@ import java.io.File
  * @author Galder Zamarreño
  * @since // TODO
  */
-abstract class TestLiftExtension {
+abstract class LiftTestSetup {
    // To avoid being instantiated by the surefire...
 }
 
-object TestLiftExtension extends AssertionsForJUnit with Log {
+object LiftTestSetup extends AssertionsForJUnit with Log {
 
    def buildExtension {
       info("Build Lift extension and copy to container")
+      // Cleanup scala deployments module dir, if present
+      deleteDirectoryIfPresent(
+         new File(System.getProperty("surefire.basedir", ".")
+              + "/build/target/jboss-as/downloads"))
+      // Set up Lift module
       val tmpFile = new File(System.getProperty("java.io.tmpdir"))
       val destDir = mkDirs(tmpFile, "test-module", true) // Delete if present!
       info("Build Lift module into %s", destDir)
-      ScalaBox.build(destDir, LiftModule)
+      RuntimeAssembly.build(destDir, LiftModule)
    }
 
    def installExtension {

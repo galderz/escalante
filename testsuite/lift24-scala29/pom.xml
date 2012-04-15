@@ -27,14 +27,13 @@
 
    <parent>
       <groupId>org.scalabox</groupId>
-      <artifactId>scalabox</artifactId>
+      <artifactId>scalabox-testsuite</artifactId>
       <version>1.0-SNAPSHOT</version>
-      <relativePath>../../pom.xml</relativePath>
+      <relativePath>../pom.xml</relativePath>
    </parent>
 
    <groupId>org.scalabox</groupId>
    <artifactId>test-lift24-scala29</artifactId>
-   <version>1.0-SNAPSHOT</version>
 
    <name>ScalaBox Testsuite for Lift 2.4 and Scala 2.9</name>
 
@@ -47,12 +46,8 @@
    <dependencies>
       <dependency>
          <groupId>${project.groupId}</groupId>
-         <artifactId>scalabox-lift</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>scalabox-core</artifactId>
+         <artifactId>test-lift24-scala28</artifactId>
+         <type>test-jar</type>
          <scope>test</scope>
       </dependency>
       <dependency>
@@ -65,77 +60,15 @@
          <artifactId>scalatest_${version.scala}</artifactId>
          <scope>test</scope>
       </dependency>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>scalabox-lift</artifactId>
-         <type>test-jar</type>
-         <scope>test</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>org.scalatest</groupId>
-               <artifactId>scalatest_2.8.2</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>net.liftweb</groupId>
-               <artifactId>lift-mapper_2.8.2</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.arquillian.container</groupId>
-         <artifactId>arquillian-container-test-api</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.arquillian.junit</groupId>
-         <artifactId>arquillian-junit-container</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-arquillian-container-managed</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.shrinkwrap.resolver</groupId>
-         <artifactId>shrinkwrap-resolver-api-maven</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.shrinkwrap.resolver</groupId>
-         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-         <scope>test</scope>
-      </dependency>
    </dependencies>
 
    <build>
-      <sourceDirectory>src/main/scala</sourceDirectory>
       <testSourceDirectory>src/test/scala</testSourceDirectory>
       <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-               <systemProperties>
-                  <property>
-                     <name>surefire.basedir</name>
-                     <value>${basedir}/../..</value>
-                  </property>
-               </systemProperties>
-            </configuration>
-         </plugin>
          <plugin>
             <groupId>net.alchim31.maven</groupId>
             <artifactId>scala-maven-plugin</artifactId>
             <version>${version.scala.tools}</version>
-            <!--<groupId>org.scala-tools</groupId>-->
-            <!--<artifactId>maven-scala-plugin</artifactId>-->
-            <!--<version>2.15.2</version>-->
             <executions>
                <execution>
                   <id>compile</id>

@@ -2,7 +2,8 @@
 
 import java.io._
 import java.lang.String
-import org.scalabox.assembly.ScalaBox
+import java.nio.charset.Charset
+import org.scalabox.assembly.RuntimeAssembly
 import org.scalabox.lift.LiftModule
 import org.scalabox.util.FileSystem._
 import org.scalabox.util.ScalaXmlParser._
@@ -57,7 +58,7 @@ if (scalaBoxDirs.length > 0) {
 }
 
 // 2. Build Scalabox, reusing the code used to unit test ScalaBox (how cool!!!)
-ScalaBox.build(new File("%s/modules".format(scalaBoxTarget)), LiftModule)
+RuntimeAssembly.build(new File("%s/modules".format(scalaBoxTarget)), LiftModule)
 
 // 3. Add extension(s) and subsystem(s) to configuration file
 val stdCfg = new File(
@@ -71,9 +72,23 @@ val withExtension = addXmlElement(
 val withSubsystem = addXmlElement(
    "profile", <subsystem xmlns="urn:scalabox:lift:1.0" />, withExtension)
 
-saveXml(stdCfg.getCanonicalPath, withSubsystem)
+saveXml(stdCfg, withSubsystem)
 println("Scalabox Lift extension added to configuration file")
 
+// 4. Modify standalone.sh (and other scripts...) to add downloads module dir
+// TODO: Find a better way to do this. Scott asked already: https://community.jboss.org/message/620710
+val standaloneSh = new File("%s/bin/standalone.sh".format(scalaBoxTarget))
+val standaloneShOriginal = new File(
+      "%s.original".format(standaloneSh.getCanonicalPath))
+if (!standaloneShOriginal.exists())
+   copy(standaloneSh, standaloneShOriginal) // Backup original standalone config
+
+val standaloneShContents = fileToString(standaloneSh, "UTF-8")
+val newStandaloneShContents = standaloneShContents.replace("$JBOSS_HOME/modules",
+      "$JBOSS_HOME/modules:$JBOSS_HOME/downloads")
+printToFile(standaloneSh) { p =>
+   p.print(newStandaloneShContents)
+}
 
 
 

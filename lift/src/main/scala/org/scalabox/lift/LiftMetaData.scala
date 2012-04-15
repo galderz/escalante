@@ -1,6 +1,7 @@
 package org.scalabox.lift
 
 import org.jboss.as.server.deployment.AttachmentKey
+import org.scalabox.Scala
 
 /**
  * // TODO: Document this

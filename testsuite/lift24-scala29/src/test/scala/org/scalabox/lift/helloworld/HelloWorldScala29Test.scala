@@ -1,10 +1,9 @@
-package org.scalabox.lift
+package org.scalabox.lift.helloworld
 
 import org.jboss.shrinkwrap.api.spec.WebArchive
 import org.jboss.arquillian.container.test.api.Deployment
 import org.junit.runner.RunWith
 import org.jboss.arquillian.junit.Arquillian
-import org.scalabox.lift.helloworld.AbstractHelloWorldTest
 import bootstrap.liftweb.Boot
 
 /**

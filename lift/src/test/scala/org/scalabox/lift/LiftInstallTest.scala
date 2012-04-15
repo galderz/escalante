@@ -8,6 +8,7 @@ import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
 import org.jboss.dmr.ModelNode
 import java.net.InetAddress
 import org.scalabox.util.Closeable._
+import org.scalabox.logging.Log
 
 /**
  * // TODO: Document this
@@ -15,7 +16,7 @@ import org.scalabox.util.Closeable._
  * @since // TODO
  */
 @RunWith(classOf[Arquillian])
-class LiftInstallTest {
+class LiftInstallTest extends Log {
 
    @Test def testCheckInstall() {
       use(ModelControllerClient.Factory.create(
@@ -24,8 +25,9 @@ class LiftInstallTest {
             val op = new ModelNode()
             op.get(OP).set(READ_RESOURCE_DESCRIPTION_OPERATION)
             op.get(OP_ADDR).add("extension", "org.scalabox.lift")
-            val resp = TestLiftExtension.validateResponse(client.execute(op))
-            assert(!resp.asString().isEmpty)
+            val resp = client.execute(op)
+            LiftTestSetup.validateResponse(resp)
+            info("Lift is installed: %s", resp.get(OUTCOME))
       }
    }
 
