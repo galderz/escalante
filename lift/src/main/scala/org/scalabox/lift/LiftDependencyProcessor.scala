@@ -8,9 +8,10 @@ import org.jboss.as.server.deployment.module._
 import org.jboss.modules.{Module, ModuleIdentifier}
 import org.jboss.as.server.ServerEnvironment
 import org.scalabox.util.SecurityActions
-import resolver.Lift24DependencyFilter
-import org.scalabox.{SCALA_28, SCALA_29}
-import org.scalabox.assembly.{MavenArtifact, DependencyResolverFactory, JBossModule, JBossModulesRepository}
+import maven.LiftDependencyFilter
+import org.scalabox.{SCALA_282, SCALA_291}
+import org.scalabox.modules.{JBossModule, JBossModulesRepository}
+import org.scalabox.maven.{MavenDependencyResolver, MavenArtifact}
 
 /**
  * A deployment processor that hooks the right dependencies for the Lift
@@ -54,10 +55,10 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       }
 
       liftMetaData match {
-         case LiftMetaData(lift, SCALA_29) =>
+         case LiftMetaData(lift, SCALA_291) =>
             moduleSpec.addSystemDependency(createDependency(SCALA_MODULE_ID))
-         case LiftMetaData(lift, SCALA_28) =>
-            val module = repo.installModule(SCALA_28.maven)
+         case LiftMetaData(lift, SCALA_282) =>
+            val module = repo.installModule(SCALA_282.maven)
             moduleSpec.addSystemDependency(module.moduleDependency)
          case _ => info("Unknown Lift deployment")
       }
@@ -65,15 +66,10 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       // Hack Lift jars into the war file cos Lift framework is currently
       // designed to be solely used by one web-app in (class loader) isolation
       liftMetaData match {
-         case LiftMetaData(LIFT_24, SCALA_29) =>
-            val liftJars = DependencyResolverFactory.getDependencyResolver()
-                 .artifact("net.liftweb:lift-mapper_2.9.1:2.4")
-                 .resolveAsFiles(Lift24DependencyFilter)
-            addLiftJars(deployment, liftJars)
-         case LiftMetaData(LIFT_24, SCALA_28) =>
-            val liftJars = DependencyResolverFactory.getDependencyResolver()
-                 .artifact("net.liftweb:lift-mapper_2.8.2:2.4")
-                 .resolveAsFiles(Lift24DependencyFilter)
+         case LiftMetaData(lift, scala) =>
+            val liftJars = MavenDependencyResolver.resolveArtifact(
+               new MavenArtifact("net.liftweb", "lift-mapper_" + scala.version,
+                  lift.version), LiftDependencyFilter)
             addLiftJars(deployment, liftJars)
          case _ => info("Unknown Lift deployment")
       }
@@ -87,7 +83,7 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       new ModuleDependency(
          Module.getBootModuleLoader(), id, false, false, false)
 
-   private def addLiftJars(deployment: DeploymentUnit, jars: Array[File]) {
+   private def addLiftJars(deployment: DeploymentUnit, jars: Seq[File]) {
       val resourceRoot = deployment.getAttachment(Attachments.DEPLOYMENT_ROOT)
       val root = resourceRoot.getRoot()
 

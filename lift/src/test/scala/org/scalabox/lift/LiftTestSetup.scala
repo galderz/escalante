@@ -1,5 +1,6 @@
 package org.scalabox.lift
 
+import assembly.LiftModule
 import org.scalabox.util.FileSystem._
 import org.scalabox.util.Closeable._
 import org.jboss.as.controller.client.ModelControllerClient
@@ -10,8 +11,8 @@ import org.scalabox.logging.Log
 import org.jboss.as.controller.operations.common.Util
 import org.jboss.as.controller.{ControlledProcessState, PathAddress}
 import org.scalatest.junit.AssertionsForJUnit
-import org.scalabox.assembly.RuntimeAssembly
 import java.io.File
+import org.scalabox.assembly.RuntimeAssembly
 
 /**
  * // TODO: Document this

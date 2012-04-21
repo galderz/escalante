@@ -5,9 +5,11 @@ package org.scalabox.lift
  * @author Galder Zamarreño
  * @since // TODO
  */
-sealed trait Lift
+sealed trait Lift { def version: String }
 
-case object LIFT_24 extends Lift
+case object LIFT_24 extends Lift {
+   def version = "2.4"
+}
 
 case class UnknownLiftVersion(version: String) extends Lift
 

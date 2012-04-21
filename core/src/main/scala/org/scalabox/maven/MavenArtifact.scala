@@ -1,4 +1,6 @@
-package org.scalabox.assembly
+package org.scalabox.maven
+
+import org.scalabox.modules.JBossModule
 
 /**
  * // TODO: Document this
@@ -9,7 +11,7 @@ class MavenArtifact(val groupId: String, val artifactId: String,
         val version: String, val isMain: Boolean) {
 
    def this(groupId: String, artifactId: String, version: String) =
-           this(groupId, artifactId, version, true)
+      this(groupId, artifactId, version, true)
 
    private val moduleFriendlyArtifactId = artifactId.replace('.', '_')
 
@@ -31,7 +33,7 @@ class MavenArtifact(val groupId: String, val artifactId: String,
    def jbossModule(export: Boolean): JBossModule =
       new JBossModule(moduleName, export, slot)
 
-   def coordinates : String =
+   def coordinates: String =
       new java.lang.StringBuilder()
               .append(groupId).append(":")
               .append(artifactId).append(":")

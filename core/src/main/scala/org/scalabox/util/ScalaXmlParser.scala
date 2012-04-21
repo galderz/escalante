@@ -4,6 +4,7 @@ import java.io.File
 import scala.xml.transform.{RuleTransformer, RewriteRule}
 import scala.xml._
 import annotation.tailrec
+import scala.Predef._
 
 /**
  * // TODO: Document this

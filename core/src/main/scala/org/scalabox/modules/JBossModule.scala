@@ -1,4 +1,4 @@
-package org.scalabox.assembly
+package org.scalabox.modules
 
 import org.jboss.modules.{Module, ModuleIdentifier}
 import org.jboss.as.server.deployment.module.ModuleDependency
@@ -27,7 +27,8 @@ class JBossModule(val name: String, val export: Boolean, val slot: String,
 
 }
 
-sealed trait Service { def name: String }
+sealed trait Service {def name: String}
+
 case object NONE extends Service { val name = "none" }
 case object IMPORT extends Service { val name = "import" }
 case object EXPORT extends Service { val name = "export" }

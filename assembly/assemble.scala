@@ -2,9 +2,8 @@
 
 import java.io._
 import java.lang.String
-import java.nio.charset.Charset
 import org.scalabox.assembly.RuntimeAssembly
-import org.scalabox.lift.LiftModule
+import org.scalabox.lift.assembly.LiftModule
 import org.scalabox.util.FileSystem._
 import org.scalabox.util.ScalaXmlParser._
 

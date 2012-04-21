@@ -1,8 +1,9 @@
-package org.scalabox.assembly
+package org.scalabox.modules
 
 import java.io.File
 import org.scalabox.util.FileSystem._
 import org.scalabox.util.ScalaXmlParser._
+import org.scalabox.maven.{MavenArtifact, MavenDependencyResolver}
 
 /**
  * A JBoss Module repository
@@ -21,9 +22,7 @@ class JBossModulesRepository(root: File) {
 
    private def doInstallModule(artifact: MavenArtifact, export: Boolean,
            deps: Seq[JBossModule]): JBossModule = {
-      // TODO: Check if already installed...
-      val resolver = DependencyResolverFactory.getDependencyResolver()
-      val jarFiles = resolver.artifact(artifact.coordinates).resolveAsFiles()
+      val jarFiles = MavenDependencyResolver.resolveArtifact(artifact)
 
       val module = artifact.jbossModule(export)
       val dir = mkDirs(root, artifact.moduleDirName)
@@ -31,14 +30,15 @@ class JBossModulesRepository(root: File) {
       val templateModuleXml =
          addXmlAttributes(
             <module xmlns="urn:jboss:module:1.0">
-                  <resources />
+                  <resources/>
                   <dependencies/>
             </module>, ("name", module.name), ("slot", module.slot))
 
-      val resourceRoots = jarFiles.map { jar =>
-         val name = jar.getName
-         copy(jar, new File(dir, name))
-         addXmlAttribute(<resource-root/>, "path", name)
+      val resourceRoots = jarFiles.map {
+         jar =>
+            val name = jar.getName
+            copy(jar, new File(dir, name))
+            addXmlAttribute(<resource-root/>, "path", name)
       }
 
       val moduleXmlWithResources =
