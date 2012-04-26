@@ -23,7 +23,7 @@ class JBossModule(val name: String, val export: Boolean, val slot: String,
       this(name, false, slot, NONE)
 
    def moduleDependency = new ModuleDependency(Module.getBootModuleLoader(),
-      ModuleIdentifier.create(name, slot), false, export, false)
+      ModuleIdentifier.create(name, slot), false, export, false, false)
 
 }
 

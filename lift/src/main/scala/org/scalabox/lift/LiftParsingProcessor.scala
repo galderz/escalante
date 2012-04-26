@@ -1,6 +1,5 @@
 package org.scalabox.lift
 
-import org.jboss.as.ee.structure.{DeploymentType, DeploymentTypeMarker}
 import org.jboss.as.server.deployment.{Attachments, DeploymentPhaseContext, DeploymentUnit, DeploymentUnitProcessor}
 import org.scalabox.util.Closeable._
 import javax.xml.stream.XMLInputFactory
@@ -9,6 +8,7 @@ import org.jboss.metadata.parser.util.{MetaDataElementParser, NoopXMLResolver}
 import org.jboss.metadata.parser.servlet.WebMetaDataParser
 import org.jboss.as.web.deployment.WarMetaData
 import java.io.StringReader
+import org.jboss.as.ee.structure.{SpecDescriptorPropertyReplacement, DeploymentType, DeploymentTypeMarker}
 
 /**
  * // TODO: Document this
@@ -66,7 +66,8 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
       val dtdInfo = new MetaDataElementParser.DTDInfo()
       inputFactory.setXMLResolver(dtdInfo)
       val xmlReader = inputFactory.createXMLStreamReader(reader)
-      val webMetaData = WebMetaDataParser.parse(xmlReader, dtdInfo)
+      val webMetaData = WebMetaDataParser.parse(xmlReader, dtdInfo,
+         SpecDescriptorPropertyReplacement.propertyReplacer(deployment))
 
       val warMetaData = deployment.getAttachment(WarMetaData.ATTACHMENT_KEY)
       warMetaData.setWebMetaData(webMetaData)

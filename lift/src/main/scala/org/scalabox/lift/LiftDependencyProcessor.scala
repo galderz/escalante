@@ -44,8 +44,8 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
 
       liftMetaData match {
          case LiftMetaData(LIFT_24, scala) =>
-            moduleSpec.addSystemDependency(createDependency(JODA_TIME_MODULE_ID))
-            moduleSpec.addSystemDependency(createDependency(SLF4J_MODULE_ID))
+            moduleSpec.addSystemDependency(JODA_TIME_MODULE_ID.moduleDependency)
+            moduleSpec.addSystemDependency(SLF4J_MODULE_ID.moduleDependency)
             // Not shipped by JBoss AS, so download and install
             val module = repo.installModule(
                new MavenArtifact("commons-fileupload", "commons-fileupload", "1.2.2"),
@@ -56,7 +56,7 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
 
       liftMetaData match {
          case LiftMetaData(lift, SCALA_291) =>
-            moduleSpec.addSystemDependency(createDependency(SCALA_MODULE_ID))
+            moduleSpec.addSystemDependency(SCALA_MODULE_ID.moduleDependency)
          case LiftMetaData(lift, SCALA_282) =>
             val module = repo.installModule(SCALA_282.maven)
             moduleSpec.addSystemDependency(module.moduleDependency)
@@ -78,10 +78,6 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
    def undeploy(unit: DeploymentUnit) {
       // TODO: Do I need to remove the dependencies?
    }
-
-   private def createDependency(id: ModuleIdentifier): ModuleDependency =
-      new ModuleDependency(
-         Module.getBootModuleLoader(), id, false, false, false)
 
    private def addLiftJars(deployment: DeploymentUnit, jars: Seq[File]) {
       val resourceRoot = deployment.getAttachment(Attachments.DEPLOYMENT_ROOT)
@@ -105,10 +101,10 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
 
 object LiftDependencyProcessor extends Log {
 
-   val JODA_TIME_MODULE_ID = ModuleIdentifier.create("org.joda.time")
+   val JODA_TIME_MODULE_ID = new JBossModule("org.joda.time")
 
-   val SLF4J_MODULE_ID = ModuleIdentifier.create("org.slf4j")
+   val SLF4J_MODULE_ID = new JBossModule("org.slf4j")
 
-   val SCALA_MODULE_ID = ModuleIdentifier.create("org.scala-lang.scala-library")
+   val SCALA_MODULE_ID = new JBossModule("org.scala-lang.scala-library")
 
 }

@@ -20,7 +20,6 @@
       <dependency>
          <groupId>org.jboss.as</groupId>
          <artifactId>jboss-as-dist</artifactId>
-         <version>${version.jboss.as}</version>
          <type>zip</type>
          <scope>provided</scope>
       </dependency>

@@ -65,7 +65,7 @@ object LiftTestSetup extends AssertionsForJUnit with Log {
             validateResponse(client.execute(opReload))
 
             // Sleep for a little bit to allow enough time for server to start
-            // TODO: Find a better way of waiting till server's reloaded
+            // TODO: Once https://issues.jboss.org/browse/AS7-4185 is fixed, remove this
             Thread.sleep(3000)
 
             // Now that the reload has been requested, do a dummy operation to
