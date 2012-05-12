@@ -1,6 +1,6 @@
-package bootstrap.liftweb
+package org.scalabox.lift.helloworld
 
-import net.liftweb.http.LiftRules
+import net.liftweb.http.{LiftRules, Bootable}
 import net.liftweb.sitemap.{SiteMap, Loc, Menu}
 
 /**
@@ -8,9 +8,9 @@ import net.liftweb.sitemap.{SiteMap, Loc, Menu}
  * @author Galder Zamarreño
  * @since // TODO
  */
-class Boot {
+class HelloWorldBoot extends Bootable {
 
-   def boot {
+   def boot() {
       LiftRules.addToPackages("org.scalabox.lift.helloworld")
 
       // Build SiteMap

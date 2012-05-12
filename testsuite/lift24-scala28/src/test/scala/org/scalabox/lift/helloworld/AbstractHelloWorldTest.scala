@@ -3,7 +3,6 @@ package org.scalabox.lift.helloworld
 import org.jboss.shrinkwrap.api.spec.WebArchive
 import org.jboss.shrinkwrap.api.asset.{StringAsset, Asset}
 import snippet.HelloWorld
-import bootstrap.liftweb.Boot
 import java.net.URL
 import java.io.{BufferedInputStream, StringWriter}
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers
@@ -19,7 +18,8 @@ import scala.xml.Elem
 import org.scalabox.util.Closeable
 
 /**
- * // TODO: Document this
+ * Base hello world test class.
+ *
  * @author Galder Zamarreño
  * @since // TODO
  */
@@ -52,7 +52,7 @@ object AbstractHelloWorldTest extends Log {
    def deployment(): WebArchive = deployment(None, None)
 
    def deployment(lift: Option[String], scala: Option[String]): WebArchive =
-      deployment(lift, scala, classOf[Boot])
+      deployment(lift, scala, classOf[HelloWorldBoot])
 
    def deployment(lift: Option[String], scala: Option[String], bootClass: Class[_ <: AnyRef]): WebArchive = {
       info("Create war deployment")
@@ -100,12 +100,37 @@ object AbstractHelloWorldTest extends Log {
          }
       }
 
+      /**
+       * This web.xml is not necessary, but it's added in order to provide a
+       * custom boot class. This allows for multiple apps to be tested within
+       * the same testsuite.
+       */
+      val webXml = xml {
+         <web-app>
+            <filter>
+               <filter-name>LiftFilter</filter-name>
+               <display-name>Lift Filter</display-name>
+               <description>The Filter that intercepts lift calls</description>
+               <filter-class>net.liftweb.http.LiftFilter</filter-class>
+               <init-param>
+                  <param-name>bootloader</param-name>
+                  <param-value>org.scalabox.lift.helloworld.HelloWorldBoot</param-value>
+               </init-param>
+            </filter>
+            <filter-mapping>
+               <filter-name>LiftFilter</filter-name>
+               <url-pattern>/*</url-pattern>
+            </filter-mapping>
+         </web-app>
+      }
+
       // TODO: How avoid duplicating library version?? Load from a pom...
       war.addAsWebResource(indexHtml, "index.html")
          .addAsWebResource(defaultHtml, "templates-hidden/default.html")
          .addAsWebResource(liftXml, "WEB-INF/lift.xml")
+         .addAsWebResource(webXml, "WEB-INF/web.xml")
          .addClasses(bootClass, classOf[Closeable],
-                     classOf[HelloWorld], classOf[AbstractHelloWorldTest])
+               classOf[HelloWorld], classOf[AbstractHelloWorldTest])
          .addAsLibraries(DependencyResolvers.use(classOf[MavenDependencyResolver])
             .artifacts("org.scalatest:scalatest_2.9.0:1.7.1")
                   .exclusion("org.scala-lang:scala-library")
