@@ -9,6 +9,7 @@ import org.jboss.as.controller.registry.OperationEntry
 import org.jboss.as.controller.descriptions.common.CommonDescriptions
 import org.jboss.as.controller._
 import org.scalabox.logging.Log
+import org.scalabox.Version
 
 /**
  * // TODO: Document this
@@ -22,7 +23,8 @@ class LiftExtension extends Extension {
    val parser = new LiftSubsystemParser
 
    def initialize(ctx: ExtensionContext) {
-      val subsystem = ctx.registerSubsystem(SUBSYSTEM_NAME)
+      val subsystem = ctx.registerSubsystem(
+            SUBSYSTEM_NAME, Version.MAJOR, Version.MINOR)
       val registry = subsystem.registerSubsystemModel(SUBSYSTEM_DESC)
 
       // We always need to add an 'add' operation
@@ -42,8 +44,9 @@ class LiftExtension extends Extension {
       info("Lift extension initialized")
    }
 
-   def initializeParsers(ctx: ExtensionParsingContext) =
-      ctx.setSubsystemXmlMapping(NAMESPACE, parser)
+   def initializeParsers(ctx: ExtensionParsingContext) {
+      ctx.setSubsystemXmlMapping(SUBSYSTEM_NAME, NAMESPACE, parser)
+   }
 
 }
 
@@ -89,7 +92,7 @@ object LiftExtension extends Log {
       val subsystem = new ModelNode
       subsystem.get(OP).set(ADD)
       subsystem.get(OP_ADDR).add(SUBSYSTEM, SUBSYSTEM_NAME)
-      return subsystem
+      subsystem
    }
 
 }

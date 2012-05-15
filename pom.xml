@@ -24,7 +24,7 @@
       <version.scala>2.8.2</version.scala>
       <version.scalatest>1.7.1</version.scalatest>
 
-      <version.jboss.as>7.1.2.Final-SNAPSHOT</version.jboss.as>
+      <version.jboss.as>7.x.incremental.379</version.jboss.as>
       <version.jboss.logging>3.1.0.GA</version.jboss.logging>
       <version.junit>4.8.2</version.junit>
       <version.scala.tools>3.0.1</version.scala.tools>
@@ -140,6 +140,12 @@
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-server</artifactId>
             <version>${version.jboss.as}</version>
+            <exclusions>
+               <exclusion>
+                  <groupId>org.jboss.logmanager</groupId>
+                  <artifactId>log4j-jboss-logmanager</artifactId>
+               </exclusion>
+            </exclusions>
          </dependency>
          <dependency>
             <groupId>org.jboss.as</groupId>
@@ -250,5 +256,44 @@
          </dependency>
       </dependencies>
    </dependencyManagement>
+
+   <repositories>
+      <repository>
+         <id>jboss-public-repository</id>
+         <releases>
+            <enabled>true</enabled>
+         </releases>
+         <snapshots>
+            <enabled>true</enabled>
+         </snapshots>
+         <name>JBoss Public Repository and Proxy for third party repositories</name>
+         <url>https://repository.jboss.org/nexus/content/groups/public</url>
+      </repository>
+      <repository>
+         <id>jboss-incremental</id>
+         <name>JBoss AS Incremental Builds</name>
+         <url>https://repository-projectodd.forge.cloudbees.com/upstream</url>
+         <layout>default</layout>
+         <releases>
+            <enabled>true</enabled>
+         </releases>
+         <snapshots>
+            <enabled>false</enabled>
+         </snapshots>
+      </repository>
+   </repositories>
+   <pluginRepositories>
+      <pluginRepository>
+         <id>jboss-public-plugin-repository</id>
+         <releases>
+            <enabled>true</enabled>
+         </releases>
+         <snapshots>
+            <enabled>true</enabled>
+         </snapshots>
+         <name>JBoss Public Plugin Repository and Proxy for third party plugin repositories</name>
+         <url>https://repository.jboss.org/nexus/content/groups/public</url>
+      </pluginRepository>
+   </pluginRepositories>
 
 </project>
