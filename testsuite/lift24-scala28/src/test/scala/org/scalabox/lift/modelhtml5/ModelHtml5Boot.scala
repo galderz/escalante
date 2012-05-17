@@ -6,15 +6,21 @@ import net.liftweb.sitemap.Loc.Link
 import net.liftweb.common.Full
 import net.liftweb.http._
 import net.liftweb.mapper.{DB, Schemifier}
+import net.liftweb.db.DefaultConnectionIdentifier
 
 /**
- * // TODO: Document this
+ * Boot class for Lift model, HTML 5, application
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 class ModelHtml5Boot extends Bootable {
 
    def boot() {
+      // TODO: Pain: requires recompiling app for running in env... think about ways to make it easy to enable it via lift.xml
+      // JBoss AS7 default datasource jndi name
+      DefaultConnectionIdentifier.jndiName = "java:jboss/datasources/ExampleDS"
+
       // Use Lift's Mapper ORM to populate the database
       // you don't need to use Mapper to use Lift... use
       // any ORM you want

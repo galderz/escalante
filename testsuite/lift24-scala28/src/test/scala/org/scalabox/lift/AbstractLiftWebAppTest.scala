@@ -2,7 +2,6 @@ package org.scalabox.lift
 
 import org.jboss.shrinkwrap.api.spec.WebArchive
 import org.scalabox.logging.Log
-import org.jboss.shrinkwrap.api.asset.{StringAsset, Asset}
 import xml.Elem
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver
@@ -10,6 +9,7 @@ import org.jboss.shrinkwrap.api.{GenericArchive, ShrinkWrap}
 import org.scalabox.util.ScalaXmlParser._
 import org.scalabox.util.{FileSystem, Closeable}
 import java.io.File
+import org.jboss.shrinkwrap.api.asset.{ClassLoaderAsset, StringAsset, Asset}
 
 /**
  * // TODO: Document this
@@ -18,20 +18,22 @@ import java.io.File
  */
 abstract class AbstractLiftWebAppTest extends Log {
 
-   val deploymentArchiveName: String
+   val appName: String
 
    val indexHtml: Elem
 
-   val defaultHtml: Elem
+   val templates: Seq[String]
+
+   val static: Option[Elem]
 
    def deployment(lift: Option[String], scala: Option[String],
            bootClass: Class[_ <: AnyRef], bootLoader: String,
            classes: Class[_]*): WebArchive = {
-      val war = ShrinkWrap.create(classOf[WebArchive], deploymentArchiveName)
-      info("Create war deployment: %s", deploymentArchiveName)
+      val deploymentName = appName + ".war"
+      val war = ShrinkWrap.create(classOf[WebArchive], deploymentName)
+      info("Create war deployment: %s", deploymentName)
 
       val indexHtmlContent = xml(indexHtml)
-      val defaultHtmlContent = xml(defaultHtml)
       val liftXmlContent = xml(liftXml(lift, scala))
       val webXmlContent = xml(webXml(bootLoader))
 
@@ -39,8 +41,15 @@ abstract class AbstractLiftWebAppTest extends Log {
          .loadMetadataFromPom(new File(FileSystem.getTarget(
                classOf[AbstractLiftWebAppTest]), "../pom.xml").getCanonicalPath)
 
+      // Add hidden templates
+      templates.foreach { template =>
+         war.addAsWebResource(resource("%s/%s".format(appName, template)), template)
+      }
+
+      static.map(staticResource =>
+         war.addAsWebResource(xml(staticResource), "static/index.html"))
+
       war.addAsWebResource(indexHtmlContent, "index.html")
-           .addAsWebResource(defaultHtmlContent, "templates-hidden/default.html")
            .addAsWebResource(liftXmlContent, "WEB-INF/lift.xml")
            .addAsWebResource(webXmlContent, "WEB-INF/web.xml")
            .addClasses(bootClass, classOf[Closeable])
@@ -56,6 +65,8 @@ abstract class AbstractLiftWebAppTest extends Log {
    }
 
    private def xml(e: Elem): Asset = new StringAsset(e.toString())
+
+   private def resource(resource: String): Asset = new ClassLoaderAsset(resource)
 
    private def liftXml(lift: Option[String], scala: Option[String]): Elem = {
       (lift, scala) match {
@@ -79,9 +90,7 @@ abstract class AbstractLiftWebAppTest extends Log {
             <filter-class>net.liftweb.http.LiftFilter</filter-class>
             <init-param>
                <param-name>bootloader</param-name>
-               <param-value>
-                  {bootLoader}
-               </param-value>
+               <param-value>{bootLoader}</param-value>
             </init-param>
          </filter>
          <filter-mapping>

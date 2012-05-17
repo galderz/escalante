@@ -11,7 +11,7 @@ import org.jboss.arquillian.junit.Arquillian
  * @since // TODO
  */
 @RunWith(classOf[Arquillian])
-class HelloWorldScala29Test extends AbstractHelloWorldTest {
+class HelloWorldScala29Test extends HelloWorldTest {
 
    // Tests in parent class
 
@@ -20,7 +20,8 @@ class HelloWorldScala29Test extends AbstractHelloWorldTest {
 object HelloWorldScala29Test {
 
    @Deployment def deployment: WebArchive =
-      AbstractHelloWorldTest.deployment(Some("2.4"), Some("2.9.1"), classOf[HelloWorldBoot])
+      HelloWorldTest.deployment(
+         Some("2.4"), Some("2.9.1"), classOf[HelloWorldBoot])
 
 }
 

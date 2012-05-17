@@ -21,7 +21,7 @@ object RuntimeAssembly extends Log {
       // TODO: Pass this in the module build
       val repo = new JBossModulesRepository(destDir)
 
-      repo.installModule(SCALA_291.maven, new JBossModule("javax.api"))
+      repo.installScalaModule(SCALA_291)
    }
 
 }
