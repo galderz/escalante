@@ -1,6 +1,6 @@
-package org.scalabox.lift.modelhtml5
+package bootstrap.liftweb
 
-import model.User
+import org.scalabox.quickstarts.modelhtml5.model.User
 import net.liftweb.sitemap.{Loc, Menu, SiteMap}
 import net.liftweb.sitemap.Loc.Link
 import net.liftweb.common.Full
@@ -14,10 +14,9 @@ import net.liftweb.db.DefaultConnectionIdentifier
  * @author Galder Zamarreño
  * @since 1.0
  */
-class ModelHtml5Boot extends Bootable {
+class Boot extends Bootable {
 
    def boot() {
-      // TODO: Pain: requires recompiling app for running in env... think about ways to make it easy to enable it via lift.xml
       // JBoss AS7 default datasource jndi name
       DefaultConnectionIdentifier.jndiName = "java:jboss/datasources/ExampleDS"
 
@@ -27,7 +26,7 @@ class ModelHtml5Boot extends Bootable {
       Schemifier.schemify(true, Schemifier.infoF _, User)
 
       // where to search snippet
-      LiftRules.addToPackages("org.scalabox.lift.modelhtml5")
+      LiftRules.addToPackages("code")
 
       // Build SiteMap
       def sitemap = SiteMap(

@@ -1,4 +1,4 @@
-package org.scalabox.lift.modelhtml5.model
+package org.scalabox.quickstarts.modelhtml5.model
 
 import net.liftweb.common.Full
 import net.liftweb.mapper.{MappedTextarea, MegaProtoUser, MetaMegaProtoUser}
@@ -38,7 +38,7 @@ class User extends MegaProtoUser[User] {
 
       override def textareaCols = 50
 
-      override def displayName = "A very long essay..."
+      override def displayName = "Galder Zamarreño"
 
    }
 

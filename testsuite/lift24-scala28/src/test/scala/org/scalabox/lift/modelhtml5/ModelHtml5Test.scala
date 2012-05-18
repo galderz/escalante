@@ -13,9 +13,10 @@ import org.openqa.selenium.By
 import collection.JavaConversions._
 
 /**
- * // TODO: Document this
+ * Test for a Lift ORM model based application.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 @RunWith(classOf[Arquillian])
 class ModelHtml5Test {
@@ -39,7 +40,8 @@ class ModelHtml5Test {
       driver.findElement(By.id("txtEmail")).sendKeys("athletic@bilbao.com")
       asScalaIterable(driver.findElements(
          By.cssSelector("input[type='password']"))).foreach { elem =>
-         elem.sendKeys("boomoo")
+            elem.clear() // Clear the '*' from the field first
+            elem.sendKeys("boomoo")
       }
       // Click on sign up
       driver.findElement(By.cssSelector("input[type='submit']")).click();
@@ -87,11 +89,9 @@ object ModelHtml5Test extends AbstractLiftWebAppTest {
         </head>
         <body class="lift:content_id=main">
            <div id="main" class="lift:surround?with=default;at=content">
-              <h2>Welcome to your project!</h2>
+              <h2>Welcome to ScalaBox!</h2>
               <p>
-                 <span class="lift:helloWorld.howdy">
-                    Welcome to your Lift app at <span id="time">Time goes here</span>
-                 </span>
+                 The home of Scala apps :)
               </p>
            </div>
         </body>

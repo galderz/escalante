@@ -5,8 +5,9 @@ Author: Galder Zamarreño
 What is it?
 -----------
 
-This example demonstrates the use of *Lift* Scala web framework and in ScalaBox
-using the latest Scala version available.
+This example demonstrates the use of *Lift* ORM model which interacts with
+JBoss' example datasource. This quickstart uses an older Scala version (2.8)
+on purpouse to demonstrate that multiple versions of Scala are supported.
 
 System requirements
 -------------------
@@ -24,4 +25,11 @@ To deploy the application to ScalaBox using Maven, start the ScalaBox and type
 
     mvn package jboss-as:deploy
 
-The application is deployed to <http://localhost:8080/scalabox-helloworld-lift>.
+The application is deployed to <http://localhost:8080/scalabox-modelhtml5-lift>.
+
+Using the application
+---------------------
+
+# To use the application, click on 'Sign Up' and fill in the details.
+# Once signed up, change your password to 'scalabox'
+# Now, click on 'Logout' and then click on 'Login' and enter username and new password

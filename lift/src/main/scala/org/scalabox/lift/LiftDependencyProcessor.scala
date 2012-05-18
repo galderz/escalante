@@ -46,6 +46,7 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
          case LiftMetaData(LIFT_24, scala) =>
             moduleSpec.addSystemDependency(JODA_TIME_MODULE_ID.moduleDependency)
             moduleSpec.addSystemDependency(SLF4J_MODULE_ID.moduleDependency)
+            moduleSpec.addSystemDependency(COMMONS_CODEC_MODULE_ID.moduleDependency)
             // Not shipped by JBoss AS, so download and install
             val module = repo.installModule(
                new MavenArtifact("commons-fileupload", "commons-fileupload", "1.2.2"),
@@ -106,10 +107,12 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
 
 object LiftDependencyProcessor extends Log {
 
+   val SCALA_MODULE_ID = new JBossModule("org.scala-lang.scala-library")
+
    val JODA_TIME_MODULE_ID = new JBossModule("org.joda.time")
 
    val SLF4J_MODULE_ID = new JBossModule("org.slf4j")
 
-   val SCALA_MODULE_ID = new JBossModule("org.scala-lang.scala-library")
+   val COMMONS_CODEC_MODULE_ID = new JBossModule("org.apache.commons.codec")
 
 }
