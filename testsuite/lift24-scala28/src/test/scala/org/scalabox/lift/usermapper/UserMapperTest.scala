@@ -1,4 +1,4 @@
-package org.scalabox.lift.modelhtml5
+package org.scalabox.lift.usermapper
 
 import model.User
 import org.scalabox.lift.AbstractLiftWebAppTest
@@ -19,9 +19,9 @@ import collection.JavaConversions._
  * @since 1.0
  */
 @RunWith(classOf[Arquillian])
-class ModelHtml5Test {
+class UserMapperTest {
 
-   val appUrl = "http://localhost:8080/modelhtml5"
+   val appUrl = "http://localhost:8080/usermapper"
    val driver = new HtmlUnitDriver()
 
    @Test def testStaticContent() {
@@ -69,17 +69,17 @@ class ModelHtml5Test {
 
 }
 
-object ModelHtml5Test extends AbstractLiftWebAppTest {
+object UserMapperTest extends AbstractLiftWebAppTest {
 
    @Deployment def deployment: WebArchive =
-      deployment(Some("2.4"), Some("2.8.2"), classOf[ModelHtml5Boot])
+      deployment(Some("2.4"), Some("2.8.2"), classOf[UserMapperBoot])
 
    def deployment(lift: Option[String], scala: Option[String],
            bootClass: Class[_ <: AnyRef]): WebArchive =
       deployment(lift, scala, bootClass,
-         "org.scalabox.lift.modelhtml5.ModelHtml5Boot", classOf[User])
+         "org.scalabox.lift.usermapper.UserMapperBoot", classOf[User])
 
-   override val appName: String = "modelhtml5"
+   override val appName: String = "usermapper"
 
    override val indexHtml: Elem =
       <html>

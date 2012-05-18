@@ -1,6 +1,6 @@
-package bootstrap.liftweb
+package org.scalabox.lift.usermapper
 
-import org.scalabox.quickstarts.modelhtml5.model.User
+import model.User
 import net.liftweb.sitemap.{Loc, Menu, SiteMap}
 import net.liftweb.sitemap.Loc.Link
 import net.liftweb.common.Full
@@ -14,9 +14,10 @@ import net.liftweb.db.DefaultConnectionIdentifier
  * @author Galder Zamarreño
  * @since 1.0
  */
-class Boot extends Bootable {
+class UserMapperBoot extends Bootable {
 
    def boot() {
+      // TODO: Pain: requires recompiling app for running in env... think about ways to make it easy to enable it via lift.xml
       // JBoss AS7 default datasource jndi name
       DefaultConnectionIdentifier.jndiName = "java:jboss/datasources/ExampleDS"
 
@@ -26,7 +27,7 @@ class Boot extends Bootable {
       Schemifier.schemify(true, Schemifier.infoF _, User)
 
       // where to search snippet
-      LiftRules.addToPackages("code")
+      LiftRules.addToPackages("org.scalabox.lift.usermapper")
 
       // Build SiteMap
       def sitemap = SiteMap(

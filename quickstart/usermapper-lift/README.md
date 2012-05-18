@@ -25,7 +25,7 @@ To deploy the application to ScalaBox using Maven, start the ScalaBox and type
 
     mvn package jboss-as:deploy
 
-The application is deployed to <http://localhost:8080/scalabox-modelhtml5-lift>.
+The application is deployed to <http://localhost:8080/scalabox-usermapper-lift>.
 
 Using the application
 ---------------------

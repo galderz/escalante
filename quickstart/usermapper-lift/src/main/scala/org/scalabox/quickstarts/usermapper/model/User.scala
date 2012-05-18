@@ -1,4 +1,4 @@
-package org.scalabox.quickstarts.modelhtml5.model
+package org.scalabox.quickstarts.usermapper.model
 
 import net.liftweb.common.Full
 import net.liftweb.mapper.{MappedTextarea, MegaProtoUser, MetaMegaProtoUser}
