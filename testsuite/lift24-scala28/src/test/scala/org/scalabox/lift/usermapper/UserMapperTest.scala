@@ -77,7 +77,8 @@ object UserMapperTest extends AbstractLiftWebAppTest {
    def deployment(lift: Option[String], scala: Option[String],
            bootClass: Class[_ <: AnyRef]): WebArchive =
       deployment(lift, scala, bootClass,
-         "org.scalabox.lift.usermapper.UserMapperBoot", classOf[User])
+         "org.scalabox.lift.usermapper.UserMapperBoot",
+         classOf[User], classOf[UserMapperTest])
 
    override val appName: String = "usermapper"
 

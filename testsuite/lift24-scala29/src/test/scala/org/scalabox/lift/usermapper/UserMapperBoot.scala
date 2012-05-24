@@ -1,23 +1,21 @@
 package org.scalabox.lift.usermapper
 
 import model.User
+import net.liftweb.db.DefaultConnectionIdentifier
 import net.liftweb.sitemap.{Loc, Menu, SiteMap}
 import net.liftweb.sitemap.Loc.Link
 import net.liftweb.common.Full
-import net.liftweb.http._
 import net.liftweb.mapper.{DB, Schemifier}
-import net.liftweb.db.DefaultConnectionIdentifier
+import net.liftweb.http.{Bootable, S, LiftRules}
 
 /**
- * Boot class for Lift model, HTML 5, application
- *
+ * // TODO: Document this
  * @author Galder Zamarreño
- * @since 1.0
+ * @since // TODO
  */
 class UserMapperBoot extends Bootable {
 
    def boot() {
-      // TODO: Pain: requires recompiling app for running in env... think about ways to make it easy to enable it via lift.xml
       // JBoss AS7 default datasource jndi name
       DefaultConnectionIdentifier.jndiName = "java:jboss/datasources/ExampleDS"
 
@@ -61,13 +59,8 @@ class UserMapperBoot extends Bootable {
       // What is the function to test if a user is logged in?
       LiftRules.loggedInTest = Full(() => User.loggedIn_?)
 
-      // Use HTML5 for rendering
-      LiftRules.htmlProperties.default.set((r: Req) =>
-         new Html5Properties(r.userAgent))
-
       // Make a transaction span the whole HTTP request
       S.addAround(DB.buildLoanWrapper())
-
    }
 
 }

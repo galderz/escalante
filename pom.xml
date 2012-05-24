@@ -32,7 +32,9 @@
       <version.shrinkwrap>1.0.0-cr-1</version.shrinkwrap>
       <version.shrinkwrap.resolver>1.1.0-alpha-1</version.shrinkwrap.resolver>
       <version.lift>2.4</version.lift>
-      <version.org.apache.maven>3.0.3</version.org.apache.maven>
+      <version.apache.maven>3.0.4</version.apache.maven>
+      <version.apache.wagon>1.0</version.apache.wagon>
+      <version.sonatype.aether>1.13.1</version.sonatype.aether>
       <version.selenium>2.21.0</version.selenium>
    </properties>
 
@@ -175,7 +177,27 @@
          <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-aether-provider</artifactId>
-            <version>${version.org.apache.maven}</version>
+            <version>${version.apache.maven}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-settings</artifactId>
+            <version>${version.apache.maven}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-settings-builder</artifactId>
+            <version>${version.apache.maven}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.sonatype.aether</groupId>
+            <artifactId>aether-connector-wagon</artifactId>
+            <version>${version.sonatype.aether}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-http-lightweight</artifactId>
+            <version>${version.apache.wagon}</version>
          </dependency>
 
          <dependency>
@@ -256,6 +278,29 @@
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
             <version>${version.shrinkwrap.resolver}</version>
+            <!-- TODO: Revisit exclusions or find a newer library version -->
+            <!--<exclusions>-->
+               <!--<exclusion>-->
+                  <!--<groupId>org.sonatype.aether</groupId>-->
+                  <!--<artifactId>aether-api</artifactId>-->
+               <!--</exclusion>-->
+               <!--<exclusion>-->
+                  <!--<groupId>org.sonatype.aether</groupId>-->
+                  <!--<artifactId>aether-impl</artifactId>-->
+               <!--</exclusion>-->
+               <!--<exclusion>-->
+                  <!--<groupId>org.sonatype.aether</groupId>-->
+                  <!--<artifactId>aether-spi</artifactId>-->
+               <!--</exclusion>-->
+               <!--<exclusion>-->
+                  <!--<groupId>org.sonatype.aether</groupId>-->
+                  <!--<artifactId>aether-util</artifactId>-->
+               <!--</exclusion>-->
+               <!--<exclusion>-->
+                  <!--<groupId>org.sonatype.aether</groupId>-->
+                  <!--<artifactId>aether-connector-wagon</artifactId>-->
+               <!--</exclusion>-->
+            <!--</exclusions>-->
          </dependency>
 
          <dependency>

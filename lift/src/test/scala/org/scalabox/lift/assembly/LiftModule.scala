@@ -35,8 +35,28 @@ object LiftModule extends ScalaBoxModule {
 
       // 3. Install modules for Lift module dependencies
       val repo = new JBossModulesRepository(destDir)
+
+      // TODO: There are duplicates and libraries we don't need:
+//      -rw-r--r--   1 g  staff  489474 May 24 13:16 sisu-guice-3.0.3-no_aop.jar
+//      -rw-r--r--   1 g  staff     221 May 24 13:16 sisu-guice-3.0.3-no_aop.jar.index
+//      -rw-r--r--   1 g  staff  261829 May 24 13:16 sisu-inject-bean-2.2.3.jar
+//      -rw-r--r--   1 g  staff     672 May 24 13:16 sisu-inject-bean-2.2.3.jar.index
+//      -rw-r--r--   1 g  staff  203520 May 24 13:16 sisu-inject-plexus-2.2.3.jar
+//      -rw-r--r--   1 g  staff    1440 May 24 13:16 sisu-inject-plexus-2.2.3.jar.index
+//      -rw-r--r--   1 g  staff  223425 May 24 13:16 plexus-utils-2.0.6.jar
+//      -rw-r--r--   1 g  staff     438 May 24 13:16 plexus-utils-2.0.6.jar.index
+//      -rw-r--r--   1 g  staff  223943 May 24 13:16 plexus-utils-2.0.7.jar
+//      -rw-r--r--   1 g  staff     438 May 24 13:16 plexus-utils-2.0.7.jar.index
+
+      val subArtifacts =
+         new MavenArtifact("org.apache.maven", "maven-settings", "3.0.4") ::
+         new MavenArtifact("org.apache.maven", "maven-settings-builder", "3.0.4") ::
+         new MavenArtifact("org.sonatype.aether", "aether-connector-wagon", "1.13.1") ::
+         new MavenArtifact("org.apache.maven.wagon", "wagon-http-lightweight", "1.0") ::
+         Nil
+
       repo.installModule(new MavenArtifact("org.apache.maven",
-         "maven-aether-provider", "3.0.3"))
+         "maven-aether-provider", "3.0.4"), subArtifacts)
 
       // 4. Generate module.xml and safe it to disk
       saveXml(new File(moduleDir, "module.xml"), moduleXml)

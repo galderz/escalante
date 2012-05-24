@@ -29,7 +29,8 @@ class JBossModulesRepository(root: File) {
     * lot of jars (possibly coming from transitive dependencies).
     */
    def installModule(artifact: MavenArtifact, deps: JBossModule*): JBossModule =
-      installModule(artifact, false, deps, None)
+      installModule(artifact, export = false, deps = deps,
+         moduleDescriptor = None, subArtifacts = Nil)
 
    /**
     * Install a JBoss module from a Maven artifact with a given module.xml.
@@ -38,7 +39,18 @@ class JBossModulesRepository(root: File) {
     * with exotic options.
     */
    def installModule(artifact: MavenArtifact, moduleXml: Elem): JBossModule =
-      installModule(artifact, false, List.empty, Some(moduleXml))
+      installModule(artifact, export = false, deps = Nil,
+         moduleDescriptor = Some(moduleXml), subArtifacts = Nil)
+
+   /**
+    * Install a JBoss module from a Maven artifact alongside other Maven
+    * sub-artifacts. These sub-artifacts will be resolved and installed under
+    * the same JBoss module as the main artifact.
+    */
+   def installModule(artifact: MavenArtifact,
+           subArtifacts: List[MavenArtifact]): JBossModule =
+      installModule(artifact, export = false, deps = Nil,
+         moduleDescriptor = None, subArtifacts = subArtifacts)
 
    /**
     *
@@ -49,14 +61,17 @@ class JBossModulesRepository(root: File) {
     * @return
     */
    private def installModule(artifact: MavenArtifact, export: Boolean,
-           deps: Seq[JBossModule], moduleDescriptor: Option[Node]): JBossModule = {
+           deps: Seq[JBossModule], moduleDescriptor: Option[Node],
+           subArtifacts: List[MavenArtifact]): JBossModule = {
       // TODO: check if the directory exists, a module.xml exists and at least one jar is present
 
       val module = artifact.jbossModule(export)
       val dir = mkDirs(root, artifact.moduleDirName)
 
-      // Resolve and copy jars
-      val jarFiles = MavenDependencyResolver.resolveArtifact(artifact)
+      // Take all artifacts, both main artifact and sub-artifact, and create a single list will all the jar files
+      val jarFiles = (artifact :: subArtifacts)
+              .flatMap(MavenDependencyResolver.resolveArtifact(_))
+
       jarFiles.foreach(jar => copy(jar, new File(dir, jar.getName)))
 
       val moduleXml = moduleDescriptor.getOrElse {

@@ -62,10 +62,37 @@
          <artifactId>jboss-as-server</artifactId>
          <scope>provided</scope>
       </dependency>
+
       <dependency>
          <groupId>org.apache.maven</groupId>
          <artifactId>maven-aether-provider</artifactId>
          <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven</groupId>
+         <artifactId>maven-settings</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven</groupId>
+         <artifactId>maven-settings-builder</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.sonatype.aether</groupId>
+         <artifactId>aether-connector-wagon</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-http-lightweight</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
       </dependency>
    </dependencies>
 
@@ -73,6 +100,19 @@
       <sourceDirectory>src/main/scala</sourceDirectory>
       <testSourceDirectory>src/test/scala</testSourceDirectory>
       <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.12</version>
+            <configuration>
+               <systemProperties>
+                  <property>
+                     <name>surefire.basedir</name>
+                     <value>${basedir}/..</value>
+                  </property>
+               </systemProperties>
+            </configuration>
+         </plugin>
          <plugin>
             <groupId>net.alchim31.maven</groupId>
             <artifactId>scala-maven-plugin</artifactId>
