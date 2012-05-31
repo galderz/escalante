@@ -22,8 +22,7 @@ import org.sonatype.aether.connector.wagon.{WagonRepositoryConnectorFactory, Wag
 object MavenDependencyResolver {
 
    private val DEFAULT_REPOSITORY_PATH =
-         SecurityActions.getSystemProperty("user.home")
-           .concat("/.m2/repository")
+         SecurityActions.getSystemProperty("user.home").concat("/.m2/repository")
 
    private lazy val SYSTEM = createSystem()
 
@@ -51,17 +50,18 @@ object MavenDependencyResolver {
       val dependency = new Dependency(aetherArtifact, null)
 
       val request = new CollectRequest(Collections.singletonList(dependency),
-         null, SETTINGS.getRemoteRepositories)
+            null, SETTINGS.getRemoteRepositories)
 
-      val results = SYSTEM.resolveDependencies(
-         SESSION, new DependencyRequest(request, filter)).getArtifactResults
+      val results = SYSTEM.resolveDependencies(SESSION,
+            new DependencyRequest(request, filter)).getArtifactResults
+
       asScalaIterator(results.iterator())
               .filter(_.getArtifact.getExtension != "pom")
               .map(_.getArtifact.getFile).toSeq
    }
 
    private def createSystem(): RepositorySystem =  {
-      // TODO: Why do I need to be in the TCCL?
+      // Has to be done within the TCCL...
       val prevCl = Thread.currentThread().getContextClassLoader
       try {
          Thread.currentThread().setContextClassLoader(this.getClass.getClassLoader)

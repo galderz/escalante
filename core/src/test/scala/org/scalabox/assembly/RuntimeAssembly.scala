@@ -3,7 +3,7 @@ package org.scalabox.assembly
 import java.io.File
 import org.scalabox.logging.Log
 import org.scalabox.SCALA_291
-import org.scalabox.modules.{JBossModule, JBossModulesRepository}
+import org.scalabox.modules.JBossModulesRepository
 
 /**
  * // TODO: Is this really needed? Why not just call LiftModule.build?

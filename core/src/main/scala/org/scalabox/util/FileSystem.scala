@@ -15,8 +15,25 @@ import java.util.jar.JarFile
  */
 object FileSystem extends Log {
 
-   def mkDirs(parent: File, child: String): File = mkDirs(parent, child, false)
+   /**
+    * Make a directory.
+    *
+    * @param parent File instance representing the parent directory
+    * @param child name of child directory to create
+    * @return a File composed of the parent and child
+    */
+   def mkDirs(parent: File, child: String): File =
+         mkDirs(parent, child, deleteIfPresent = false)
 
+   /**
+    * Make a directory, deleting it first if already present.
+    *
+    * @param parent File instance representing the parent directory
+    * @param child name of child directory to create
+    * @param deleteIfPresent if true, directory must be deleted before
+    *                        recreating it
+    * @return a File composed of the parent and child
+    */
    def mkDirs(parent: File, child: String, deleteIfPresent: Boolean): File = {
       val f = new File(parent, child)
       if (deleteIfPresent & f.exists()) deleteDirectory(f)
@@ -44,9 +61,9 @@ object FileSystem extends Log {
 
    def copy(src: File, dest: File) {
       if (src.isDirectory) {
-         // if directory not exists, create it
+         // If directory not exists, create it
          if (!dest.exists()) {
-            dest.mkdir();
+            dest.mkdir()
             debug("Directory copied from %s to %s",
                src.getCanonicalPath, dest.getCanonicalPath)
          }
@@ -76,9 +93,9 @@ object FileSystem extends Log {
    }
 
    /**
-    * Recursively deletes a directory and all its contents
+    * Recursively deletes a directory and all its contents.
     *
-    * @param directory
+    * @param directory File representing the directory to delete
     */
    def deleteDirectory(directory: File) {
       if (directory.isDirectory && directory.exists) {
@@ -138,7 +155,7 @@ object FileSystem extends Log {
       finally {
          inStream.close()
       }
-      new String(outStream.toByteArray(), encoding)
+      new String(outStream.toByteArray, encoding)
    }
 
    def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {

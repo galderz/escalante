@@ -7,7 +7,7 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver
 import org.jboss.shrinkwrap.api.{GenericArchive, ShrinkWrap}
 import org.scalabox.util.ScalaXmlParser._
-import org.scalabox.util.{FileSystem, Closeable}
+import org.scalabox.util.Closeable
 import java.io.File
 import org.jboss.shrinkwrap.api.asset.{ClassLoaderAsset, StringAsset, Asset}
 
@@ -37,9 +37,15 @@ abstract class AbstractLiftWebAppTest extends Log {
       val liftXmlContent = xml(liftXml(lift, scala))
       val webXmlContent = xml(webXml(bootLoader))
 
+      val ideFriendlyPath = "testsuite/lift24-scala28/pom.xml"
+      // Figure out an IDE and Maven friendly path:
+      val path =
+         if (new File(ideFriendlyPath).exists()) ideFriendlyPath else "pom.xml"
+
+      info("Loading pom from: " + new File(path).getCanonicalPath)
+
       val resolver = DependencyResolvers.use(classOf[MavenDependencyResolver])
-         .loadMetadataFromPom(new File(FileSystem.getTarget(
-               classOf[AbstractLiftWebAppTest]), "../pom.xml").getCanonicalPath)
+         .loadMetadataFromPom(path)
 
       // Add hidden templates
       templates.foreach { template =>

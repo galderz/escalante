@@ -13,9 +13,11 @@ import org.scalabox.lift.LiftExtension
 import org.scalabox.assembly.ScalaBoxModule
 
 /**
- * // TODO: Document this
+ * Defines how the Lift JBoss module is constructed, including the classes it
+ * incorporates, the libraries it depends on...etc.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object LiftModule extends ScalaBoxModule {
 
@@ -68,23 +70,23 @@ object LiftModule extends ScalaBoxModule {
    private def moduleXml = {
       <module xmlns="urn:jboss:module:1.0" name="org.scalabox.lift">
          <resources>
-               <resource-root path="scalabox-lift.jar"/>
+            <resource-root path="scalabox-lift.jar"/>
          </resources>
          <dependencies>
-               <module name="javax.api"/>
-               <module name="org.jboss.staxmapper"/>
-               <module name="org.jboss.as.controller"/>
-               <module name="org.jboss.as.server"/>
-               <module name="org.jboss.as.ee"/>
-               <module name="org.jboss.as.web"/>
-               <module name="org.jboss.metadata"/>
-               <module name="org.jboss.modules"/>
-               <module name="org.jboss.msc"/>
-               <module name="org.jboss.logging"/>
-               <module name="org.jboss.vfs"/>
-               <module name="org.scala-lang.scala-library"/>
-               <module name="org.apache.maven.maven-aether-provider"
-                       services="import">
+            <module name="javax.api"/>
+            <module name="org.jboss.staxmapper"/>
+            <module name="org.jboss.as.controller"/>
+            <module name="org.jboss.as.server"/>
+            <module name="org.jboss.as.ee"/>
+            <module name="org.jboss.as.web"/>
+            <module name="org.jboss.metadata"/>
+            <module name="org.jboss.modules"/>
+            <module name="org.jboss.msc"/>
+            <module name="org.jboss.logging"/>
+            <module name="org.jboss.vfs"/>
+            <module name="org.scala-lang.scala-library"/>
+            <module name="org.apache.maven.maven-aether-provider"
+                    services="import">
                <imports>
                   <include-set>
                         <path name="META-INF/plexus"/>
