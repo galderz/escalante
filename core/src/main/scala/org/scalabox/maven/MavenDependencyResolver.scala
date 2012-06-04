@@ -1,7 +1,6 @@
 package org.scalabox.maven
 
 import org.sonatype.aether.repository.LocalRepository
-import java.io.File
 import org.sonatype.aether.util.artifact.DefaultArtifact
 import org.sonatype.aether.resolution.DependencyRequest
 import org.sonatype.aether.collection.CollectRequest
@@ -13,11 +12,13 @@ import java.util.Collections
 import org.apache.maven.repository.internal.{MavenServiceLocator, MavenRepositorySystemSession}
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory
 import org.sonatype.aether.connector.wagon.{WagonRepositoryConnectorFactory, WagonProvider}
+import java.io._
 
 /**
- * // TODO: Document this
+ * Maven dependency resolver.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object MavenDependencyResolver {
 
@@ -30,20 +31,24 @@ object MavenDependencyResolver {
 
    private val SETTINGS = new MavenSettings
 
+   private val SYSTEM_OUT = new PrintStream(new BufferedOutputStream(
+         new FileOutputStream(FileDescriptor.out), 128), true)
+
    /**
-    * TODO
+    * Resolve a maven artifact into a collection of File instances.
     *
-    * @param artifact
-    * @return
+    * @param artifact MavenArtifact to resolve
+    * @return a sequence of files
     */
    def resolveArtifact(artifact: MavenArtifact): Seq[File] =
       resolveArtifact(artifact, null)
 
    /**
+    * Resolve a maven artifact into a collection of File instances.
     *
-    * @param artifact
-    * @param filter
-    * @return
+    * @param artifact MavenArtifact to resolve
+    * @param filter filter the dependencies of the artifact
+    * @return a sequence of files
     */
    def resolveArtifact(artifact: MavenArtifact, filter: DependencyFilter): Seq[File] = {
       val aetherArtifact = new DefaultArtifact(artifact.coordinates)
@@ -81,7 +86,7 @@ object MavenDependencyResolver {
             new LocalRepository(DEFAULT_REPOSITORY_PATH))
       val session = new MavenRepositorySystemSession()
       session.setLocalRepositoryManager(localRepo)
-      session.setTransferListener(new LogTransferListener)
+      session.setTransferListener(new ConsoleTransferLog(SYSTEM_OUT))
       session
    }
 

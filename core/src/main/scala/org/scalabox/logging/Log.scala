@@ -3,9 +3,10 @@ package org.scalabox.logging
 import org.jboss.logging.Logger
 
 /**
- * // TODO: Document this
+ * Logging interface.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 trait Log {
 
@@ -25,6 +26,10 @@ trait Log {
 
    def warn(msg: => String) {
       log.warn(msg)
+   }
+
+   def warn(msg: => String, param1: Any, param2: Any, param3: Any) {
+      log.warnf(msg, param1, param2, param3)
    }
 
    def debug(msg: => String) {
