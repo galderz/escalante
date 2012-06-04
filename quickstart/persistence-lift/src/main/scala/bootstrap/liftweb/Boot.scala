@@ -1,6 +1,6 @@
 package bootstrap.liftweb
 
-import org.scalabox.quickstarts.usermapper.model.User
+import org.scalabox.quickstarts.lift.persistence.model.User
 import net.liftweb.sitemap.{Loc, Menu, SiteMap}
 import net.liftweb.sitemap.Loc.Link
 import net.liftweb.common.Full
@@ -26,7 +26,7 @@ class Boot extends Bootable {
       Schemifier.schemify(true, Schemifier.infoF _, User)
 
       // where to search snippet
-      LiftRules.addToPackages("org.scalabox.quickstarts.usermapper")
+      LiftRules.addToPackages("org.scalabox.quickstarts.lift.persistence")
 
       // Build SiteMap
       def sitemap = SiteMap(

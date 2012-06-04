@@ -1,12 +1,13 @@
-helloworld-lift: Helloworld Lift Example
-========================================
+standard-lift: Standard HelloWorld Lift Example
+=================================================
 Author: Galder Zamarreño
 
 What is it?
 -----------
 
-This example demonstrates the use of *Lift* Scala web framework and in ScalaBox
-using the latest Scala version available.
+This example demonstrates that Scalabox can deploy the standard, original,
+helloworl example, where the war file contains all the jars required by the
+Lift application, including the Scala libraries.
 
 System requirements
 -------------------
@@ -25,4 +26,4 @@ To deploy the application to ScalaBox using Maven, start the ScalaBox and type
 
     mvn package jboss-as:deploy
 
-The application is deployed to <http://localhost:8080/scalabox-helloworld-lift>.
+The application is deployed to <http://localhost:8080/scalabox-standard-lift>.

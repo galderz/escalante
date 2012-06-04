@@ -1,4 +1,4 @@
-package org.scalabox.quickstarts.usermapper.model
+package org.scalabox.quickstarts.lift.persistence.model
 
 import net.liftweb.common.Full
 import net.liftweb.mapper.{MappedTextarea, MegaProtoUser, MetaMegaProtoUser}

@@ -60,11 +60,13 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
          } else {
             trace("No web.xml present in deployment, generate a Lift-friendly web.xml")
             val webXml =
-               <web-app>
+               <web-app version="2.5"
+                        xmlns="http://java.sun.com/xml/ns/javaee"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                        http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
                   <filter>
                      <filter-name>LiftFilter</filter-name>
-                     <display-name>Lift Filter</display-name>
-                     <description>The Filter that intercepts lift calls</description>
                      <filter-class>net.liftweb.http.LiftFilter</filter-class>
                   </filter>
                   <filter-mapping>
@@ -72,6 +74,7 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
                      <url-pattern>/*</url-pattern>
                   </filter-mapping>
                </web-app>
+
             val reader = new StringReader(webXml.toString())
             val inputFactory = XMLInputFactory.newInstance()
             val dtdInfo = new MetaDataElementParser.DTDInfo()

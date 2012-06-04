@@ -88,11 +88,13 @@ abstract class AbstractLiftWebAppTest extends Log {
    }
 
    private def webXml(bootLoader: String): Elem = {
-      <web-app>
+      <web-app version="2.5"
+               xmlns="http://java.sun.com/xml/ns/javaee"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+               http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
          <filter>
             <filter-name>LiftFilter</filter-name>
-            <display-name>Lift Filter</display-name>
-            <description>The Filter that intercepts lift calls</description>
             <filter-class>net.liftweb.http.LiftFilter</filter-class>
             <init-param>
                <param-name>bootloader</param-name>

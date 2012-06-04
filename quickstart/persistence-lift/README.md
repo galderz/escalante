@@ -1,4 +1,4 @@
-helloworld-lift: Helloworld Lift Example
+persistence-lift: Persistence Lift Example
 ========================================
 Author: Galder Zamarreño
 
@@ -16,7 +16,8 @@ The example can be deployed using Maven from the command line or from Eclipse
 using JBoss Tools.
 
 To set up Maven or JBoss Tools in Eclipse, refer to the
-<a href="https://docs.jboss.org/author/display/AS71/Getting+Started+Developing+Applications+Guide" title="Getting Started Developing Applications Guide">Getting Started Developing Applications Guide</a>.
+<a href="https://docs.jboss.org/author/display/AS71/Getting+Started+Developing+Applications+Guide"
+title="Getting Started Developing Applications Guide">Getting Started Developing Applications Guide</a>.
 
 Deploying the application
 -------------------------
@@ -25,7 +26,7 @@ To deploy the application to ScalaBox using Maven, start the ScalaBox and type
 
     mvn package jboss-as:deploy
 
-The application is deployed to <http://localhost:8080/scalabox-usermapper-lift>.
+The application is deployed to <http://localhost:8080/scalabox-persistence-lift>.
 
 Using the application
 ---------------------
