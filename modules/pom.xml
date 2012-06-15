@@ -26,23 +26,23 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>org.scalabox</groupId>
-      <artifactId>scalabox</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>io.escalante</groupId>
+      <artifactId>escalante</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <groupId>org.scalabox</groupId>
-   <artifactId>scalabox-modules</artifactId>
-   <version>1.0-SNAPSHOT</version>
+   <groupId>io.escalante</groupId>
+   <artifactId>escalante-modules</artifactId>
+   <version>0.1.0-SNAPSHOT</version>
    <packaging>pom</packaging>
 
-   <name>ScalaBox Modules</name>
+   <name>Escalante Modules</name>
 
    <dependencies>
       <dependency>
          <groupId>${project.groupId}</groupId>
-         <artifactId>scalabox-build</artifactId>
+         <artifactId>escalante-build</artifactId>
          <type>pom</type>
       </dependency>
 

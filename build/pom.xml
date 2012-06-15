@@ -5,16 +5,16 @@
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
-      <groupId>org.scalabox</groupId>
-      <artifactId>scalabox</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>io.escalante</groupId>
+      <artifactId>escalante</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <artifactId>scalabox-build</artifactId>
-   <name>ScalaBox Build</name>
+   <artifactId>escalante-build</artifactId>
+   <name>Escalante Build</name>
    <packaging>pom</packaging>
-   <description>ScalaBox Build</description>
+   <description>Escalante Build</description>
 
    <dependencies>
       <dependency>

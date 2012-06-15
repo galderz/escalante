@@ -22,15 +22,15 @@ title="Getting Started Developing Applications Guide">Getting Started Developing
 Deploying the application
 -------------------------
 
-To deploy the application to ScalaBox using Maven, start the ScalaBox and type
+To deploy the application to Escalante using Maven, start the Escalante and type
 
     mvn package jboss-as:deploy
 
-The application is deployed to <http://localhost:8080/scalabox-persistence-lift>.
+The application is deployed to <http://localhost:8080/escalante-persistence-lift>.
 
 Using the application
 ---------------------
 
 # To use the application, click on 'Sign Up' and fill in the details.
-# Once signed up, change your password to 'scalabox'
+# Once signed up, change your password to 'escalante'
 # Now, click on 'Logout' and then click on 'Login' and enter username and new password

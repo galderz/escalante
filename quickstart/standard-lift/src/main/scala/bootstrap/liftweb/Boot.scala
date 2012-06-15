@@ -11,7 +11,7 @@ import net.liftweb.sitemap.{SiteMap, Loc, Menu}
 class Boot {
 
    def boot {
-      LiftRules.addToPackages("org.scalabox.quickstarts.lift.standard")
+      LiftRules.addToPackages("io.escalante.quickstarts.lift.standard")
 
       // Build SiteMap
       val entries = Menu(Loc("Home", List("index"), "Home")) :: Nil

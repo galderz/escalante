@@ -10,14 +10,14 @@
       <version>6-beta-1</version>
    </parent>
 
-   <groupId>org.scalabox</groupId>
-   <artifactId>scalabox</artifactId>
-   <version>1.0-SNAPSHOT</version>
+   <groupId>io.escalante</groupId>
+   <artifactId>escalante</artifactId>
+   <version>0.1.0-SNAPSHOT</version>
    <packaging>pom</packaging>
-   <name>ScalaBox</name>
+   <name>Escalante</name>
 
    <description>
-      The ScalaBox Parent POM
+      The Escalante Parent POM
    </description>
 
    <properties>
@@ -70,35 +70,41 @@
 
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scalabox-assembly</artifactId>
+            <artifactId>escalante-assembly</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scalabox-build</artifactId>
+            <artifactId>escalante-build</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scalabox-core</artifactId>
+            <artifactId>escalante-modules</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>escalante-core</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scalabox-core</artifactId>
+            <artifactId>escalante-core</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scalabox-lift</artifactId>
+            <artifactId>escalante-lift</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>scalabox-lift</artifactId>
+            <artifactId>escalante-lift</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
          </dependency>

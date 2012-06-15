@@ -5,8 +5,8 @@ Author: Galder Zamarreño
 What is it?
 -----------
 
-This example demonstrates that Scalabox can deploy the standard, original,
-helloworl example, where the war file contains all the jars required by the
+This example demonstrates that Escalante can deploy the standard, original,
+helloworld example, where the war file contains all the jars required by the
 Lift application, including the Scala libraries.
 
 System requirements
@@ -22,8 +22,8 @@ title="Getting Started Developing Applications Guide">Getting Started Developing
 Deploying the application
 -------------------------
 
-To deploy the application to ScalaBox using Maven, start the ScalaBox and type
+To deploy the application to Escalante using Maven, start the Escalante and type
 
     mvn package jboss-as:deploy
 
-The application is deployed to <http://localhost:8080/scalabox-standard-lift>.
+The application is deployed to <http://localhost:8080/escalante-standard-lift>.
