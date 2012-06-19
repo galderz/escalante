@@ -1,5 +1,5 @@
-standard-lift: Standard HelloWorld Lift Example
-=================================================
+standard-helloworld-lift: Standard HelloWorld Lift Example
+==========================================================
 Author: Galder Zamarreño
 
 What is it?
@@ -26,4 +26,4 @@ To deploy the application to Escalante using Maven, start the Escalante and type
 
     mvn package jboss-as:deploy
 
-The application is deployed to <http://localhost:8080/escalante-standard-lift>.
+The application is deployed to <http://localhost:8080/standard-helloworld-lift>.
