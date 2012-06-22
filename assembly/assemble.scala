@@ -84,7 +84,7 @@ if (!standaloneShOriginal.exists())
 
 val standaloneShContents = fileToString(standaloneSh, "UTF-8")
 val newStandaloneShContents = standaloneShContents.replace("$JBOSS_HOME/modules",
-      "$JBOSS_HOME/modules:$JBOSS_HOME/downloads")
+      "$JBOSS_HOME/modules:$JBOSS_HOME/thirdparty-modules")
 printToFile(standaloneSh) { p =>
    p.print(newStandaloneShContents)
 }

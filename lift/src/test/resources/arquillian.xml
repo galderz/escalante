@@ -6,7 +6,7 @@
 	<container qualifier="jboss" default="true">
 		<configuration>
          <property name="jbossHome">${surefire.basedir:.}/build/target/jboss-as</property>
-         <property name="modulePath">${java.io.tmpdir:.}/test-module:${surefire.basedir:.}/build/target/jboss-as/modules:${surefire.basedir:.}/build/target/jboss-as/downloads</property>
+         <property name="modulePath">${java.io.tmpdir:.}/test-module:${surefire.basedir:.}/build/target/jboss-as/modules:${surefire.basedir:.}/build/target/jboss-as/thirdparty-modules</property>
 			<property name="allowConnectingToRunningServer">true</property>
          <property name="adminOnly">true</property>
          <!--

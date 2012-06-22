@@ -38,9 +38,9 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       // Why use a separate directory for downloaded modules?
       // Reason 1: Keeps downloaded vs shipped in different locations
       // Reason 2: Makes it easy to wipe out downloaded modules when tests are started
-      val downloads = new File(home, "downloads")
+      val thirdPartyModulesFile = new File(home, "thirdparty-modules")
 
-      val repo = new JBossModulesRepository(downloads)
+      val repo = new JBossModulesRepository(thirdPartyModulesFile)
 
       liftMetaData match {
          case LiftMetaData(LIFT_24, scala) =>

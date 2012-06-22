@@ -30,7 +30,7 @@ object LiftTestSetup extends AssertionsForJUnit with Log {
       // Cleanup scala deployments module dir, if present
       deleteDirectoryIfPresent(
          new File(System.getProperty("surefire.basedir", ".")
-              + "/build/target/jboss-as/downloads"))
+              + "/build/target/jboss-as/thirdparty-modules"))
       // Set up Lift module
       val tmpFile = new File(System.getProperty("java.io.tmpdir"))
       val destDir = mkDirs(tmpFile, "test-module", true) // Delete if present!
