@@ -13,11 +13,13 @@ import org.jboss.as.controller.{ControlledProcessState, PathAddress}
 import org.scalatest.junit.AssertionsForJUnit
 import java.io.File
 import io.escalante.assembly.RuntimeAssembly
+import subsystem.ThirdPartyModulesRepo
 
 /**
- * // TODO: Document this
+ * Sets up a Lift test
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 abstract class LiftTestSetup {
    // To avoid being instantiated by the surefire...
@@ -25,7 +27,7 @@ abstract class LiftTestSetup {
 
 object LiftTestSetup extends AssertionsForJUnit with Log {
 
-   def buildExtension {
+   def buildExtension() {
       info("Build Lift extension and copy to container")
       // Cleanup scala deployments module dir, if present
       deleteDirectoryIfPresent(
@@ -33,27 +35,31 @@ object LiftTestSetup extends AssertionsForJUnit with Log {
               + "/build/target/jboss-as/thirdparty-modules"))
       // Set up Lift module
       val tmpFile = new File(System.getProperty("java.io.tmpdir"))
-      val destDir = mkDirs(tmpFile, "test-module", true) // Delete if present!
+      // Delete if present!
+      val destDir = mkDirs(tmpFile, "test-module", deleteIfPresent = true)
       info("Build Lift module into %s", destDir)
       RuntimeAssembly.build(destDir, LiftModule)
    }
 
-   def installExtension {
+   def installExtension() {
       // Add the extension and subsystem
       info("Add Lift extension to container")
       use(ModelControllerClient.Factory.create(
          InetAddress.getByName("localhost"), 9999)) {
          client =>
-            val opAddExt = new ModelNode()
-            opAddExt.get(OP).set(ADD)
-            opAddExt.get(OP_ADDR).add("extension", "io.escalante.lift")
+            val addExtOp = new ModelNode()
+            addExtOp.get(OP).set(ADD)
+            addExtOp.get(OP_ADDR).add("extension", "io.escalante.lift")
 
-            val opAddSubsystem = new ModelNode()
-            opAddSubsystem.get(OP).set(ADD)
-            opAddSubsystem.get(OP_ADDR).add("subsystem", "lift")
+            val addSubsystemOp = new ModelNode()
+            addSubsystemOp.get(OP).set(ADD)
+            addSubsystemOp.get(OP_ADDR).add("subsystem", "lift")
+            // TODO: Test without them...
+            addSubsystemOp.get(ThirdPartyModulesRepo.RELATIVE_TO).set("jboss.home.dir")
+            addSubsystemOp.get(ThirdPartyModulesRepo.PATH).set("thirdparty-modules")
 
-            validateResponse(client.execute(opAddExt))
-            validateResponse(client.execute(opAddSubsystem))
+            validateResponse(client.execute(addExtOp))
+            validateResponse(client.execute(addSubsystemOp))
 
             info("Lift extension and subsystem added, now reload the server")
 
@@ -61,7 +67,7 @@ object LiftTestSetup extends AssertionsForJUnit with Log {
             // unit processors (DUPs) are installed (only happens at boot)
             val opReload = new ModelNode()
             opReload.get(OP).set("reload")
-            opAddSubsystem.get(OP_ADDR).setEmptyList()
+            addSubsystemOp.get(OP_ADDR).setEmptyList()
             validateResponse(client.execute(opReload))
 
             // Sleep for a little bit to allow enough time for server to start
@@ -74,7 +80,7 @@ object LiftTestSetup extends AssertionsForJUnit with Log {
       }
    }
 
-   def uninstallExtension {
+   def uninstallExtension() {
       // Remove the extension and subsystem
       info("Uninstall Lift extension from container")
       use(ModelControllerClient.Factory.create(
@@ -101,7 +107,7 @@ object LiftTestSetup extends AssertionsForJUnit with Log {
             // If duplicate resource found, it could be due to test not
             // having finished properly, so clean up before propagating failure
             info("Duplicate extension found, carry on...")
-            uninstallExtension
+            uninstallExtension()
          }
          fail(r.toString)
          null
@@ -131,7 +137,8 @@ object LiftTestSetup extends AssertionsForJUnit with Log {
    }
 
    private def createReadServerStateOp: ModelNode = {
-      val op = Util.getEmptyOperation(READ_ATTRIBUTE_OPERATION, PathAddress.EMPTY_ADDRESS.toModelNode())
+      val op = Util.getEmptyOperation(READ_ATTRIBUTE_OPERATION,
+            PathAddress.EMPTY_ADDRESS.toModelNode)
       op.get(NAME).set("server-state")
       op
    }

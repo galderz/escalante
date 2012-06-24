@@ -1,4 +1,4 @@
-package io.escalante.lift
+package io.escalante.lift.subsystem
 
 import org.jboss.as.server.deployment.{Attachments, DeploymentPhaseContext, DeploymentUnit, DeploymentUnitProcessor}
 import io.escalante.util.Closeable._
@@ -12,9 +12,10 @@ import org.jboss.as.ee.structure.{SpecDescriptorPropertyReplacement, DeploymentT
 import org.jboss.as.server.deployment.module.ResourceRoot
 
 /**
- * // TODO: Document this
+ * Lift metadata descriptor processor
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 class LiftParsingProcessor extends DeploymentUnitProcessor {
 

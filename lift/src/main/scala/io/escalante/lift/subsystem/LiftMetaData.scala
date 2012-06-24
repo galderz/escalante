@@ -1,7 +1,8 @@
-package io.escalante.lift
+package io.escalante.lift.subsystem
 
 import org.jboss.as.server.deployment.AttachmentKey
 import io.escalante.Scala
+import io.escalante.lift.Lift
 
 /**
  * // TODO: Document this

@@ -4,9 +4,10 @@ import javax.xml.stream.{XMLStreamException, XMLStreamReader}
 import javax.xml.stream.XMLStreamConstants._
 
 /**
- * // TODO: Document this
+ * Java XML parser
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object JavaXmlParser {
 
@@ -17,7 +18,7 @@ object JavaXmlParser {
     */
    def unexpectedElement(reader: XMLStreamReader): XMLStreamException = {
       new XMLStreamException("Unexpected element '%s' encountered".format(
-         reader.getName), reader.getLocation);
+         reader.getName), reader.getLocation)
    }
 
    /**
@@ -30,7 +31,7 @@ object JavaXmlParser {
     */
    def requireNoContent(reader: XMLStreamReader) {
       if (reader.hasNext && reader.nextTag() != END_ELEMENT) {
-         throw unexpectedElement(reader);
+         throw unexpectedElement(reader)
       }
    }
 
@@ -47,8 +48,8 @@ object JavaXmlParser {
    def readStringAttributeElement(reader: XMLStreamReader, attributeName: String): String = {
       requireSingleAttribute(reader, attributeName)
       val value = reader.getAttributeValue(0)
-      requireNoContent(reader);
-      value;
+      requireNoContent(reader)
+      value
    }
 
    /**
@@ -118,5 +119,18 @@ object JavaXmlParser {
       !(reader.getAttributeNamespace(i) == null
               || ("" == reader.getAttributeNamespace(i)))
    }
+
+   /**
+    * Checks that the current element has no attributes, throwing an
+    * {@link javax.xml.stream.XMLStreamException} if one is found.
+    * @param reader the reader
+    * @throws javax.xml.stream.XMLStreamException if an error occurs
+    */
+   def requireNoAttributes(reader: XMLStreamReader) {
+      if (reader.getAttributeCount() > 0) {
+         throw unexpectedAttribute(reader, 0);
+      }
+   }
+
 
 }

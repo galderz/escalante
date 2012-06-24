@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ JBoss, Home of Professional Open Source.
+  ~ Copyright 2012, Red Hat, Inc., and individual contributors
+  ~ as indicated by the @author tags. See the copyright.txt file in the
+  ~ distribution for a full listing of individual contributors.
+  ~
+  ~ This is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation; either version 2.1 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This software is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this software; if not, write to the Free
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:escalante:lift:1.0"
+           xmlns="urn:escalante:lift:1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           version="1.0">
+
+   <!-- TODO: Fix schema!!! -->
+
+   <!-- The subsystem root element -->
+   <xs:element name="subsystem" type="escalanteLiftType" />
+
+   <xs:complexType name="escalanteLiftType">
+      <xs:annotation>
+         <xs:documentation>
+            The lift subsystem, used to configure escalante.lift
+         </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="1" name="thirdparty-modules-repo"
+                     type="thirdpartyModulesRepoType" />
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="thirdpartyModulesRepoType">
+      <xs:sequence>
+         <xs:choice maxOccurs="1">
+            <xs:element name="designated">
+               <xs:annotation>
+                  <xs:documentation>
+                     Downloaded modules will installed within Escalante's
+                     designated thirdparty modules directory.
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+            <xs:element name="app-server">
+               <xs:annotation>
+                  <xs:documentation>
+                     Downloaded modules will be installed within
+                     JBoss AS's modules directory.
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+            <xs:element name="custom-path">
+               <xs:annotation>
+                  <xs:documentation>
+                     Downloaded modules will be installed in this module path.
+                  </xs:documentation>
+               </xs:annotation>
+            </xs:element>
+         </xs:choice>
+      </xs:sequence>
+   </xs:complexType>
+
+
+
+</xs:schema>

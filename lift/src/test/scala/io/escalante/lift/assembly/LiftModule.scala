@@ -9,8 +9,8 @@ import org.jboss.as.controller.Extension
 import io.escalante.util.ScalaXmlParser._
 import io.escalante.maven.MavenArtifact
 import io.escalante.modules.JBossModulesRepository
-import io.escalante.lift.LiftExtension
 import io.escalante.assembly.EscalanteModule
+import io.escalante.lift.subsystem.LiftExtension
 
 /**
  * Defines how the Lift JBoss module is constructed, including the classes it

@@ -69,25 +69,28 @@ if (!stdCfgOriginal.exists())
 val withExtension = addXmlElement(
    "extensions", <extension module="io.escalante.lift"/>, stdCfgOriginal)
 val withSubsystem = addXmlElement(
-   "profile", <subsystem xmlns="urn:escalante:lift:1.0" />, withExtension)
+   "profile",
+      <subsystem xmlns="urn:escalante:lift:1.0">
+         <thirdparty-modules-repo relative-to="jboss.home.dir" path="modules" />
+      </subsystem>,
+   withExtension)
 
 saveXml(stdCfg, withSubsystem)
 println("Escalante Lift extension added to configuration file")
 
-// 4. Modify standalone.sh (and other scripts...) to add downloads module dir
-// TODO: Find a better way to do this. Scott asked already: https://community.jboss.org/message/620710
-val standaloneSh = new File("%s/bin/standalone.sh".format(escalanteTarget))
-val standaloneShOriginal = new File(
-      "%s.original".format(standaloneSh.getCanonicalPath))
-if (!standaloneShOriginal.exists())
-   copy(standaloneSh, standaloneShOriginal) // Backup original standalone config
-
-val standaloneShContents = fileToString(standaloneSh, "UTF-8")
-val newStandaloneShContents = standaloneShContents.replace("$JBOSS_HOME/modules",
-      "$JBOSS_HOME/modules:$JBOSS_HOME/thirdparty-modules")
-printToFile(standaloneSh) { p =>
-   p.print(newStandaloneShContents)
-}
+//// 4. Modify standalone.sh (and other scripts...) to add downloads module dir
+//val standaloneSh = new File("%s/bin/standalone.sh".format(escalanteTarget))
+//val standaloneShOriginal = new File(
+//      "%s.original".format(standaloneSh.getCanonicalPath))
+//if (!standaloneShOriginal.exists())
+//   copy(standaloneSh, standaloneShOriginal) // Backup original standalone config
+//
+//val standaloneShContents = fileToString(standaloneSh, "UTF-8")
+//val newStandaloneShContents = standaloneShContents.replace("$JBOSS_HOME/modules",
+//      "$JBOSS_HOME/modules:$JBOSS_HOME/thirdparty-modules")
+//printToFile(standaloneSh) { p =>
+//   p.print(newStandaloneShContents)
+//}
 
 
 

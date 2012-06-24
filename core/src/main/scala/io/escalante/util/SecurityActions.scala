@@ -9,12 +9,23 @@ import java.security.{PrivilegedAction, AccessController}
  */
 object SecurityActions {
 
+   // TODO: Create one per package...
+
    def getSystemProperty(key: String): String = {
       if (System.getSecurityManager() == null)
-         return System.getProperty(key);
+         return System.getProperty(key)
 
       return AccessController.doPrivileged(new PrivilegedAction[String]() {
          override def run(): String = System.getProperty(key)
+      });
+   }
+
+   def getSystemProperty(key: String, default: String): String = {
+      if (System.getSecurityManager() == null)
+         return System.getProperty(key, default)
+
+      return AccessController.doPrivileged(new PrivilegedAction[String]() {
+         override def run(): String = System.getProperty(key, default)
       });
    }
 

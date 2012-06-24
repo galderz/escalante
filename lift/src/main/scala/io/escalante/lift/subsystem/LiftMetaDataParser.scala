@@ -1,9 +1,10 @@
-package io.escalante.lift
+package io.escalante.lift.subsystem
 
 import javax.xml.stream.XMLStreamReader
 import javax.xml.stream.XMLStreamConstants._
 import io.escalante.util.JavaXmlParser._
 import io.escalante.ScalaVersion
+import io.escalante.lift.LiftVersion
 
 /**
  * // TODO: Document this
