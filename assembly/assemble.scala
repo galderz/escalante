@@ -78,6 +78,10 @@ val withSubsystem = addXmlElement(
 saveXml(stdCfg, withSubsystem)
 println("Escalante Lift extension added to configuration file")
 
+// 4. Copy xsd files
+copy("%s/../lift/target/classes/schema/escalante-lift_1_0.xsd".format(baseDir),
+     "%s/docs/schema/escalante-lift_1_0.xsd".format(escalanteTarget.getCanonicalPath))
+
 //// 4. Modify standalone.sh (and other scripts...) to add downloads module dir
 //val standaloneSh = new File("%s/bin/standalone.sh".format(escalanteTarget))
 //val standaloneShOriginal = new File(

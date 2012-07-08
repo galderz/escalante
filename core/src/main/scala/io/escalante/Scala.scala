@@ -17,28 +17,41 @@ sealed trait Scala {
       "org.scala-lang", "scala-library", version, isMain)
 }
 
-case object SCALA_291 extends Scala {
-   override def version = "2.9.1"
-   override def isMain = true
-   override def moduleXml =
-      <module name="org.scala-lang.scala-library"
-              xmlns="urn:jboss:module:1.0">
+abstract class SCALA_29x extends Scala {
+   override def moduleXml: Elem = {
+      val slot = if (isMain) "main" else version
+      <module name="org.scala-lang.scala-library" slot={slot}
+              xmlns="urn:jboss:module:1.1">
          <resources>
-            <resource-root path="scala-library-2.9.1.jar"/>
+            <resource-root path={"scala-library-" + version + ".jar"} />
          </resources>
          <dependencies>
-            <module name="javax.api"/>
+            <module name="javax.api" />
          </dependencies>
       </module>
+   }
 }
 
-case object SCALA_282 extends Scala {
-   override def version = "2.8.2"
-   override def moduleXml =
-      <module name="org.scala-lang.scala-library" slot="2.8.2"
-              xmlns="urn:jboss:module:1.0">
+case object SCALA_290 extends SCALA_29x {
+   override def version = "2.9.0"
+}
+
+case object SCALA_291 extends SCALA_29x {
+   override def version = "2.9.1"
+}
+
+case object SCALA_292 extends SCALA_29x {
+   override def version = "2.9.2"
+   override def isMain = true
+}
+
+abstract class SCALA_28x extends Scala {
+   override def moduleXml: Elem = {
+      val slot = if (isMain) "main" else version
+      <module name="org.scala-lang.scala-library" slot={slot}
+              xmlns="urn:jboss:module:1.1">
          <resources>
-            <resource-root path="scala-library-2.8.2.jar"/>
+            <resource-root path={"scala-library-" + version + ".jar"}/>
          </resources>
          <dependencies>
             <system export="true">
@@ -49,6 +62,19 @@ case object SCALA_282 extends Scala {
             </system>
          </dependencies>
       </module>
+   }
+}
+
+case object SCALA_280 extends SCALA_28x {
+   override def version = "2.8.0"
+}
+
+case object SCALA_281 extends SCALA_28x {
+   override def version = "2.8.1"
+}
+
+case object SCALA_282 extends SCALA_28x {
+   override def version = "2.8.2"
 }
 
 case class UnknownScalaVersion(version: String) extends Scala{
@@ -57,12 +83,15 @@ case class UnknownScalaVersion(version: String) extends Scala{
 
 object ScalaVersion {
 
-   def forName(version: Option[String]): Scala = {
+   def forName(version: String): Scala = {
       version match {
-         case Some("2.9.1") => SCALA_291
-         case Some("2.8.2") => SCALA_282
-         case Some(v) => new UnknownScalaVersion(v)
-         case None => SCALA_291
+         case "2.9.2" => SCALA_292
+         case "2.8.2" => SCALA_282
+         case "2.9.1" => SCALA_291
+         case "2.8.1" => SCALA_281
+         case "2.9.0" => SCALA_290
+         case "2.8.0" => SCALA_280
+         case v => new UnknownScalaVersion(v)
       }
    }
 

@@ -2,7 +2,7 @@ package io.escalante.assembly
 
 import java.io.File
 import io.escalante.logging.Log
-import io.escalante.SCALA_291
+import io.escalante.SCALA_292
 import io.escalante.modules.JBossModulesRepository
 
 /**
@@ -21,7 +21,7 @@ object RuntimeAssembly extends Log {
       // TODO: Pass this in the module build
       val repo = new JBossModulesRepository(destDir)
 
-      repo.installScalaModule(SCALA_291)
+      repo.installScalaModule(SCALA_292)
    }
 
 }

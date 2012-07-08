@@ -3,7 +3,6 @@ package io.escalante.util
 import java.io.File
 import scala.xml.transform.{RuleTransformer, RewriteRule}
 import scala.xml._
-import annotation.tailrec
 import scala.Predef._
 
 /**
@@ -22,21 +21,8 @@ object ScalaXmlParser {
    def addXmlElements(parentElem: String, elements: Seq[Node], xml: Node): Node =
       addXmlRules(xml, elements.map(new AddChildrenTo(parentElem, _)): _*)
 
-   def addXmlAttribute(elem: Elem, name: String, value: String): Elem =
-      elem % Attribute(None, name, Text(value), Null)
-
-   @tailrec
-   def addXmlAttributes(elem: Elem, attributes: (String, String)*): Elem = {
-      if (attributes == Nil) elem
-      else {
-         val attr = attributes.head
-         addXmlAttributes(addXmlAttribute(elem, attr._1, attr._2),
-            attributes.tail : _*)
-      }
-   }
-
    def saveXml(fileName: String, xmlNode: Node): Any =
-      XML.save(fileName, xmlNode, "UTF-8", true, null)
+      XML.save(fileName, xmlNode, "UTF-8", xmlDecl = true, doctype = null)
 
    def saveXml(file: File, xmlNode: Node): Any =
       saveXml(file.getCanonicalPath, xmlNode)

@@ -5,12 +5,11 @@ import io.escalante.logging.Log
 import java.io.File
 import org.jboss.vfs.{VFS, VirtualFile}
 import org.jboss.as.server.deployment.module._
-import io.escalante.{SCALA_282, SCALA_291}
+import io.escalante.SCALA_292
 import io.escalante.modules.{JBossModule, JBossModulesRepository}
 import io.escalante.maven.{MavenDependencyResolver, MavenArtifact}
 import org.jboss.msc.service.ServiceRegistry
 import io.escalante.lift.LIFT_24
-import io.escalante.lift.maven.{Lift24Scala28DependencyFilter, Lift24Scala29DependencyFilter}
 
 /**
  * A deployment processor that hooks the right dependencies for the Lift
@@ -26,7 +25,7 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
    def deploy(ctx: DeploymentPhaseContext) {
       val deployment = ctx.getDeploymentUnit
       info("Try to deploy: %s", deployment)
-      val liftMetaData = deployment.getAttachment(LiftMetaData.ATTACHMENT_KEY)
+      val liftMetaData = deployment.getAttachment[LiftMetaData](LiftMetaData.ATTACHMENT_KEY)
       info("Metadata is: %s", liftMetaData)
       if (liftMetaData == null)
          return
@@ -36,6 +35,7 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       val service = getLiftService(ctx.getServiceRegistry)
       val repo = new JBossModulesRepository(new File(service.thirdPartyModulesPath))
 
+      // Attach shared dependencies depending of the lift version
       liftMetaData match {
          case LiftMetaData(LIFT_24, scala) =>
             moduleSpec.addSystemDependency(JODA_TIME_MODULE_ID.moduleDependency)
@@ -50,16 +50,15 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
             info("Unknown Lift deployment")
       }
 
-      val liftDependencyFilter = liftMetaData match {
-         case LiftMetaData(lift, SCALA_291) =>
+      // Attach Scala dependencies according to the Scala version passed
+      liftMetaData match {
+         case LiftMetaData(lift, SCALA_292) =>
             moduleSpec.addSystemDependency(SCALA_MODULE_ID.moduleDependency)
-            Lift24Scala29DependencyFilter
-         case LiftMetaData(lift, SCALA_282) =>
-            val module = repo.installScalaModule(SCALA_282)
+         case LiftMetaData(lift, scala) =>
+            val module = repo.installScalaModule(scala)
             moduleSpec.addSystemDependency(module.moduleDependency)
-            Lift24Scala28DependencyFilter
          case _ => // TODO: Throw exception
-            info("Unknown Lift deployment")
+            info("Unknown lift metadata")
             null
       }
 
@@ -68,8 +67,7 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
       liftMetaData match {
          case LiftMetaData(lift, scala) =>
             val liftJars = MavenDependencyResolver.resolveArtifact(
-               new MavenArtifact("net.liftweb", "lift-mapper_" + scala.version,
-                  lift.version), liftDependencyFilter)
+               liftMetaData.mavenArtifact, liftMetaData.liftDependencyFilter)
             addLiftJars(deployment, liftJars)
          case _ => info("Unknown Lift deployment")
       }

@@ -84,10 +84,10 @@ class ConsoleTransferLog(out: PrintStream) extends AbstractTransferListener {
 
    private def transferCompleted(event: TransferEvent) {
       downloads.remove(event.getResource)
-      val buffer = new java.lang.StringBuilder(64)
-      pad(buffer, lastLength)
-      buffer.append('\r')
-      out.print(buffer)
+//      val buffer = new java.lang.StringBuilder(64)
+//      pad(buffer, lastLength)
+//      buffer.append('\r')
+//      out.print(buffer)
    }
 
    // converts into status message

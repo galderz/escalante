@@ -6,22 +6,24 @@ import org.junit.runner.RunWith
 import org.jboss.arquillian.junit.Arquillian
 
 /**
- * // TODO: Document this
+ * // TODO: Merge into HelloWorldTest using:
+ * https://docs.jboss.org/author/display/ARQ/Multiple+Deployments
+ *
  * @author Galder Zamarreño
  * @since // TODO
  */
 @RunWith(classOf[Arquillian])
-class HelloWorldScala29Test extends HelloWorldTest {
+class HelloWorldScala291Test extends HelloWorldTest {
 
    // Tests in parent class
 
 }
 
-object HelloWorldScala29Test {
+object HelloWorldScala291Test {
 
    @Deployment def deployment: WebArchive =
       HelloWorldTest.deployment(
-         Some("2.4"), None, classOf[HelloWorldBoot])
+         Some("2.4"), Some("2.9.1"), classOf[HelloWorldBoot])
 
 }
 

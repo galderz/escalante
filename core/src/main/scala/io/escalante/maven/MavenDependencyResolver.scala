@@ -31,7 +31,7 @@ object MavenDependencyResolver {
 
    private val SETTINGS = new MavenSettings
 
-   private val SYSTEM_OUT = new PrintStream(new BufferedOutputStream(
+   private lazy val SYSTEM_OUT = new PrintStream(new BufferedOutputStream(
          new FileOutputStream(FileDescriptor.out), 128), true)
 
    /**

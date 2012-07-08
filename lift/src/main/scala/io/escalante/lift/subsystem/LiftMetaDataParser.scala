@@ -7,9 +7,10 @@ import io.escalante.ScalaVersion
 import io.escalante.lift.LiftVersion
 
 /**
- * // TODO: Document this
+ * Lift application metadata parser
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object LiftMetaDataParser {
 
@@ -24,8 +25,10 @@ object LiftMetaDataParser {
       val version = LiftVersion.forName(
          readOptionalStringAttributeElement(reader, "version"))
 
+      // Default Scala version based on last Lift release
       val scalaVersion = ScalaVersion.forName(
-         readOptionalStringAttributeElement(reader, "scala-version"))
+         readOptionalStringAttributeElement(reader, "scala-version")
+                 .getOrElse("2.9.2"))
 
       new LiftMetaData(version, scalaVersion)
    }

@@ -28,8 +28,6 @@
            attributeFormDefault="unqualified"
            version="1.0">
 
-   <!-- TODO: Fix schema!!! -->
-
    <!-- The subsystem root element -->
    <xs:element name="subsystem" type="escalanteLiftType" />
 
@@ -46,35 +44,28 @@
    </xs:complexType>
 
    <xs:complexType name="thirdpartyModulesRepoType">
-      <xs:sequence>
-         <xs:choice maxOccurs="1">
-            <xs:element name="designated">
-               <xs:annotation>
-                  <xs:documentation>
-                     Downloaded modules will installed within Escalante's
-                     designated thirdparty modules directory.
-                  </xs:documentation>
-               </xs:annotation>
-            </xs:element>
-            <xs:element name="app-server">
-               <xs:annotation>
-                  <xs:documentation>
-                     Downloaded modules will be installed within
-                     JBoss AS's modules directory.
-                  </xs:documentation>
-               </xs:annotation>
-            </xs:element>
-            <xs:element name="custom-path">
-               <xs:annotation>
-                  <xs:documentation>
-                     Downloaded modules will be installed in this module path.
-                  </xs:documentation>
-               </xs:annotation>
-            </xs:element>
-         </xs:choice>
-      </xs:sequence>
+      <xs:annotation>
+         <xs:documentation>
+            Configuration of third party modules repository.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="relative-to" type="xs:string" default="jboss.home.dir">
+         <xs:annotation>
+            <xs:documentation>
+               The name of another previously named path, or of one of the
+               standard paths provided by the system. If 'relative-to' is
+               provided, the value of the 'path' attribute is treated as
+               relative to the path specified by this attribute.
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="path" type="xs:string" default="thirdparty-modules">
+         <xs:annotation>
+            <xs:documentation>
+               The path of the third party modules repository.
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
-
-
 
 </xs:schema>

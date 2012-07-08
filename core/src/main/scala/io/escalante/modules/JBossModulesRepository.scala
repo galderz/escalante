@@ -83,14 +83,14 @@ class JBossModulesRepository(root: File) {
 
          val moduleXml = moduleDescriptor.getOrElse {
             val templateModuleXml =
-               addXmlAttributes(
-                  <module xmlns="urn:jboss:module:1.0">
-                        <resources/>
-                        <dependencies/>
-                  </module>, ("name", module.name), ("slot", module.slot))
+               <module xmlns="urn:jboss:module:1.1" name={module.name}
+                       slot={module.slot}>
+                  <resources/>
+                  <dependencies/>
+               </module>
 
             val resourceRoots = jarFiles.map {
-               jar => addXmlAttribute(<resource-root/>, "path", jar.getName)
+               jar => <resource-root path={jar.getName} />
             }
 
             val moduleXmlWithResources =
@@ -98,12 +98,9 @@ class JBossModulesRepository(root: File) {
 
             deps match {
                case d => {
-                  val children = d.map {
-                     dep =>
-                        addXmlAttributes(<module/>,
-                           ("name", dep.name), ("export", dep.export.toString),
-                           ("slot", dep.slot.toString),
-                           ("services", dep.service.name))
+                  val children = d.map { dep =>
+                     <module name={dep.name} export={dep.export.toString}
+                             slot={dep.slot.toString} services={dep.service.name}/>
                   }
                   addXmlElements("dependencies", children, moduleXmlWithResources)
                }

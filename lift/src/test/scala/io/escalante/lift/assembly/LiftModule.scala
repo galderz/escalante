@@ -67,8 +67,9 @@ object LiftModule extends EscalanteModule {
       copy(jarInput, new FileOutputStream(new File(moduleDir, jarName)))
    }
 
+   // TODO: Revise the need to import plexus stuff now that we don't use IOC
    private def moduleXml = {
-      <module xmlns="urn:jboss:module:1.0" name="io.escalante.lift">
+      <module xmlns="urn:jboss:module:1.1" name="io.escalante.lift">
          <resources>
             <resource-root path="escalante-lift.jar"/>
          </resources>
