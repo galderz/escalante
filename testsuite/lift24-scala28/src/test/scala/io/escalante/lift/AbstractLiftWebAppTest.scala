@@ -17,20 +17,19 @@ import org.jboss.shrinkwrap.api.asset.{ClassLoaderAsset, StringAsset, Asset}
  */
 abstract class AbstractLiftWebAppTest extends Log {
 
-   val appName: String
-
    val indexHtml: Elem
 
    val templates: Seq[String]
 
    val static: Option[Elem]
 
-   def deployment(lift: Option[String], scala: Option[String],
+   def deployment(appName: String, deployName: String,
+           lift: Option[String], scala: Option[String],
            bootClass: Class[_ <: AnyRef], bootLoader: String,
            classes: Class[_]*): WebArchive = {
-      val deploymentName = appName + ".war"
-      val war = ShrinkWrap.create(classOf[WebArchive], deploymentName)
-      info("Create war deployment: %s", deploymentName)
+      // Create deployment name
+      val war = ShrinkWrap.create(classOf[WebArchive], deployName)
+      info("Create war deployment: %s", deployName)
 
       val indexHtmlContent = xml(indexHtml)
       val liftXmlContent = xml(liftXml(lift, scala))

@@ -21,7 +21,6 @@ import collection.JavaConversions._
 @RunWith(classOf[Arquillian])
 class UserMapperTest {
 
-   val appUrl = "http://localhost:8080/usermapper"
    val driver = new HtmlUnitDriver()
 
    @Test def testStaticContent() {
@@ -62,6 +61,8 @@ class UserMapperTest {
       findLogout()
    }
 
+   protected def appUrl: String = "http://localhost:8080/usermapper-282"
+
    private def findLogout() {
       val source = driver.getPageSource
       assert(source.contains("Logout"), "Instead, page source contains: " + source)
@@ -76,11 +77,9 @@ object UserMapperTest extends AbstractLiftWebAppTest {
 
    def deployment(lift: Option[String], scala: Option[String],
            bootClass: Class[_ <: AnyRef]): WebArchive =
-      deployment(lift, scala, bootClass,
-         "io.escalante.lift.usermapper.UserMapperBoot",
+      deployment("usermapper", "usermapper-%s.war".format(scala.get.replace(".", "")),
+         lift, scala, bootClass, "io.escalante.lift.usermapper.UserMapperBoot",
          classOf[User], classOf[UserMapperTest])
-
-   override val appName: String = "usermapper"
 
    override val indexHtml: Elem =
       <html>
