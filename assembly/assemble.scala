@@ -6,6 +6,7 @@ import io.escalante.assembly.RuntimeAssembly
 import io.escalante.lift.assembly.LiftModule
 import io.escalante.util.FileSystem._
 import io.escalante.util.ScalaXmlParser._
+import io.escalante.util.JBossEnvironment._
 
 val baseDir = project.getBasedir.getCanonicalPath
 val jbossVersion = project("version.jboss.as")
@@ -57,17 +58,14 @@ if (escalanteDirs.length > 0) {
 }
 
 // 2. Build Escalante, reusing the code used to unit test Escalante (how cool!!!)
-RuntimeAssembly.build(new File("%s/modules".format(escalanteTarget)), LiftModule)
+RuntimeAssembly.build(new File("%s/modules".format(escalanteTarget)),
+      escalanteTarget, LiftModule)
 
 // 3. Add extension(s) and subsystem(s) to configuration file
-val stdCfg = new File(
-   "%s/standalone/configuration/standalone.xml".format(escalanteTarget))
-val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
-if (!stdCfgOriginal.exists())
-   copy(stdCfg, stdCfgOriginal) // Backup original standalone config
+val (xml, xmlBackup) = backupStandaloneXml(escalanteTarget)
 
 val withExtension = addXmlElement(
-   "extensions", <extension module="io.escalante.lift"/>, stdCfgOriginal)
+   "extensions", <extension module="io.escalante.lift"/>, xmlBackup)
 val withSubsystem = addXmlElement(
    "profile",
       <subsystem xmlns="urn:escalante:lift:1.0">
@@ -75,26 +73,13 @@ val withSubsystem = addXmlElement(
       </subsystem>,
    withExtension)
 
-saveXml(stdCfg, withSubsystem)
+saveXml(xml, withSubsystem)
 println("Escalante Lift extension added to configuration file")
 
 // 4. Copy xsd files
 copy("%s/../lift/target/classes/schema/escalante-lift_1_0.xsd".format(baseDir),
      "%s/docs/schema/escalante-lift_1_0.xsd".format(escalanteTarget.getCanonicalPath))
 
-//// 4. Modify standalone.sh (and other scripts...) to add downloads module dir
-//val standaloneSh = new File("%s/bin/standalone.sh".format(escalanteTarget))
-//val standaloneShOriginal = new File(
-//      "%s.original".format(standaloneSh.getCanonicalPath))
-//if (!standaloneShOriginal.exists())
-//   copy(standaloneSh, standaloneShOriginal) // Backup original standalone config
-//
-//val standaloneShContents = fileToString(standaloneSh, "UTF-8")
-//val newStandaloneShContents = standaloneShContents.replace("$JBOSS_HOME/modules",
-//      "$JBOSS_HOME/modules:$JBOSS_HOME/thirdparty-modules")
-//printToFile(standaloneSh) { p =>
-//   p.print(newStandaloneShContents)
-//}
 
 
 

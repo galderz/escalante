@@ -2,18 +2,14 @@ package io.escalante.lift
 
 import assembly.LiftModule
 import io.escalante.util.FileSystem._
-import io.escalante.util.Closeable._
-import org.jboss.as.controller.client.ModelControllerClient
-import java.net.InetAddress
+import io.escalante.util.JBossEnvironment._
 import org.jboss.dmr.ModelNode
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
 import io.escalante.logging.Log
-import org.jboss.as.controller.operations.common.Util
-import org.jboss.as.controller.{ControlledProcessState, PathAddress}
 import org.scalatest.junit.AssertionsForJUnit
-import java.io.File
+import java.io.{FileOutputStream, File}
 import io.escalante.assembly.RuntimeAssembly
-import subsystem.ThirdPartyModulesRepo
+import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset
 
 /**
  * Sets up a Lift test
@@ -22,81 +18,44 @@ import subsystem.ThirdPartyModulesRepo
  * @since 1.0
  */
 abstract class LiftTestSetup {
+
    // To avoid being instantiated by the surefire...
+
 }
 
 object LiftTestSetup extends AssertionsForJUnit with Log {
 
-   def buildExtension() {
+   private def jbossHome = new File(
+      System.getProperty("surefire.basedir", ".") + "/build/target/jboss-as")
+
+   def installExtension() {
       info("Build Lift extension and copy to container")
-      // Cleanup scala deployments module dir, if present
-      deleteDirectoryIfPresent(
-         new File(System.getProperty("surefire.basedir", ".")
-              + "/build/target/jboss-as/thirdparty-modules"))
+      val home = jbossHome
+
+      // Cleanup thirdparty deployments module dir, if present
+      deleteDirectoryIfPresent(new File(home, "thirdparty-modules"))
+
       // Set up Lift module
       val tmpFile = new File(System.getProperty("java.io.tmpdir"))
       // Delete if present!
-      val destDir = mkDirs(tmpFile, "test-module", deleteIfPresent = true)
-      info("Build Lift module into %s", destDir)
-      RuntimeAssembly.build(destDir, LiftModule)
-   }
+      val modulesInstallDir = mkDirs(tmpFile, "test-module", deleteIfPresent = true)
+      info("Build Lift module into %s", modulesInstallDir)
 
-   def installExtension() {
-      // Add the extension and subsystem
-      info("Add Lift extension to container")
-      use(ModelControllerClient.Factory.create(
-         InetAddress.getByName("localhost"), 9999)) {
-         client =>
-            val addExtOp = new ModelNode()
-            addExtOp.get(OP).set(ADD)
-            addExtOp.get(OP_ADDR).add("extension", "io.escalante.lift")
+      // Run assembly build
+      RuntimeAssembly.build(modulesInstallDir, home, LiftModule)
 
-            val addSubsystemOp = new ModelNode()
-            addSubsystemOp.get(OP).set(ADD)
-            addSubsystemOp.get(OP_ADDR).add("subsystem", "lift")
-            // TODO: Test without them...
-            addSubsystemOp.get(ThirdPartyModulesRepo.RELATIVE_TO).set("jboss.home.dir")
-            addSubsystemOp.get(ThirdPartyModulesRepo.PATH).set("thirdparty-modules")
+      // Backup standalone configuration
+      backupStandaloneXml(home)
 
-            validateResponse(client.execute(addExtOp))
-            validateResponse(client.execute(addSubsystemOp))
-
-            info("Lift extension and subsystem added, now reload the server")
-
-            // Reload the app server so that it's rebooted and deployment
-            // unit processors (DUPs) are installed (only happens at boot)
-            val opReload = new ModelNode()
-            opReload.get(OP).set("reload")
-            addSubsystemOp.get(OP_ADDR).setEmptyList()
-            validateResponse(client.execute(opReload))
-
-            // Sleep for a little bit to allow enough time for server to start
-            // TODO: Once https://issues.jboss.org/browse/AS7-4185 is fixed, remove this
-            Thread.sleep(3000)
-
-            // Now that the reload has been requested, do a dummy operation to
-            // wait for the server to be up and running
-            waitServerToStart(client)
-      }
+      // Copy test standalone xml to server
+      copy(new ClassLoaderAsset("standalone.xml").openStream(),
+            new FileOutputStream(standaloneXml(home)))
    }
 
    def uninstallExtension() {
-      // Remove the extension and subsystem
-      info("Uninstall Lift extension from container")
-      use(ModelControllerClient.Factory.create(
-         InetAddress.getByName("localhost"), 9999)) {
-         client =>
-            val opRemoveExt = new ModelNode()
-            opRemoveExt.get(OP).set("remove")
-            opRemoveExt.get(OP_ADDR).add("extension", "io.escalante.lift")
-
-            val opRemoveSubsystem = new ModelNode()
-            opRemoveSubsystem.get(OP).set("remove")
-            opRemoveSubsystem.get(OP_ADDR).add("subsystem", "lift")
-
-            validateResponse(client.execute(opRemoveSubsystem))
-            validateResponse(client.execute(opRemoveExt))
-      }
+      val stdCfg = standaloneXml(jbossHome)
+      val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
+      copy(stdCfgOriginal, stdCfg) // Restore original standalone config
    }
 
    def validateResponse(r: ModelNode): ModelNode = {
@@ -115,32 +74,6 @@ object LiftTestSetup extends AssertionsForJUnit with Log {
          assert(SUCCESS === outcome)
          r.get(RESULT)
       }
-   }
-
-   private def waitServerToStart(client: ModelControllerClient) {
-      info("Wait for server reload...")
-      waitServerToStart(createReadServerStateOp, client)
-      info("Wait over, server reloaded")
-   }
-
-   private def waitServerToStart(op: ModelNode, client: ModelControllerClient) {
-      val rsp = client.execute(op)
-      validateResponse(rsp)
-      if (!isServerRunning(rsp)) {
-         Thread.sleep(50)
-         waitServerToStart(createReadServerStateOp, client)
-      }
-   }
-
-   private def isServerRunning(rsp: ModelNode): Boolean = {
-      ControlledProcessState.State.RUNNING.toString == rsp.get(RESULT).asString()
-   }
-
-   private def createReadServerStateOp: ModelNode = {
-      val op = Util.getEmptyOperation(READ_ATTRIBUTE_OPERATION,
-            PathAddress.EMPTY_ADDRESS.toModelNode)
-      op.get(NAME).set("server-state")
-      op
    }
 
 }

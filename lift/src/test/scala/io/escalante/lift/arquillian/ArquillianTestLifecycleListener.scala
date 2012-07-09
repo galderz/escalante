@@ -14,12 +14,9 @@ import org.jboss.arquillian.container.spi.event.container._
 class ArquillianTestLifecycleListener {
 
    def executeBeforeStart(@Observes event: BeforeStart) =
-      LiftTestSetup.buildExtension
-
-   def executeAfterStart(@Observes event: AfterStart) =
       LiftTestSetup.installExtension
 
-   def executeBeforeStop(@Observes event: BeforeStop) =
+   def executeAfterStop(@Observes event: AfterStop) =
       LiftTestSetup.uninstallExtension
 
 }
