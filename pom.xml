@@ -31,9 +31,8 @@
       <version.jboss.logging>3.1.0.GA</version.jboss.logging>
       <version.junit>4.8.2</version.junit>
       <version.scala.tools>3.0.2</version.scala.tools>
-      <version.arquillian>1.0.0.Final</version.arquillian>
-      <version.shrinkwrap>1.0.0-cr-1</version.shrinkwrap>
-      <version.shrinkwrap.resolver>1.1.0-alpha-1</version.shrinkwrap.resolver>
+      <version.arquillian>1.0.1.Final</version.arquillian>
+      <version.shrinkwrap.resolver>1.1.0-alpha-3</version.shrinkwrap.resolver>
       <version.lift>2.4</version.lift>
       <version.apache.maven>3.0.4</version.apache.maven>
       <version.apache.wagon>1.0</version.apache.wagon>
@@ -201,6 +200,16 @@
          </dependency>
          <dependency>
             <groupId>org.sonatype.aether</groupId>
+            <artifactId>aether-api</artifactId>
+            <version>${version.sonatype.aether}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.sonatype.aether</groupId>
+            <artifactId>aether-util</artifactId>
+            <version>${version.sonatype.aether}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.sonatype.aether</groupId>
             <artifactId>aether-connector-wagon</artifactId>
             <version>${version.sonatype.aether}</version>
          </dependency>
@@ -239,16 +248,6 @@
          </dependency>
 
          <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-container-test-api</artifactId>
-            <version>${version.arquillian}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <version>${version.arquillian}</version>
-         </dependency>
-         <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-arquillian-container-managed</artifactId>
             <version>${version.jboss.as}</version>
@@ -263,16 +262,13 @@
                </exclusion>
             </exclusions>
          </dependency>
-         <dependency>
-            <groupId>org.jboss.shrinkwrap</groupId>
-            <artifactId>shrinkwrap-impl-base</artifactId>
-            <version>${version.shrinkwrap}</version>
-         </dependency>
+
          <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-api</artifactId>
             <version>${version.shrinkwrap.resolver}</version>
          </dependency>
+
          <dependency>
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-api-maven</artifactId>
@@ -288,29 +284,6 @@
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
             <version>${version.shrinkwrap.resolver}</version>
-            <!-- TODO: Revisit exclusions or find a newer library version -->
-            <!--<exclusions>-->
-               <!--<exclusion>-->
-                  <!--<groupId>org.sonatype.aether</groupId>-->
-                  <!--<artifactId>aether-api</artifactId>-->
-               <!--</exclusion>-->
-               <!--<exclusion>-->
-                  <!--<groupId>org.sonatype.aether</groupId>-->
-                  <!--<artifactId>aether-impl</artifactId>-->
-               <!--</exclusion>-->
-               <!--<exclusion>-->
-                  <!--<groupId>org.sonatype.aether</groupId>-->
-                  <!--<artifactId>aether-spi</artifactId>-->
-               <!--</exclusion>-->
-               <!--<exclusion>-->
-                  <!--<groupId>org.sonatype.aether</groupId>-->
-                  <!--<artifactId>aether-util</artifactId>-->
-               <!--</exclusion>-->
-               <!--<exclusion>-->
-                  <!--<groupId>org.sonatype.aether</groupId>-->
-                  <!--<artifactId>aether-connector-wagon</artifactId>-->
-               <!--</exclusion>-->
-            <!--</exclusions>-->
          </dependency>
 
          <dependency>
