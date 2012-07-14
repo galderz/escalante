@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!--
+  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Eclipse Public License version 1.0, available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  -->
 <arquillian xmlns="http://jboss.org/schema/arquillian" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jboss.org/schema/arquillian http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 

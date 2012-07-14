@@ -1,3 +1,9 @@
+/*
+ * Copyright 2012 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Eclipse Public License version 1.0, available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 package io.escalante.lift.usermapper.model
 
 import net.liftweb.common.Full
@@ -5,6 +11,11 @@ import net.liftweb.mapper.{MappedTextarea, MegaProtoUser, MetaMegaProtoUser}
 
 /**
  * The singleton that has methods for accessing the database
+ *
+ * @author Galder Zamarreño
+ * @since 1.0
+ * @see This code is based on sample code provided in the
+ *      <a href="https://github.com/lift/lift_24_sbt">Lift project templates</a>
  */
 object User extends User with MetaMegaProtoUser[User] {
 
@@ -25,6 +36,11 @@ object User extends User with MetaMegaProtoUser[User] {
 
 /**
  * An O-R mapped "User" class that includes first name, last name, password/
+ *
+ * @author Galder Zamarreño
+ * @since 1.0
+ * @see This code is based on sample code provided in the
+ *      <a href="https://github.com/lift/lift_24_sbt">Lift project templates</a>
  */
 class User extends MegaProtoUser[User] {
    def getSingleton = User

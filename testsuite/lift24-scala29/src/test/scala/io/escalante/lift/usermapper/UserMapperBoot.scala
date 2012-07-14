@@ -1,3 +1,9 @@
+/*
+ * Copyright 2012 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Eclipse Public License version 1.0, available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 package io.escalante.lift.usermapper
 
 import model.User
@@ -9,9 +15,12 @@ import net.liftweb.mapper.{DB, Schemifier}
 import net.liftweb.http.{Bootable, S, LiftRules}
 
 /**
- * // TODO: Document this
+ * Boot class.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
+ * @see This code is based on sample code provided in the
+ *      <a href="https://github.com/lift/lift_24_sbt">Lift project templates</a>
  */
 class UserMapperBoot extends Bootable {
 

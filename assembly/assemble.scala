@@ -1,5 +1,9 @@
-// Assemble Escalante
-
+/*
+ * Copyright 2012 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Eclipse Public License version 1.0, available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 import java.io._
 import java.lang.String
 import io.escalante.assembly.RuntimeAssembly
@@ -8,6 +12,7 @@ import io.escalante.util.FileSystem._
 import io.escalante.util.ScalaXmlParser._
 import io.escalante.util.JBossEnvironment._
 
+// Assemble Escalante
 val baseDir = project.getBasedir.getCanonicalPath
 val jbossVersion = project("version.jboss.as")
 val scalaVersion = project("version.scala")

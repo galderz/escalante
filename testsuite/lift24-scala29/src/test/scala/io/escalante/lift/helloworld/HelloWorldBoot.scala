@@ -1,12 +1,21 @@
+/*
+ * Copyright 2012 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Eclipse Public License version 1.0, available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */
 package io.escalante.lift.helloworld
 
 import net.liftweb.http.{LiftRules, Bootable}
 import net.liftweb.sitemap.{SiteMap, Loc, Menu}
 
 /**
- * // TODO: Document this
+ * Boot class.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
+ * @see This code is based on sample code provided in the
+ *      <a href="https://github.com/lift/lift_24_sbt">Lift project templates</a>
  */
 class HelloWorldBoot extends Bootable {
 
