@@ -1,0 +1,3 @@
+
+Escalante itself is licensed under the EPL.
+- Please see epl-v10.html.
