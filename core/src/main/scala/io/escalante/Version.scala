@@ -7,15 +7,17 @@
 package io.escalante
 
 /**
- * // TODO: Document this
+ * Escalante version.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object Version {
 
-   val MAJOR = 1
-   val MINOR = 0
+   val MAJOR = 0
+   val MINOR = 1
    val MICRO = 0
    val MODIFIER = "SNAPSHOT";
+   val SNAPSHOT = true;
 
 }

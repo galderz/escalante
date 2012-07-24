@@ -17,8 +17,8 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
 
-   <artifactId>escalante-assembly</artifactId>
-   <name>Escalante Assembly</name>
+   <artifactId>escalante-dist</artifactId>
+   <name>Escalante Distribution Assembly</name>
    <packaging>pom</packaging>
    <description/>
 
@@ -123,5 +123,38 @@
          </plugin>
       </plugins>
    </build>
+
+   <profiles>
+      <profile>
+         <id>release</id>
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-assembly-plugin</artifactId>
+                  <executions>
+                     <execution>
+                        <id>assemble</id>
+                        <phase>package</phase>
+                        <goals>
+                           <goal>single</goal>
+                        </goals>
+                        <configuration>
+                           <descriptors>
+                              <descriptor>assembly.xml</descriptor>
+                           </descriptors>
+                           <finalName>escalante-${project.version}</finalName>
+                           <appendAssemblyId>false</appendAssemblyId>
+                           <outputDirectory>target/release</outputDirectory>
+                           <workDirectory>target</workDirectory>
+                           <tarLongFileMode>gnu</tarLongFileMode>
+                        </configuration>
+                     </execution>
+                  </executions>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+   </profiles>
 
 </project>

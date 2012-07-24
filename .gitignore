@@ -12,3 +12,5 @@
 target
 # log files
 *.log
+# python tmp files
+*.pyc

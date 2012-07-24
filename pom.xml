@@ -26,6 +26,73 @@
       The Escalante Parent POM
    </description>
 
+   <url>http://escalante.io</url>
+   <organization>
+      <name>JBoss, a division of Red Hat</name>
+      <url>http://www.jboss.org</url>
+   </organization>
+   <licenses>
+      <license>
+         <name>Eclipse Public License</name>
+         <url>http://www.eclipse.org/legal/epl-v10.html</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+   <scm>
+      <connection>scm:git:git://github.com/escalante/escalante.git</connection>
+      <developerConnection>scm:git:ssh://git@github.com/escalante/escalante.git</developerConnection>
+      <url>http://github.com/escalante/escalante</url>
+   </scm>
+   <developers>
+      <developer>
+         <id>escalante-team</id>
+         <name>The Escalante Team</name>
+         <email>escalante-dev@escalante.io</email>
+      </developer>
+   </developers>
+   <mailingLists>
+      <mailingList>
+         <name>Escalante Users</name>
+         <!--<subscribe>https://lists.jboss.org/mailman/listinfo/infinispan-issues</subscribe>-->
+         <!--<unsubscribe>https://lists.jboss.org/mailman/listinfo/infinispan-issues</unsubscribe>-->
+         <!--<post>infinispan-issues@lists.jboss.org</post>-->
+         <!--<archive>http://lists.jboss.org/pipermail/infinispan-issues/</archive>-->
+      </mailingList>
+      <mailingList>
+         <name>Escalante Developers</name>
+         <!--<subscribe>https://lists.jboss.org/mailman/listinfo/infinispan-dev</subscribe>-->
+         <!--<unsubscribe>https://lists.jboss.org/mailman/listinfo/infinispan-dev</unsubscribe>-->
+         <!--<post>infinispan-dev@lists.jboss.org</post>-->
+         <!--<archive>http://lists.jboss.org/pipermail/infinispan-dev/</archive>-->
+      </mailingList>
+   </mailingLists>
+   <issueManagement>
+      <system>jira</system>
+      <url>https://jira.jboss.com/jira/browse/ESC</url>
+   </issueManagement>
+   <!--<ciManagement>-->
+      <!--<system>hudson</system>-->
+      <!--<url>http://hudson.jboss.org/hudson/view/Infinispan</url>-->
+      <!--<notifiers>-->
+         <!--<notifier>-->
+            <!--<type>mail</type>-->
+            <!--<address>infinispan-commits@lists.jboss.org</address>-->
+         <!--</notifier>-->
+      <!--</notifiers>-->
+   <!--</ciManagement>-->
+   <distributionManagement>
+      <repository>
+         <id>projectodd-releases-repository</id>
+         <name>ProjectOdd Release Repository</name>
+         <url>dav:https://repository-projectodd.forge.cloudbees.com/release</url>
+      </repository>
+      <snapshotRepository>
+         <id>projectodd-snapshots-repository</id>
+         <name>ProjectOdd Snapshot Repository</name>
+         <url>dav:https://repository-projectodd.forge.cloudbees.com/snapshot</url>
+      </snapshotRepository>
+   </distributionManagement>
+
    <properties>
       <version.scala>2.8.2</version.scala>
       <version.scalatest>1.7.1</version.scalatest>
@@ -53,7 +120,7 @@
       <module>lift</module>
       <module>testsuite/lift24-scala28</module>
       <module>testsuite/lift24-scala29</module>
-      <module>assembly</module>
+      <module>dist</module>
    </modules>
 
    <dependencyManagement>
