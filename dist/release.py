@@ -151,7 +151,7 @@ def update_versions(base_dir, version):
   f_in = open(version_java)
   f_out = open(version_java+".tmp", "w")
 
-  regexp = re.compile('\s*val ((MAJOR|MINOR|MICRO|MODIFIER)|SNAPSHOT)')
+  regexp = re.compile('\s*val (MAJOR|MINOR|MICRO|MODIFIER|SNAPSHOT)')
   pieces = re.compile('[\.\-]').split(version)
   snapshot = True if len(pieces) > 2 else False
   try:

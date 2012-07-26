@@ -48,22 +48,6 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>escalante-lift</artifactId>
-         <type>test-jar</type>
-         <scope>test</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>org.scalatest</groupId>
-               <artifactId>scalatest_2.8.2</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>net.liftweb</groupId>
-               <artifactId>lift-mapper_2.8.2</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
          <groupId>org.jboss.arquillian.container</groupId>
          <artifactId>arquillian-container-test-api</artifactId>
          <scope>test</scope>
