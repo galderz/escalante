@@ -17,7 +17,7 @@ object Version {
    val MAJOR = 0
    val MINOR = 1
    val MICRO = 0
-   val MODIFIER = "SNAPSHOT";
-   val SNAPSHOT = true;
+   val MODIFIER = "SNAPSHOT"
+   val SNAPSHOT = true
 
 }
