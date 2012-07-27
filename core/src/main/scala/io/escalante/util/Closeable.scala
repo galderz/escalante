@@ -12,17 +12,17 @@ package io.escalante.util
  * @since // TODO
  */
 class Closeable {
-   // Empty - do not delete!
+  // Empty - do not delete!
 }
 
 object Closeable {
 
-   def use[T <: {def close() : Unit}](closable: T)(block: T => Unit) {
-      try {
-         block(closable)
-      } finally {
-         closable.close()
-      }
-   }
+  def use[T <: {def close() : Unit}](closable: T)(block: T => Unit) {
+    try {
+      block(closable)
+    } finally {
+      closable.close()
+    }
+  }
 
 }

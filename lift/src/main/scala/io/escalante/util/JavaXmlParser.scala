@@ -41,17 +41,17 @@ object JavaXmlParser {
       }
    }
 
-   /**
-    * Read an element which contains only a single string attribute.
-    *
-    * @param reader the reader
-    * @param attributeName the attribute name, usually "value" or "name"
-    * @return the string value
-    * @throws javax.xml.stream.XMLStreamException if an error occurs or if the
-    *         element does not contain the specified attribute, contains other
-    *         attributes, or contains child elements.
-    */
-   def readStringAttributeElement(reader: XMLStreamReader, attributeName: String): String = {
+  /**
+   * Read an element which contains only a single string attribute.
+   *
+   * @param reader the reader
+   * @param attributeName the attribute name, usually "value" or "name"
+   * @return the string value
+   * @throws javax.xml.stream.XMLStreamException if an error occurs or if the
+   *         element does not contain the specified attribute, contains other
+   *         attributes, or contains child elements.
+   */
+  def readStringAttributeElement(reader: XMLStreamReader, attributeName: String): String = {
       requireSingleAttribute(reader, attributeName)
       val value = reader.getAttributeValue(0)
       requireNoContent(reader)

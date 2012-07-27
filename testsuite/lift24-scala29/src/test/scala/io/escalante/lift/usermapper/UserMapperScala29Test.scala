@@ -19,15 +19,15 @@ import org.jboss.shrinkwrap.api.spec.WebArchive
 @RunWith(classOf[Arquillian])
 class UserMapperScala29Test extends UserMapperTest {
 
-   // Tests in parent class
-   override protected def appUrl: String = "http://localhost:8080/usermapper-292"
+  // Tests in parent class
+  override protected def appUrl: String = "http://localhost:8080/usermapper-292"
 
 }
 
 object UserMapperScala29Test {
 
-   @Deployment def deployment: WebArchive =
-      UserMapperTest.deployment(
-         Some("2.4"), Some("2.9.2"), classOf[UserMapperBoot])
+  @Deployment def deployment: WebArchive =
+    UserMapperTest.deployment(
+      Some("2.4"), Some("2.9.2"), classOf[UserMapperBoot])
 
 }

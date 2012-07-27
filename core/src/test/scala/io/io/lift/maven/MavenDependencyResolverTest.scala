@@ -11,9 +11,9 @@ import org.junit.Test
  */
 class MavenDependencyResolverTest {
 
-   @Test def testResolveArtifact {
-      MavenDependencyResolver.resolveArtifact(new MavenArtifact(
-         "net.liftweb", "lift-proto_2.9.1", "2.4"))
-   }
+  @Test def testResolveArtifact {
+    MavenDependencyResolver.resolveArtifact(new MavenArtifact(
+      "net.liftweb", "lift-proto_2.9.1", "2.4"))
+  }
 
 }

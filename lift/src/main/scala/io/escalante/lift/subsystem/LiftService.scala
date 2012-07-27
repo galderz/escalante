@@ -18,35 +18,35 @@ import org.jboss.msc.inject.Injector
  * @since 1.0
  */
 class LiftService(modulesRelativeTo: String, modulesPath: String)
-        extends Service[LiftService] {
+  extends Service[LiftService] {
 
-   private val pathManager = new InjectedValue[PathManager]()
+  private val pathManager = new InjectedValue[PathManager]()
 
-   // Why use a separate directory for thirdparty modules?
-   // Reason 1: Keeps thirdparty vs shipped in different locations
-   // Reason 2: Makes it easy to wipe out thirdparty modules when tests are started
-   private var resolvedModulesPath: String = _
+  // Why use a separate directory for thirdparty modules?
+  // Reason 1: Keeps thirdparty vs shipped in different locations
+  // Reason 2: Makes it easy to wipe out thirdparty modules when tests are started
+  private var resolvedModulesPath: String = _
 
-   def start(context: StartContext) {
-      resolvedModulesPath = pathManager.getValue
-              .resolveRelativePathEntry(modulesPath, modulesRelativeTo)
-   }
+  def start(context: StartContext) {
+    resolvedModulesPath = pathManager.getValue
+      .resolveRelativePathEntry(modulesPath, modulesRelativeTo)
+  }
 
-   def stop(context: StopContext) {
-      resolvedModulesPath = null
-   }
+  def stop(context: StopContext) {
+    resolvedModulesPath = null
+  }
 
-   def getValue: LiftService = this
+  def getValue: LiftService = this
 
-   def thirdPartyModulesPath: String = resolvedModulesPath
+  def thirdPartyModulesPath: String = resolvedModulesPath
 
-   def pathManagerInjector: Injector[PathManager] = pathManager
+  def pathManagerInjector: Injector[PathManager] = pathManager
 
 }
 
 object LiftService {
 
-   private[subsystem] def createServiceName =
-         ServiceName.of("escalante").append("lift")
+  private[subsystem] def createServiceName =
+    ServiceName.of("escalante").append("lift")
 
 }

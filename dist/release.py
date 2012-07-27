@@ -158,15 +158,15 @@ def update_versions(base_dir, version):
     for l in f_in:
       if regexp.match(l):
         if l.find('MAJOR') > -1:
-          f_out.write('   val MAJOR = %s\n' % pieces[0])
+          f_out.write('  val MAJOR = %s\n' % pieces[0])
         elif l.find('MINOR') > -1:
-          f_out.write('   val MINOR = %s\n' % pieces[1])
+          f_out.write('  val MINOR = %s\n' % pieces[1])
         elif l.find('MICRO') > -1:
-          f_out.write('   val MICRO = %s\n' % pieces[2])
+          f_out.write('  val MICRO = %s\n' % pieces[2])
 #        elif l.find('MODIFIER') > -1:
 #          f_out.write('   val MODIFIER = %s\n' % pieces[3])
         elif l.find('SNAPSHOT') > -1:
-          f_out.write('   val SNAPSHOT = %s\n' % ('true' if snapshot else 'false'))
+          f_out.write('  val SNAPSHOT = %s\n' % ('true' if snapshot else 'false'))
       else:
         f_out.write(l)
   finally:

@@ -19,18 +19,18 @@ import org.jboss.arquillian.container.spi.event.container._
  */
 class ArquillianTestLifecycleListener {
 
-   def executeBeforeStart(@Observes event: BeforeStart) =
-      LiftTestSetup.installExtension
+  def executeBeforeStart(@Observes event: BeforeStart) =
+    LiftTestSetup.installExtension
 
-   def executeAfterStop(@Observes event: AfterStop) =
-      LiftTestSetup.uninstallExtension
+  def executeAfterStop(@Observes event: AfterStop) =
+    LiftTestSetup.uninstallExtension
 
 }
 
 class ArquillianTestLifecycleRegister extends LoadableExtension {
 
-   def register(builder: ExtensionBuilder) {
-      builder.observer(classOf[ArquillianTestLifecycleListener]);
-   }
+  def register(builder: ExtensionBuilder) {
+    builder.observer(classOf[ArquillianTestLifecycleListener]);
+  }
 
 }

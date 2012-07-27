@@ -18,14 +18,14 @@ import java.util.List
  */
 abstract class RegexDependencyFilter extends DependencyFilter {
 
-   def accept(node: DependencyNode, parents: List[DependencyNode]): Boolean = {
-      val dependency = node.getDependency
-      if (dependency == null)
-         false
-      else
-         regex.findFirstIn(dependency.getArtifact.getArtifactId).isDefined
-   }
+  def accept(node: DependencyNode, parents: List[DependencyNode]): Boolean = {
+    val dependency = node.getDependency
+    if (dependency == null)
+      false
+    else
+      regex.findFirstIn(dependency.getArtifact.getArtifactId).isDefined
+  }
 
-   def regex: Regex
+  def regex: Regex
 
 }

@@ -20,40 +20,43 @@ import org.junit.Test
 @RunWith(classOf[Arquillian])
 class HelloWorldScala29Test extends AbstractHelloWorldTest {
 
-   @Test @OperateOnDeployment("helloworld-default")
-   def testHelloWorld() {
-      helloWorld("default")
-   }
+  @Test
+  @OperateOnDeployment("helloworld-default")
+  def testHelloWorld() {
+    helloWorld("default")
+  }
 
-   @Test @OperateOnDeployment("helloworld-291")
-   def testHelloWorld281() {
-      helloWorld("291")
-   }
+  @Test
+  @OperateOnDeployment("helloworld-291")
+  def testHelloWorld281() {
+    helloWorld("291")
+  }
 
-   @Test @OperateOnDeployment("helloworld-290")
-   def testHelloWorld280() {
-      helloWorld("290")
-   }
+  @Test
+  @OperateOnDeployment("helloworld-290")
+  def testHelloWorld280() {
+    helloWorld("290")
+  }
 
 }
 
 object HelloWorldScala29Test {
 
-   @Deployment(name = "helloworld-default", order = 1)
-   def deployment: WebArchive =
-      HelloWorldTest.deployment("helloworld", "helloworld-default.war",
-         Some("2.4"), None, classOf[HelloWorldBoot])
+  @Deployment(name = "helloworld-default", order = 1)
+  def deployment: WebArchive =
+    HelloWorldTest.deployment("helloworld", "helloworld-default.war",
+      Some("2.4"), None, classOf[HelloWorldBoot])
 
-   @Deployment(name = "helloworld-291", order = 2)
-   def deployment291: WebArchive = deployHelloWorld("2.9.1")
+  @Deployment(name = "helloworld-291", order = 2)
+  def deployment291: WebArchive = deployHelloWorld("2.9.1")
 
-   @Deployment(name = "helloworld-290", order = 3)
-   def deployment290: WebArchive = deployHelloWorld("2.9.0")
+  @Deployment(name = "helloworld-290", order = 3)
+  def deployment290: WebArchive = deployHelloWorld("2.9.0")
 
-   private def deployHelloWorld(scala: String): WebArchive =
-      HelloWorldTest.deployment("helloworld",
-         "helloworld-%s.war".format(scala.replace(".", "")),
-         Some("2.4"), Some(scala), classOf[HelloWorldBoot])
+  private def deployHelloWorld(scala: String): WebArchive =
+    HelloWorldTest.deployment("helloworld",
+      "helloworld-%s.war".format(scala.replace(".", "")),
+      Some("2.4"), Some(scala), classOf[HelloWorldBoot])
 
 }
 

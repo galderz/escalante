@@ -16,12 +16,12 @@ import org.jboss.as.controller.descriptions.ModelDescriptionConstants
  */
 object ThirdPartyModulesRepo {
 
-   val THIRDPARTY_MODULES_REPO = "thirdparty-modules-repo"
+  val THIRDPARTY_MODULES_REPO = "thirdparty-modules-repo"
 
-   val RELATIVE_TO = THIRDPARTY_MODULES_REPO + "." +
-           ModelDescriptionConstants.RELATIVE_TO
+  val RELATIVE_TO = THIRDPARTY_MODULES_REPO + "." +
+    ModelDescriptionConstants.RELATIVE_TO
 
-   val PATH = THIRDPARTY_MODULES_REPO + "." +
-           ModelDescriptionConstants.PATH
+  val PATH = THIRDPARTY_MODULES_REPO + "." +
+    ModelDescriptionConstants.PATH
 
 }

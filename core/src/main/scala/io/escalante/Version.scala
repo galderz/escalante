@@ -14,9 +14,9 @@ package io.escalante
  */
 object Version {
 
-   val MAJOR = 0
-   val MINOR = 1
-   val MICRO = 0
-   val SNAPSHOT = true
+  val MAJOR = 0
+  val MINOR = 1
+  val MICRO = 0
+  val SNAPSHOT = true
 
 }

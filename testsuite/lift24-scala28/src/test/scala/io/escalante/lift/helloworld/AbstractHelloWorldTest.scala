@@ -15,10 +15,10 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver
  */
 abstract class AbstractHelloWorldTest {
 
-   def helloWorld(appVersion: String) {
-      val driver = new HtmlUnitDriver()
-      driver.get("http://localhost:8080/helloworld-%s/index.html".format(appVersion))
-      assert(driver.getPageSource.contains("Hello World!"))
-   }
+  def helloWorld(appVersion: String) {
+    val driver = new HtmlUnitDriver()
+    driver.get("http://localhost:8080/helloworld-%s/index.html".format(appVersion))
+    assert(driver.getPageSource.contains("Hello World!"))
+  }
 
 }

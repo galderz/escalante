@@ -16,6 +16,8 @@ package io.escalante.lift.helloworld.snippet
  */
 class HelloWorld {
 
-   def howdy = <span>{new _root_.java.util.Date}: Hello World!</span>
+  def howdy = <span>
+    {new _root_.java.util.Date}
+    : Hello World!</span>
 
 }

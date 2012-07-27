@@ -16,9 +16,9 @@ import org.jboss.dmr.ModelNode
  */
 object LiftSubsystemRemove extends AbstractRemoveStepHandler {
 
-   override def performRuntime(ctx: OperationContext, op: ModelNode, model: ModelNode) {
-      super.performRuntime(ctx, op, model)
-      ctx.removeService(LiftService.createServiceName)
-   }
+  override def performRuntime(ctx: OperationContext, op: ModelNode, model: ModelNode) {
+    super.performRuntime(ctx, op, model)
+    ctx.removeService(LiftService.createServiceName)
+  }
 
 }

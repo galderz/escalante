@@ -20,81 +20,83 @@ import io.escalante.util.JavaXmlParser
  * @author Galder Zamarreño
  * @since // TODO
  */
-class LiftSubsystemParser extends XMLElementReader[java.util.List[ModelNode]]
-         with XMLElementWriter[SubsystemMarshallingContext] with Log {
+class LiftSubsystemParser
+  extends XMLElementReader[java.util.List[ModelNode]]
+  with XMLElementWriter[SubsystemMarshallingContext]
+  with Log {
 
-   override def writeContent(writer: XMLExtendedStreamWriter,
-           ctx: SubsystemMarshallingContext) {
-      debug("Write lift subsystem")
+  override def writeContent(writer: XMLExtendedStreamWriter,
+    ctx: SubsystemMarshallingContext) {
+    debug("Write lift subsystem")
 
-      // Write out the main subsystem element
-      ctx.startSubsystemElement(LiftExtension.NAMESPACE, false)
+    // Write out the main subsystem element
+    ctx.startSubsystemElement(LiftExtension.NAMESPACE, false)
 
-      val model = ctx.getModelNode
-      val hasPath = model.hasDefined(ThirdPartyModulesRepo.PATH)
-      val hasRelativeTo = model.hasDefined(ThirdPartyModulesRepo.RELATIVE_TO)
+    val model = ctx.getModelNode
+    val hasPath = model.hasDefined(ThirdPartyModulesRepo.PATH)
+    val hasRelativeTo = model.hasDefined(ThirdPartyModulesRepo.RELATIVE_TO)
 
-      if (hasPath || hasRelativeTo) {
-         writer.writeStartElement(ThirdPartyModulesRepo.THIRDPARTY_MODULES_REPO)
-         if (hasPath) {
-            writer.writeAttribute(ModelDescriptionConstants.PATH,
-                  model.get(ThirdPartyModulesRepo.PATH).asString())
-         }
-
-         if (hasRelativeTo) {
-            writer.writeAttribute(ModelDescriptionConstants.RELATIVE_TO,
-                  model.get(ThirdPartyModulesRepo.RELATIVE_TO).asString())
-         }
-         // End thirdparty module repo
-         writer.writeEndElement()
+    if (hasPath || hasRelativeTo) {
+      writer.writeStartElement(ThirdPartyModulesRepo.THIRDPARTY_MODULES_REPO)
+      if (hasPath) {
+        writer.writeAttribute(ModelDescriptionConstants.PATH,
+          model.get(ThirdPartyModulesRepo.PATH).asString())
       }
 
-      // End subsystem
+      if (hasRelativeTo) {
+        writer.writeAttribute(ModelDescriptionConstants.RELATIVE_TO,
+          model.get(ThirdPartyModulesRepo.RELATIVE_TO).asString())
+      }
+      // End thirdparty module repo
       writer.writeEndElement()
-   }
+    }
 
-   override def readElement(reader: XMLExtendedStreamReader, ops: java.util.List[ModelNode]) {
-      // Require no attributes
-      JavaXmlParser.requireNoAttributes(reader)
+    // End subsystem
+    writer.writeEndElement()
+  }
 
-      val addSubsystemOp = LiftExtension.createAddSubsystemOperation
+  override def readElement(reader: XMLExtendedStreamReader, ops: java.util.List[ModelNode]) {
+    // Require no attributes
+    JavaXmlParser.requireNoAttributes(reader)
 
-      while (reader.hasNext && (reader.nextTag() != END_ELEMENT)) {
-         val element = reader.getLocalName
-         element match {
-            case ThirdPartyModulesRepo.THIRDPARTY_MODULES_REPO =>
-               parseThirdPartyModulesRepo(0,
-                     reader.getAttributeCount, reader, addSubsystemOp)
-            case _ =>
-               throw JavaXmlParser.unexpectedElement(reader)
-         }
+    val addSubsystemOp = LiftExtension.createAddSubsystemOperation
+
+    while (reader.hasNext && (reader.nextTag() != END_ELEMENT)) {
+      val element = reader.getLocalName
+      element match {
+        case ThirdPartyModulesRepo.THIRDPARTY_MODULES_REPO =>
+          parseThirdPartyModulesRepo(0,
+            reader.getAttributeCount, reader, addSubsystemOp)
+        case _ =>
+          throw JavaXmlParser.unexpectedElement(reader)
       }
+    }
 
-      ops.add(addSubsystemOp)
+    ops.add(addSubsystemOp)
 
-      info("Subsystem descriptor read, add subsystem add operation")
-   }
+    info("Subsystem descriptor read, add subsystem add operation")
+  }
 
-   @tailrec
-   private def parseThirdPartyModulesRepo(attrIndex: Int,
-           attrCount: Int, reader: XMLExtendedStreamReader,
-           addSubsystemOp: ModelNode) {
-      // Check if we've gone beyond the attribute count
-      if (attrIndex >= attrCount) {
-         JavaXmlParser.requireNoContent(reader)
-      } else {
-         val value = reader.getAttributeValue(attrIndex)
-         val attributeName = reader.getAttributeLocalName(attrIndex)
-         val node = attributeName match {
-            case ModelDescriptionConstants.RELATIVE_TO =>
-               addSubsystemOp.get(ThirdPartyModulesRepo.RELATIVE_TO)
-            case ModelDescriptionConstants.PATH =>
-               addSubsystemOp.get(ThirdPartyModulesRepo.PATH)
-         }
-         node.set(value)
-         parseThirdPartyModulesRepo(attrIndex + 1, attrCount,
-               reader, addSubsystemOp)
+  @tailrec
+  private def parseThirdPartyModulesRepo(attrIndex: Int,
+    attrCount: Int, reader: XMLExtendedStreamReader,
+    addSubsystemOp: ModelNode) {
+    // Check if we've gone beyond the attribute count
+    if (attrIndex >= attrCount) {
+      JavaXmlParser.requireNoContent(reader)
+    } else {
+      val value = reader.getAttributeValue(attrIndex)
+      val attributeName = reader.getAttributeLocalName(attrIndex)
+      val node = attributeName match {
+        case ModelDescriptionConstants.RELATIVE_TO =>
+          addSubsystemOp.get(ThirdPartyModulesRepo.RELATIVE_TO)
+        case ModelDescriptionConstants.PATH =>
+          addSubsystemOp.get(ThirdPartyModulesRepo.PATH)
       }
-   }
+      node.set(value)
+      parseThirdPartyModulesRepo(attrIndex + 1, attrCount,
+        reader, addSubsystemOp)
+    }
+  }
 
 }

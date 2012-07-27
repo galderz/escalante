@@ -18,11 +18,11 @@ import org.apache.maven.wagon.providers.http.LightweightHttpWagon
  */
 object ManualWagonProvider extends WagonProvider {
 
-   def lookup(roleHint: String): Wagon =
-      if (roleHint == "http") new LightweightHttpWagon() else null
+  def lookup(roleHint: String): Wagon =
+    if (roleHint == "http") new LightweightHttpWagon() else null
 
-   def release(wagon: Wagon) {
-      // No-op
-   }
+  def release(wagon: Wagon) {
+    // No-op
+  }
 
 }

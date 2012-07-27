@@ -13,15 +13,15 @@ import io.escalante.modules.JBossModulesRepository
  */
 object RuntimeAssembly extends Log {
 
-   def build(moduleInstallDir: File, home: File, module: EscalanteModule) {
-      info("Build Lift extension and copy to container")
+  def build(moduleInstallDir: File, home: File, module: EscalanteModule) {
+    info("Build Lift extension and copy to container")
 
-      // Install default Scala module
-      val repo = new JBossModulesRepository(moduleInstallDir)
-      repo.installScalaModule(SCALA_292)
+    // Install default Scala module
+    val repo = new JBossModulesRepository(moduleInstallDir)
+    repo.installScalaModule(SCALA_292)
 
-      // Install given module
-      module.build(moduleInstallDir)
-   }
+    // Install given module
+    module.build(moduleInstallDir)
+  }
 
 }

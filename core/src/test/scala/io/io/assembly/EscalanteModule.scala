@@ -9,6 +9,6 @@ import java.io.File
  */
 trait EscalanteModule {
 
-   def build(destDir: File)
+  def build(destDir: File)
 
 }

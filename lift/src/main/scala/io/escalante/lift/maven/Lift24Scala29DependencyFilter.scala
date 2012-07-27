@@ -16,8 +16,8 @@ import util.matching.Regex
  */
 object Lift24Scala29DependencyFilter extends RegexDependencyFilter {
 
-   def regex: Regex = new Regex(
-      "(lift-webkit|lift-common|lift-util|lift-json|lift-actor" +
+  def regex: Regex = new Regex(
+    "(lift-webkit|lift-common|lift-util|lift-json|lift-actor" +
       "|lift-proto|lift-db|lift-mapper)")
 
 }

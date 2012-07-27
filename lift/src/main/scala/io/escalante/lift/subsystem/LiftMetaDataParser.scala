@@ -20,23 +20,23 @@ import io.escalante.lift.LiftVersion
  */
 object LiftMetaDataParser {
 
-   def parse(reader: XMLStreamReader): LiftMetaData = {
-      reader.require(START_DOCUMENT, null, null)
+  def parse(reader: XMLStreamReader): LiftMetaData = {
+    reader.require(START_DOCUMENT, null, null)
 
-      // TODO: Validate it's called lift-app
+    // TODO: Validate it's called lift-app
 
-      // Read until the first start element
-      while (reader.hasNext() && reader.next() != START_ELEMENT) {}
+    // Read until the first start element
+    while (reader.hasNext() && reader.next() != START_ELEMENT) {}
 
-      val version = LiftVersion.forName(
-         readOptionalStringAttributeElement(reader, "version"))
+    val version = LiftVersion.forName(
+      readOptionalStringAttributeElement(reader, "version"))
 
-      // Default Scala version based on last Lift release
-      val scalaVersion = ScalaVersion.forName(
-         readOptionalStringAttributeElement(reader, "scala-version")
-                 .getOrElse("2.9.2"))
+    // Default Scala version based on last Lift release
+    val scalaVersion = ScalaVersion.forName(
+      readOptionalStringAttributeElement(reader, "scala-version")
+        .getOrElse("2.9.2"))
 
-      new LiftMetaData(version, scalaVersion)
-   }
+    new LiftMetaData(version, scalaVersion)
+  }
 
 }

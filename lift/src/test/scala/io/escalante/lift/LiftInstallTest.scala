@@ -24,17 +24,17 @@ import io.escalante.logging.Log
 @RunWith(classOf[Arquillian])
 class LiftInstallTest extends Log {
 
-   @Test def testCheckInstall() {
-      use(ModelControllerClient.Factory.create(
-         InetAddress.getByName("localhost"), 9999)) {
-         client =>
-            val op = new ModelNode()
-            op.get(OP).set(READ_RESOURCE_DESCRIPTION_OPERATION)
-            op.get(OP_ADDR).add("extension", "io.escalante.lift")
-            val resp = client.execute(op)
-            LiftTestSetup.validateResponse(resp)
-            info("Lift is installed: %s", resp.get(OUTCOME))
-      }
-   }
+  @Test def testCheckInstall() {
+    use(ModelControllerClient.Factory.create(
+      InetAddress.getByName("localhost"), 9999)) {
+      client =>
+        val op = new ModelNode()
+        op.get(OP).set(READ_RESOURCE_DESCRIPTION_OPERATION)
+        op.get(OP_ADDR).add("extension", "io.escalante.lift")
+        val resp = client.execute(op)
+        LiftTestSetup.validateResponse(resp)
+        info("Lift is installed: %s", resp.get(OUTCOME))
+    }
+  }
 
 }
