@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Eclipse Public License version 1.0, available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:escalante:lift-app:1.0"
+           xmlns="urn:escalante:lift-app:1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           version="1.0">
+
+   <!-- The subsystem root element -->
+   <xs:element name="lift-app" type="liftAppType" />
+
+   <xs:complexType name="liftAppType">
+      <xs:annotation>
+         <xs:documentation>
+            A Lift application
+         </xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="version" type="xs:string" default="2.4">
+         <xs:annotation>
+            <xs:documentation>
+               Lift version required by this application.
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="scala-version" type="xs:string" default="2.9.2">
+         <xs:annotation>
+            <xs:documentation>
+               Scala version required by this Lift application.
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+
+</xs:schema>

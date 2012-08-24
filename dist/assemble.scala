@@ -83,8 +83,8 @@ saveXml(xml, withSubsystem)
 println("Escalante Lift extension added to configuration file")
 
 // 4. Copy xsd files
-copy("%s/../lift/target/classes/schema/escalante-lift_1_0.xsd".format(baseDir),
-  "%s/docs/schema/escalante-lift_1_0.xsd".format(escalanteTarget.getCanonicalPath))
+copy("%s/../lift/target/classes/schema".format(baseDir),
+     "%s/docs/schema".format(escalanteTarget.getCanonicalPath))
 
 
 
