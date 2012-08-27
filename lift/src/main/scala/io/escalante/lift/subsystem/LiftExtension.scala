@@ -48,8 +48,6 @@ class LiftExtension extends Extension {
 
     // Register subsystem XML writer
     subsystem.registerXMLElementWriter(parser)
-
-    info("Lift extension initialized")
   }
 
   def initializeParsers(ctx: ExtensionParsingContext) {

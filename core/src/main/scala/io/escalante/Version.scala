@@ -19,4 +19,6 @@ object Version {
   val MICRO = 0
   val SNAPSHOT = true
 
+  val VERSION = "%s.%s.%s%s".format(MAJOR, MINOR, MICRO, if (SNAPSHOT) "-SNAPSHOT" else "")
+
 }

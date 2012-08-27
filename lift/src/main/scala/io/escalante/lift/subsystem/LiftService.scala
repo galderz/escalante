@@ -10,6 +10,8 @@ import org.jboss.msc.service.{ServiceName, StartContext, StopContext, Service}
 import org.jboss.as.controller.services.path.PathManager
 import org.jboss.msc.value.InjectedValue
 import org.jboss.msc.inject.Injector
+import io.escalante.logging.Log
+import io.escalante.Version
 
 /**
  * The Lift module service
@@ -18,7 +20,7 @@ import org.jboss.msc.inject.Injector
  * @since 1.0
  */
 class LiftService(modulesRelativeTo: String, modulesPath: String)
-  extends Service[LiftService] {
+  extends Service[LiftService] with Log {
 
   private val pathManager = new InjectedValue[PathManager]()
 
@@ -30,6 +32,12 @@ class LiftService(modulesRelativeTo: String, modulesPath: String)
   def start(context: StartContext) {
     resolvedModulesPath = pathManager.getValue
       .resolveRelativePathEntry(modulesPath, modulesRelativeTo)
+
+    info("Initializing Escalante Lift subsystem")
+
+    // TODO: Move once we have multiple nodes
+    info("Welcome to Escalante AS - http://escalante.io/")
+    info("  version................ " + Version.VERSION)
   }
 
   def stop(context: StopContext) {

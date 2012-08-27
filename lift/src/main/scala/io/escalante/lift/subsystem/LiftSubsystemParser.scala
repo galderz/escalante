@@ -74,7 +74,7 @@ class LiftSubsystemParser
 
     ops.add(addSubsystemOp)
 
-    info("Subsystem descriptor read, add subsystem add operation")
+    debug("Subsystem descriptor read, add subsystem add operation")
   }
 
   @tailrec
