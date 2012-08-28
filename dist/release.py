@@ -7,6 +7,7 @@ import shutil
 from datetime import *
 from multiprocessing import Process
 from utils import *
+import argparse
 
 try:
   from xml.etree.ElementTree import ElementTree
@@ -27,7 +28,7 @@ def get_modules(directory):
     '''Analyses the pom.xml file and extracts declared modules'''
     tree = ElementTree()
     f = directory + "/pom.xml"
-    if settings['verbose']:
+    if settings.verbose:
       print "Parsing %s to get a list of modules in project" % f
     tree.parse(f)        
     mods = tree.findall(".//{%s}module" % maven_pom_xml_namespace)
@@ -88,13 +89,13 @@ def write_pom(tree, pom_file):
     in_f.close()
     out_f.close()
     os.remove("tmp.xml")    
-  if settings['verbose']:
+  if settings.verbose:
     prettyprint(" ... updated %s" % pom_file, Levels.INFO)
 
 def patch(pom_file, version):
   '''Updates the version in a POM file.  We need to locate //project/parent/version, //project/version and 
   //project/properties/project-version and replace the contents of these with the new version'''
-  if settings['verbose']:
+  if settings.verbose:
     prettyprint("Patching %s" % pom_file, Levels.DEBUG)
   tree = ElementTree()
   tree.parse(pom_file)    
@@ -107,7 +108,7 @@ def patch(pom_file, version):
 
   for tag in tags:
     if tag is not None:
-      if settings['verbose']:
+      if settings.verbose:
         prettyprint("%s is %s.  Setting to %s" % (str(tag), tag.text, version), Levels.DEBUG)
       tag.text=version
       need_to_write = True
@@ -117,13 +118,13 @@ def patch(pom_file, version):
     write_pom(tree, pom_file)
     return True
   else:
-    if settings['verbose']:
+    if settings.verbose:
       prettyprint("File doesn't need updating; nothing replaced!", Levels.DEBUG)
     return False
 
 def get_poms_to_patch(working_dir):
   get_modules(working_dir)
-  if settings['verbose']:
+  if settings.verbose:
     prettyprint('Available modules are ' + str(modules), Levels.DEBUG)
   poms_to_patch = [working_dir + "/pom.xml"]
   for m in modules:
@@ -250,7 +251,7 @@ def get_module_name(pom_file):
 #  os.chdir(base_dir)
 
 def do_task(target, args, async_processes):
-  if settings['multi_threaded']:
+  if settings.multi_threaded:
     async_processes.append(Process(target = target, args = args))  
   else:
     target(*args)
@@ -261,17 +262,29 @@ def release():
   global uploader
   global git
   assert_python_minimum_version(2, 5)
-  require_settings_file()
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument('-d', '--dry-run', action='store_true', dest='dry_run',
+                      help="release dry run", default=False)
+  parser.add_argument('-m', '--multi-threaded', action='store_true', dest='multi_threaded',
+                      help="multi threaded release", default=False)
+  parser.add_argument('-v', '--verbose', action='store_true', dest='verbose',
+                      help="verbose logging", default=False)
+  # TODO Add branch...
+  (settings, extras) = parser.parse_known_args()
+  version = extras[0]
+
+#  require_settings_file()
     
-  # We start by determining whether the version passed in is a valid one
-  if len(sys.argv) < 2:
-    help_and_exit()
-  
+#  # We start by determining whether the version passed in is a valid one
+#  if len(sys.argv) < 2:
+#    help_and_exit()
+
   base_dir = os.getcwd()
-  version = validate_version(sys.argv[1])
+#  version = validate_version(sys.argv[1])
   branch = "master"
-  if len(sys.argv) > 2:
-    branch = sys.argv[2]
+#  if len(sys.argv) > 2:
+#    branch = sys.argv[2]
     
   prettyprint("Releasing Escalante version %s from branch '%s'" % (version, branch), Levels.INFO)
   sure = input_with_default("Are you sure you want to continue?", "N")
@@ -281,7 +294,7 @@ def release():
   prettyprint("OK, releasing! Please stand by ...", Levels.INFO)
   
   ## Set up network interactive tools
-  if settings['dry_run']:
+  if settings.dry_run:
     # Use stubs
     prettyprint("*** This is a DRY RUN.  No changes will be committed.  Used to test this release script only. ***", Levels.DEBUG)
     prettyprint("Your settings are %s" % settings, Levels.DEBUG)
@@ -289,9 +302,9 @@ def release():
   else:
     prettyprint("*** LIVE Run ***", Levels.DEBUG)
     prettyprint("Your settings are %s" % settings, Levels.DEBUG)
-    uploader = Uploader()
+    uploader = Uploader(settings)
   
-  git = Git(branch, version.upper())
+  git = Git(branch, version, settings)
   if not git.is_upstream_clone():
     proceed = input_with_default('This is not a clone of an %supstream%s Escalante repository! Are you sure you want to proceed?' % (Colors.UNDERLINE, Colors.END), 'N')
     if not proceed.upper().startswith('Y'):
@@ -311,7 +324,7 @@ def release():
   
   # Step 3: Build and test in Maven2
   prettyprint("Step 3: Build and test in Maven2", Levels.INFO)
-  maven_build_distribution(version)
+  maven_build_distribution(settings)
   prettyprint("Step 3: Complete", Levels.INFO)
   
   async_processes = []
@@ -356,7 +369,7 @@ def release():
   update_versions(base_dir, version_next)
   prettyprint("Step 9: Complete", Levels.INFO)
   
-  if not settings['dry_run']:
+  if not settings.dry_run:
     git.push_to_origin()
     git.cleanup()
   else:

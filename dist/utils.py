@@ -6,12 +6,12 @@ import sys
 import readline
 import shutil
 import random
-settings_file = '%s/.escalante' % os.getenv('HOME')
+#settings_file = '%s/.escalante' % os.getenv('HOME')
 
 ### Known config keys
 maven_pom_xml_namespace = "http://maven.apache.org/POM/4.0.0"
-default_settings = {'dry_run': False, 'multi_threaded': False, 'verbose': False, 'use_colors': True}
-boolean_keys = ['dry_run', 'multi_threaded', 'verbose']
+#default_settings = {'dry_run': False, 'multi_threaded': False, 'verbose': False, 'use_colors': True}
+#boolean_keys = ['dry_run', 'multi_threaded', 'verbose']
 
 class Colors(object):
   MAGENTA = '\033[95m'
@@ -84,7 +84,8 @@ class Levels(Colors):
       return ""
 
 def use_colors():
-  return ('use_colors' in settings and settings['use_colors']) or ('use_colors' not in settings)
+  return True
+#  return ('use_colors' in settings and settings['use_colors']) or ('use_colors' not in settings)
 
 def prettyprint(message, level):  
   start_color = Levels.get_color(level)
@@ -92,11 +93,11 @@ def prettyprint(message, level):
     
   print "[%s%s%s] %s" % (start_color, level, end_color, message)
 
-def apply_defaults(s):
-  for e in default_settings.items():
-    if e[0] not in s:
-      s[e[0]] = e[1]
-  return s
+#def apply_defaults(s):
+#  for e in default_settings.items():
+#    if e[0] not in s:
+#      s[e[0]] = e[1]
+#  return s
 
 def to_bool(x):
   if type(x) == bool:
@@ -104,28 +105,28 @@ def to_bool(x):
   if type(x) == str:
     return {'true': True, 'false': False}.get(x.strip().lower())  
 
-def get_settings():
-  """Retrieves user-specific settings for all Infinispan tools.  Returns a dict of key/value pairs, or an empty dict if the settings file doesn't exist."""
-  f = None
-  try:
-    settings = {}
-    f = open(settings_file)
-    for l in f:
-      if not l.strip().startswith("#"):
-        kvp = l.split("=")
-        if kvp and len(kvp) > 0 and kvp[0] and len(kvp) > 1:
-          settings[kvp[0].strip()] = kvp[1].strip()
-    settings = apply_defaults(settings)
-    for k in boolean_keys:
-      settings[k] = to_bool(settings[k])
-    return settings
-  except IOError as ioe:
-    return {}
-  finally:
-    if f:
-      f.close()
+#def get_settings():
+#  """Retrieves user-specific settings for all Infinispan tools.  Returns a dict of key/value pairs, or an empty dict if the settings file doesn't exist."""
+#  f = None
+#  try:
+#    settings = {}
+#    f = open(settings_file)
+#    for l in f:
+#      if not l.strip().startswith("#"):
+#        kvp = l.split("=")
+#        if kvp and len(kvp) > 0 and kvp[0] and len(kvp) > 1:
+#          settings[kvp[0].strip()] = kvp[1].strip()
+#    settings = apply_defaults(settings)
+#    for k in boolean_keys:
+#      settings[k] = to_bool(settings[k])
+#    return settings
+#  except IOError as ioe:
+#    return {}
+#  finally:
+#    if f:
+#      f.close()
 
-settings = get_settings()
+#settings = get_settings()
 
 def input_with_default(msg, default):
   i = raw_input("%s %s[%s]%s: " % (msg, Colors.magenta(), default, Colors.end_color()))
@@ -133,49 +134,49 @@ def input_with_default(msg, default):
     i = default
   return i
 
-def handle_release_virgin():
-  """This sounds dirty!"""
-  prettyprint("""
-    It appears that this is the first time you are using this script.  I need to ask you a few questions before
-    we can proceed.  Default values are in brackets, just hitting ENTER will accept the default value.
+#def handle_release_virgin():
+#  """This sounds dirty!"""
+#  prettyprint("""
+#    It appears that this is the first time you are using this script.  I need to ask you a few questions before
+#    we can proceed.  Default values are in brackets, just hitting ENTER will accept the default value.
+#
+#    Lets get started!
+#    """, Levels.WARNING)
+#  s = {}
+#  s["verbose"] = input_with_default("Be verbose?", False)
+#  s["multi_threaded"] = input_with_default("Run multi-threaded?  (Disable to debug)", True)
+#  s["use_colors"] = input_with_default("Use colors?", True)
+#  s = apply_defaults(s)
+#  f = open(settings_file, "w")
+#  try:
+#    for e in s.keys():
+#      f.write("  %s = %s \n" % (e, s[e]))
+#  finally:
+#    f.close()
     
-    Lets get started!
-    """, Levels.WARNING)
-  s = {}  
-  s["verbose"] = input_with_default("Be verbose?", False)
-  s["multi_threaded"] = input_with_default("Run multi-threaded?  (Disable to debug)", True)
-  s["use_colors"] = input_with_default("Use colors?", True)
-  s = apply_defaults(s)  
-  f = open(settings_file, "w")
-  try:
-    for e in s.keys():
-      f.write("  %s = %s \n" % (e, s[e]))
-  finally:
-    f.close()
-    
-def require_settings_file(recursive = False):
-  """Tests whether the settings file exists, and if not prompts the user to create one."""
-  f = None
-  try:
-    f = open(settings_file)
-  except IOError as ioe:
-    if not recursive:
-      handle_release_virgin()
-      require_settings_file(True)
-      prettyprint("User-specific environment settings file %s created!  Please start this script again!" % settings_file, Levels.INFO)
-      sys.exit(4)
-    else:
-      prettyprint("User-specific environment settings file %s is missing!  Cannot proceed!" % settings_file, Levels.FATAL)
-      prettyprint("Please create a file called %s with the following lines:" % settings_file, Levels.FATAL)
-      prettyprint( '''
-       verbose = False
-       use_colors = True
-       multi_threaded = True
-      ''', Levels.INFO)
-      sys.exit(3)
-  finally:
-    if f:
-      f.close()
+#def require_settings_file(recursive = False):
+#  """Tests whether the settings file exists, and if not prompts the user to create one."""
+#  f = None
+#  try:
+#    f = open(settings_file)
+#  except IOError as ioe:
+#    if not recursive:
+#      handle_release_virgin()
+#      require_settings_file(True)
+#      prettyprint("User-specific environment settings file %s created!  Please start this script again!" % settings_file, Levels.INFO)
+#      sys.exit(4)
+#    else:
+#      prettyprint("User-specific environment settings file %s is missing!  Cannot proceed!" % settings_file, Levels.FATAL)
+#      prettyprint("Please create a file called %s with the following lines:" % settings_file, Levels.FATAL)
+#      prettyprint( '''
+#       verbose = False
+#       use_colors = True
+#       multi_threaded = True
+#      ''', Levels.INFO)
+#      sys.exit(3)
+#  finally:
+#    if f:
+#      f.close()
 
 def get_search_path(executable):
   """Retrieves a search path based on where the current executable is located.  Returns a string to be prepended to add"""
@@ -233,14 +234,15 @@ class Git(object):
   @staticmethod
   def current(e): return e != None and e.strip().replace(' ', '').startswith('*') 
  
-  def __init__(self, branch, tag_name):        
+  def __init__(self, branch, tag_name, settings):
+    self.settings = settings
     if not self.is_git_directory():
       raise Exception('Attempting to run git outside of a repository. Current directory is %s' % os.path.abspath(os.path.curdir))    
-      
+
     self.branch = branch
     self.tag = tag_name
     self.verbose = False 
-    if settings['verbose']:
+    if settings.verbose:
       self.verbose = True
     rand = '%x'.upper() % (random.random() * 100000)
     self.working_branch = '__temp_%s' % rand
@@ -257,7 +259,7 @@ class Git(object):
           call.append(o)
     else:
       raise Error("Cannot handle argument of type %s" % type(opts))
-    if settings['verbose']:
+    if self.settings.verbose:
       prettyprint( 'Executing %s' % call, Levels.DEBUG )
     return subprocess.Popen(call, stdout=subprocess.PIPE).communicate()[0].split('\n')
   
@@ -332,8 +334,8 @@ class DryRun(object):
     subprocess.check_call(['rsync', '-rv', '--protocol=28', src, dst])  
 
 class Uploader(object):
-  def __init__(self):
-    if settings['verbose']:
+  def __init__(self, settings):
+    if settings.verbose:
       self.scp_cmd = ['scp', '-rv']
       self.rsync_cmd = ['rsync', '-rv', '--protocol=28']
     else:
@@ -365,15 +367,15 @@ class DryRunUploader(DryRun):
   def upload(self, fr, to, type):
     self.copy(fr, "%s/%s/%s" % (self.location_root, type, to))    
 
-def maven_build_distribution(version):
+def maven_build_distribution(settings):
   """Builds the distribution in the current working dir"""
   mvn_commands = [["clean"], ["deploy", "-Prelease"]]
     
   for c in mvn_commands:
     c.append("-Dmaven.test.skip.exec=true")
-    if settings['dry_run']:
+    if settings.dry_run:
       c.append("-Dmaven.deploy.skip=true")
-    if not settings['verbose']:
+    if not settings.verbose:
       c.insert(0, '-q')
     c.insert(0, 'mvn')
     subprocess.check_call(c)
