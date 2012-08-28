@@ -17,10 +17,13 @@
       <relativePath>../pom.xml</relativePath>
    </parent>
 
+   <groupId>io.escalante</groupId>
    <artifactId>escalante-dist</artifactId>
+   <version>0.1.0-SNAPSHOT</version>
+
    <name>Escalante Distribution Assembly</name>
+
    <packaging>pom</packaging>
-   <description/>
 
    <!-- Provided scopes won't work here!!! -->
    <dependencies>
@@ -50,16 +53,20 @@
          <artifactId>escalante-core</artifactId>
          <type>test-jar</type>
       </dependency>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>test-lift24-scala28</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>test-lift24-scala29</artifactId>
-         <scope>provided</scope>
-      </dependency>
+      <!--<dependency>-->
+         <!--<groupId>${project.groupId}</groupId>-->
+         <!--<artifactId>escalate-test-lift24-scala28</artifactId>-->
+         <!--&lt;!&ndash;<type>test-jar</type>&ndash;&gt;-->
+         <!--&lt;!&ndash;<version>${project.version}</version>&ndash;&gt;-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+         <!--<groupId>${project.groupId}</groupId>-->
+         <!--<artifactId>escalate-test-lift24-scala29</artifactId>-->
+         <!--&lt;!&ndash;<type>test-jar</type>&ndash;&gt;-->
+         <!--&lt;!&ndash;<version>${project.version}</version>&ndash;&gt;-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
       <dependency>
          <groupId>org.apache.maven</groupId>
          <artifactId>maven-aether-provider</artifactId>

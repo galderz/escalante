@@ -118,6 +118,7 @@
       <module>modules</module>
       <module>core</module>
       <module>lift</module>
+      <module>testsuite</module>
       <module>testsuite/lift24-scala28</module>
       <module>testsuite/lift24-scala29</module>
       <module>dist</module>
@@ -144,7 +145,7 @@
 
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>escalante-assembly</artifactId>
+            <artifactId>escalante-dist</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
          </dependency>
@@ -184,17 +185,19 @@
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>test-lift24-scala29</artifactId>
+            <artifactId>escalante-test-lift24-scala29</artifactId>
             <version>${project.version}</version>
+            <type>test-jar</type>
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>test-lift24-scala28</artifactId>
+            <artifactId>escalante-test-lift24-scala28</artifactId>
             <version>${project.version}</version>
+            <type>test-jar</type>
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>test-lift24-scala28</artifactId>
+            <artifactId>escalante-test-lift24-scala28</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
          </dependency>
