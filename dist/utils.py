@@ -384,6 +384,9 @@ def maven_build_distribution(settings):
       c.append("-Dmaven.deploy.skip=true")
     if not settings.verbose:
       c.insert(0, '-q')
+    if settings.maven_debug:
+      c.append('-e')
+      c.append('-X')
     c.insert(0, 'mvn')
     subprocess.check_call(c)
 

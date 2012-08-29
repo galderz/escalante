@@ -277,6 +277,8 @@ def release():
                       help="verbose logging", default=False)
   parser.add_argument('-n', '--non-interactive', action='store_true', dest='non_interactive',
                       help="non interactive script", default=False)
+  parser.add_argument('-X', '--maven-debug', action='store_true', dest='maven_debug',
+                      help="maven debug", default=False)
 
   # TODO Add branch...
   (settings, extras) = parser.parse_known_args()
