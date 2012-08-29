@@ -125,7 +125,7 @@
                         Once a newer scala maven plugin that depends on a newer
                         maven version (minimum, 3.0.4), remove this.
                      -->
-                     <removeFromClasspath>aether-util-1.7</removeFromClasspath>
+                     <removeFromClasspath>aether-util-1.7,aether-spi-1.7,aether-impl-1.7,aether-api-1.7</removeFromClasspath>
                   </configuration>
                </execution>
             </executions>
