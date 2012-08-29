@@ -140,21 +140,6 @@
                   <groupId>org.codehaus.plexus</groupId>
                   <artifactId>plexus-container-default</artifactId>
                </exclusion>
-               <!-- Add exclusion while scala-maven-plugin depends on Maven 3.0
-                    This causes issues with the distribution assembly code that
-                    uses Maven 3.0.4 (and a newer aether-util version).
-
-                    Otherwise, in some environments you'll see the following
-                    when building distribution:
-
-                    Caused by: java.lang.NoSuchMethodError:
-                    org.sonatype.aether.util.listener.DefaultTransferResource.<init>(
-                    Ljava/lang/String;Ljava/lang/String;Ljava/io/File;Lorg/sonatype/aether/RequestTrace;)V
-               -->
-               <exclusion>
-                  <groupId>org.sonatype.aether</groupId>
-                  <artifactId>aether-util</artifactId>
-               </exclusion>
             </exclusions>
          </dependency>
 

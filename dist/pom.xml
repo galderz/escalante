@@ -53,20 +53,6 @@
          <artifactId>escalante-core</artifactId>
          <type>test-jar</type>
       </dependency>
-      <!--<dependency>-->
-         <!--<groupId>${project.groupId}</groupId>-->
-         <!--<artifactId>escalate-test-lift24-scala28</artifactId>-->
-         <!--&lt;!&ndash;<type>test-jar</type>&ndash;&gt;-->
-         <!--&lt;!&ndash;<version>${project.version}</version>&ndash;&gt;-->
-         <!--<scope>provided</scope>-->
-      <!--</dependency>-->
-      <!--<dependency>-->
-         <!--<groupId>${project.groupId}</groupId>-->
-         <!--<artifactId>escalate-test-lift24-scala29</artifactId>-->
-         <!--&lt;!&ndash;<type>test-jar</type>&ndash;&gt;-->
-         <!--&lt;!&ndash;<version>${project.version}</version>&ndash;&gt;-->
-         <!--<scope>provided</scope>-->
-      <!--</dependency>-->
       <dependency>
          <groupId>org.apache.maven</groupId>
          <artifactId>maven-aether-provider</artifactId>
@@ -124,6 +110,22 @@
                      <keepGeneratedScript>true</keepGeneratedScript>
                      <!-- To debug script, run with: mvnDebug -->
                      <scriptFile>assemble.scala</scriptFile>
+                     <!--
+                        Remove aether util 1.7 from classpath because it
+                        causes issues with the distribution assembly code that
+                        uses a newer aether-util version (1.13.1).
+
+                        Otherwise, in some environments you'll see the following
+                        when building distribution:
+
+                        Caused by: java.lang.NoSuchMethodError:
+                        org.sonatype.aether.util.listener.DefaultTransferResource.<init>(
+                        Ljava/lang/String;Ljava/lang/String;Ljava/io/File;Lorg/sonatype/aether/RequestTrace;)V
+
+                        Once a newer scala maven plugin that depends on a newer
+                        maven version (minimum, 3.0.4), remove this.
+                     -->
+                     <removeFromClasspath>aether-util-1.7</removeFromClasspath>
                   </configuration>
                </execution>
             </executions>
