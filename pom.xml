@@ -53,17 +53,15 @@
    <mailingLists>
       <mailingList>
          <name>Escalante Users</name>
-         <!--<subscribe>https://lists.jboss.org/mailman/listinfo/infinispan-issues</subscribe>-->
-         <!--<unsubscribe>https://lists.jboss.org/mailman/listinfo/infinispan-issues</unsubscribe>-->
-         <!--<post>infinispan-issues@lists.jboss.org</post>-->
-         <!--<archive>http://lists.jboss.org/pipermail/infinispan-issues/</archive>-->
+         <post>http://stackoverflow.com/tags/escalante</post>
+         <archive>http://stackoverflow.com/tags/escalante</archive>
       </mailingList>
       <mailingList>
          <name>Escalante Developers</name>
-         <!--<subscribe>https://lists.jboss.org/mailman/listinfo/infinispan-dev</subscribe>-->
-         <!--<unsubscribe>https://lists.jboss.org/mailman/listinfo/infinispan-dev</unsubscribe>-->
-         <!--<post>infinispan-dev@lists.jboss.org</post>-->
-         <!--<archive>http://lists.jboss.org/pipermail/infinispan-dev/</archive>-->
+         <subscribe>escalante-dev-subscribe@escalante.io</subscribe>
+         <unsubscribe>escalante-dev-unsubscribe@escalante.io</unsubscribe>
+         <post>escalante-dev@escalante.io</post>
+         <archive>http://markmail.org/search/?q=io.escalante.escalante-dev+list%3Aio.escalante.escalante-dev+order%3Adate-backward</archive>
       </mailingList>
    </mailingLists>
    <issueManagement>
@@ -80,16 +78,17 @@
          <!--</notifier>-->
       <!--</notifiers>-->
    <!--</ciManagement>-->
+
    <distributionManagement>
       <repository>
-         <id>projectodd-releases-repository</id>
-         <name>ProjectOdd Release Repository</name>
-         <url>dav:https://repository-projectodd.forge.cloudbees.com/release</url>
+         <id>jboss-releases-repository</id>
+         <name>JBoss Release Repository</name>
+         <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
       </repository>
       <snapshotRepository>
-         <id>projectodd-snapshots-repository</id>
-         <name>ProjectOdd Snapshot Repository</name>
-         <url>dav:https://repository-projectodd.forge.cloudbees.com/snapshot</url>
+         <id>jboss-snapshots-repository</id>
+         <name>JBoss Snapshot Repository</name>
+         <url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
       </snapshotRepository>
    </distributionManagement>
 
@@ -186,12 +185,6 @@
          <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>escalante-test-lift24-scala29</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-         </dependency>
-         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>escalante-test-lift24-scala28</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
          </dependency>
@@ -456,15 +449,5 @@
          <url>https://repository.jboss.org/nexus/content/groups/public</url>
       </pluginRepository>
    </pluginRepositories>
-
-   <build>
-      <extensions>
-         <extension>
-            <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-webdav-jackrabbit</artifactId>
-            <version>1.0-beta-7</version>
-         </extension>
-      </extensions>
-   </build>
 
 </project>

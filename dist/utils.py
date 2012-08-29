@@ -100,90 +100,17 @@ def prettyprint(message, level):
     
   print "[%s%s%s] %s" % (start_color, level, end_color, message)
 
-#def apply_defaults(s):
-#  for e in default_settings.items():
-#    if e[0] not in s:
-#      s[e[0]] = e[1]
-#  return s
-
 def to_bool(x):
   if type(x) == bool:
     return x
   if type(x) == str:
     return {'true': True, 'false': False}.get(x.strip().lower())  
 
-#def get_settings():
-#  """Retrieves user-specific settings for all Infinispan tools.  Returns a dict of key/value pairs, or an empty dict if the settings file doesn't exist."""
-#  f = None
-#  try:
-#    settings = {}
-#    f = open(settings_file)
-#    for l in f:
-#      if not l.strip().startswith("#"):
-#        kvp = l.split("=")
-#        if kvp and len(kvp) > 0 and kvp[0] and len(kvp) > 1:
-#          settings[kvp[0].strip()] = kvp[1].strip()
-#    settings = apply_defaults(settings)
-#    for k in boolean_keys:
-#      settings[k] = to_bool(settings[k])
-#    return settings
-#  except IOError as ioe:
-#    return {}
-#  finally:
-#    if f:
-#      f.close()
-
-#settings = get_settings()
-
 def input_with_default(msg, default):
   i = raw_input("%s %s[%s]%s: " % (msg, Colors.magenta(), default, Colors.end_color()))
   if i.strip() == "":
     i = default
   return i
-
-#def handle_release_virgin():
-#  """This sounds dirty!"""
-#  prettyprint("""
-#    It appears that this is the first time you are using this script.  I need to ask you a few questions before
-#    we can proceed.  Default values are in brackets, just hitting ENTER will accept the default value.
-#
-#    Lets get started!
-#    """, Levels.WARNING)
-#  s = {}
-#  s["verbose"] = input_with_default("Be verbose?", False)
-#  s["multi_threaded"] = input_with_default("Run multi-threaded?  (Disable to debug)", True)
-#  s["use_colors"] = input_with_default("Use colors?", True)
-#  s = apply_defaults(s)
-#  f = open(settings_file, "w")
-#  try:
-#    for e in s.keys():
-#      f.write("  %s = %s \n" % (e, s[e]))
-#  finally:
-#    f.close()
-    
-#def require_settings_file(recursive = False):
-#  """Tests whether the settings file exists, and if not prompts the user to create one."""
-#  f = None
-#  try:
-#    f = open(settings_file)
-#  except IOError as ioe:
-#    if not recursive:
-#      handle_release_virgin()
-#      require_settings_file(True)
-#      prettyprint("User-specific environment settings file %s created!  Please start this script again!" % settings_file, Levels.INFO)
-#      sys.exit(4)
-#    else:
-#      prettyprint("User-specific environment settings file %s is missing!  Cannot proceed!" % settings_file, Levels.FATAL)
-#      prettyprint("Please create a file called %s with the following lines:" % settings_file, Levels.FATAL)
-#      prettyprint( '''
-#       verbose = False
-#       use_colors = True
-#       multi_threaded = True
-#      ''', Levels.INFO)
-#      sys.exit(3)
-#  finally:
-#    if f:
-#      f.close()
 
 def get_search_path(executable):
   """Retrieves a search path based on where the current executable is located.  Returns a string to be prepended to add"""
@@ -376,8 +303,14 @@ class DryRunUploader(DryRun):
 
 def maven_build_distribution(settings):
   """Builds the distribution in the current working dir"""
-  mvn_commands = [["clean"], ["deploy", "-Prelease"]]
-    
+  mvn_commands = [['clean'], ['install']]
+
+  mvn_deploy = ['deploy', '-Prelease']
+  if settings.non_interactive:
+    mvn_deploy.append('-s')
+    mvn_deploy.append('/private/projectodd/private-escalante-settings.xml')
+
+  mvn_commands.append(mvn_deploy)
   for c in mvn_commands:
     c.append("-Dmaven.test.skip.exec=true")
     if settings.dry_run:
@@ -389,10 +322,6 @@ def maven_build_distribution(settings):
       c.append('-X')
     c.insert(0, 'mvn')
     subprocess.check_call(c)
-
-
-#def get_version_pattern():
-#  return re.compile("^([4-9]\.[0-9])\.[0-9]\.(Final|(ALPHA|BETA|CR)[1-9][0-9]?)$", re.IGNORECASE)
 
 def get_version_pattern():
   return re.compile("^([0-9]\.[0-9])\.[0-9]", re.IGNORECASE)
@@ -410,8 +339,4 @@ def assert_python_minimum_version(major, minor):
   if not (minor_ok and major_ok):
     prettyprint( "This script requires Python >= %s.%s.0.  You have %s" % (major, minor, sys.version), Levels.FATAL)
     sys.exit(3)
-  
-    
-  
 
-  
