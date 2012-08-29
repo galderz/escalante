@@ -10,21 +10,17 @@
 import re
 import sys
 import os
-import subprocess
-import shutil
-from datetime import *
 from multiprocessing import Process
 from utils import *
 from xml.etree.ElementTree import ElementTree
-import argparse
 
 try:
-  from collections import Counter
+  from argparse import ArgumentParser
 except:
   prettyprint('''
         Welcome to the Escalante Release Script.
         This release script requires that you use at least Python 2.7.0.  It appears
-        that you do not thave the collections.Counter available, which are available
+        that you do not have the collections.Counter available, which are available
         by default in Python 2.7.0.
         ''', Levels.FATAL)
   sys.exit(1)
@@ -272,7 +268,7 @@ def release():
   global git
   assert_python_minimum_version(2, 5)
 
-  parser = argparse.ArgumentParser()
+  parser = ArgumentParser()
   parser.add_argument('-d', '--dry-run', action='store_true', dest='dry_run',
                       help="release dry run", default=False)
   parser.add_argument('-m', '--multi-threaded', action='store_true', dest='multi_threaded',
