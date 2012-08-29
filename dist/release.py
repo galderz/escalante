@@ -1,4 +1,12 @@
 #!/usr/bin/python
+
+# -*- coding: utf-8; -*-
+#
+# Copyright 2012 Red Hat, Inc. and/or its affiliates.
+#
+# Licensed under the Eclipse Public License version 1.0, available at
+# http://www.eclipse.org/legal/epl-v10.html
+
 import re
 import sys
 import os
@@ -7,16 +15,17 @@ import shutil
 from datetime import *
 from multiprocessing import Process
 from utils import *
+from xml.etree.ElementTree import ElementTree
 import argparse
 
 try:
-  from xml.etree.ElementTree import ElementTree
+  from collections import Counter
 except:
   prettyprint('''
         Welcome to the Escalante Release Script.
-        This release script requires that you use at least Python 2.5.0.  It appears
-        that you do not thave the ElementTree XML APIs available, which are available
-        by default in Python 2.5.0.
+        This release script requires that you use at least Python 2.7.0.  It appears
+        that you do not thave the collections.Counter available, which are available
+        by default in Python 2.7.0.
         ''', Levels.FATAL)
   sys.exit(1)
 
@@ -270,9 +279,13 @@ def release():
                       help="multi threaded release", default=False)
   parser.add_argument('-v', '--verbose', action='store_true', dest='verbose',
                       help="verbose logging", default=False)
+  parser.add_argument('-n', '--non-interactive', action='store_true', dest='non_interactive',
+                      help="non interactive script", default=False)
+
   # TODO Add branch...
   (settings, extras) = parser.parse_known_args()
   version = extras[0]
+  interactive = not settings.non_interactive
 
 #  require_settings_file()
     
@@ -287,10 +300,13 @@ def release():
 #    branch = sys.argv[2]
     
   prettyprint("Releasing Escalante version %s from branch '%s'" % (version, branch), Levels.INFO)
-  sure = input_with_default("Are you sure you want to continue?", "N")
-  if not sure.upper().startswith("Y"):
-    prettyprint("... User Abort!", Levels.WARNING)
-    sys.exit(1)
+
+  if interactive:
+    sure = input_with_default("Are you sure you want to continue?", "N")
+    if not sure.upper().startswith("Y"):
+      prettyprint("... User Abort!", Levels.WARNING)
+      sys.exit(1)
+
   prettyprint("OK, releasing! Please stand by ...", Levels.INFO)
   
   ## Set up network interactive tools
@@ -305,7 +321,7 @@ def release():
     uploader = Uploader(settings)
   
   git = Git(branch, version, settings)
-  if not git.is_upstream_clone():
+  if interactive and not git.is_upstream_clone():
     proceed = input_with_default('This is not a clone of an %supstream%s Escalante repository! Are you sure you want to proceed?' % (Colors.UNDERLINE, Colors.END), 'N')
     if not proceed.upper().startswith('Y'):
       prettyprint("... User Abort!", Levels.WARNING)
