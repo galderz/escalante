@@ -36,8 +36,7 @@ class LiftService(modulesRelativeTo: String, modulesPath: String)
     info("Initializing Escalante Lift subsystem")
 
     // TODO: Move once we have multiple nodes
-    info("Welcome to Escalante AS - http://escalante.io/")
-    info("  version................ " + Version.VERSION)
+    info("Welcome to Escalante AS %s - http://escalante.io/", Version.VERSION)
   }
 
   def stop(context: StopContext) {
