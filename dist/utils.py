@@ -354,7 +354,7 @@ class DryRunUploader(DryRun):
 
 def maven_build_distribution(settings):
     """Builds the distribution in the current working dir"""
-    mvn_commands = [['clean']]
+    mvn_commands = [['clean', '-U']]
 
     mvn_deploy = ['deploy', '-Prelease']
     if settings.non_interactive:
