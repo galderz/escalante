@@ -1,0 +1,1 @@
+Do not remove! This is needed to force Maven to generate source jar for this project.

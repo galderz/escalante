@@ -50,6 +50,8 @@
    </dependencies>
 
    <build>
+      <!-- Source directory defined so that source jar can be correctly built -->
+      <sourceDirectory>src/main/scala</sourceDirectory>
       <plugins>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>

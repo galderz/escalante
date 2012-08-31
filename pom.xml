@@ -110,6 +110,7 @@
       <version.apache.wagon>1.0</version.apache.wagon>
       <version.sonatype.aether>1.13.1</version.sonatype.aether>
       <version.selenium>2.21.0</version.selenium>
+      <version.maven.source>2.1.2</version.maven.source>
    </properties>
 
    <modules>
