@@ -73,7 +73,7 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
     liftMetaData match {
       case LiftMetaData(lift, scala) =>
         val liftJars = MavenDependencyResolver.resolveArtifact(
-          liftMetaData.mavenArtifact, liftMetaData.liftDependencyFilter)
+          liftMetaData.mavenArtifact, Some(liftMetaData.liftDependencyFilter))
         addLiftJars(deployment, liftJars)
       case _ => info("Unknown Lift deployment")
     }

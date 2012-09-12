@@ -18,6 +18,8 @@ import java.util.List
  */
 abstract class RegexDependencyFilter extends DependencyFilter {
 
+  lazy val regex = createRegex
+
   def accept(node: DependencyNode, parents: List[DependencyNode]): Boolean = {
     val dependency = node.getDependency
     if (dependency == null)
@@ -26,6 +28,6 @@ abstract class RegexDependencyFilter extends DependencyFilter {
       regex.findFirstIn(dependency.getArtifact.getArtifactId).isDefined
   }
 
-  def regex: Regex
+  def createRegex: Regex
 
 }

@@ -13,7 +13,7 @@ import org.jboss.as.server.deployment.module.ModuleDependency
  * Metadata representation of a JBoss Module.
  *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 class JBossModule(
     val name: String,

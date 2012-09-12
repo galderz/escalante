@@ -66,6 +66,33 @@
                </systemProperties>
             </configuration>
          </plugin>
+         <!--<plugin>-->
+            <!--<groupId>org.jboss.tattletale</groupId>-->
+            <!--<artifactId>tattletale-maven</artifactId>-->
+            <!--&lt;!&ndash; The version of the plugin you want to use &ndash;&gt;-->
+            <!--<version>1.1.0.Final</version>-->
+            <!--<executions>-->
+               <!--<execution>-->
+                  <!--<goals>-->
+                     <!--<goal>report</goal>-->
+                  <!--</goals>-->
+               <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+               <!--&lt;!&ndash;-->
+                  <!--This is the location which will be scanned-->
+                  <!--for generating tattletale reports-->
+               <!--&ndash;&gt;-->
+               <!--<source>${project.build.directory}/classes</source>-->
+               <!--&lt;!&ndash; This is where the reports will be generated &ndash;&gt;-->
+               <!--<destination>${project.build.directory}/site/tattletale</destination>-->
+            <!--</configuration>-->
+         <!--</plugin>-->
+
+         <!--
+            Duplicate plugin definition needed to avoid
+            unnecessary steps in non-scala projects
+         -->
          <plugin>
             <groupId>net.alchim31.maven</groupId>
             <artifactId>scala-maven-plugin</artifactId>
@@ -82,6 +109,10 @@
                <scalaVersion>${version.scala}</scalaVersion>
             </configuration>
          </plugin>
+         <!--
+            Duplicate plugin definition needed to avoid
+            unnecessary steps in non-scala projects
+         -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>

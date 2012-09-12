@@ -7,6 +7,7 @@
 package io.escalante.maven
 
 import io.escalante.modules.JBossModule
+import org.sonatype.aether.graph.DependencyFilter
 
 /**
  * Metadata representation of a Maven artifact.
@@ -18,12 +19,14 @@ class MavenArtifact(
     val groupId: String,
     val artifactId: String,
     val version: String,
-    val isMain: Boolean) {
-
-  // TODO: Add a DependencyFilter as instance variable, so that we can control inclusions, exclusions...etc
+    val isMain: Boolean,
+    val filter: Option[DependencyFilter]) {
 
   def this(groupId: String, artifactId: String, version: String) =
-    this(groupId, artifactId, version, true)
+    this(groupId, artifactId, version, true, None)
+
+  def this(groupId: String, artifactId: String, version: String, filter: DependencyFilter) =
+    this(groupId, artifactId, version, true, Some(filter))
 
   private val moduleFriendlyArtifactId = artifactId.replace('.', '_')
 
@@ -53,17 +56,12 @@ class MavenArtifact(
   /**
    * Maven artifact metadata represented as JBossModule instance, which
    * represents metadata of a JBoss Module.
-   *
-   * @param export
-   * @return
    */
   def jbossModule(export: Boolean): JBossModule =
     new JBossModule(moduleName, export, slot)
 
   /**
-   * TODO
-   *
-   * @return
+   * Returns the Maven artifact's coordinates.
    */
   def coordinates: String =
     new java.lang.StringBuilder()

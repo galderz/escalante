@@ -82,8 +82,8 @@ class JBossModulesRepository(root: File) {
 
       // Take all artifacts, both main artifact and sub-artifact,
       // and create a single list will all the jar files
-      val jarFiles = (artifact :: subArtifacts)
-        .flatMap(MavenDependencyResolver.resolveArtifact(_))
+      val jarFiles = (artifact :: subArtifacts).flatMap(artifact =>
+        MavenDependencyResolver.resolveArtifact(artifact, artifact.filter))
 
       jarFiles.foreach(jar => copy(jar, new File(dir, jar.getName)))
 

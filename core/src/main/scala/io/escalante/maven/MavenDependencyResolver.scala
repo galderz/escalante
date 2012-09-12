@@ -47,7 +47,7 @@ object MavenDependencyResolver {
    * @return a sequence of files
    */
   def resolveArtifact(artifact: MavenArtifact): Seq[File] =
-    resolveArtifact(artifact, null)
+    resolveArtifact(artifact, None)
 
   /**
    * Resolve a maven artifact into a collection of File instances.
@@ -56,7 +56,7 @@ object MavenDependencyResolver {
    * @param filter filter the dependencies of the artifact
    * @return a sequence of files
    */
-  def resolveArtifact(artifact: MavenArtifact, filter: DependencyFilter): Seq[File] = {
+  def resolveArtifact(artifact: MavenArtifact, filter: Option[DependencyFilter]): Seq[File] = {
     val aetherArtifact = new DefaultArtifact(artifact.coordinates)
     val dependency = new Dependency(aetherArtifact, null)
 
@@ -64,7 +64,7 @@ object MavenDependencyResolver {
       null, SETTINGS.getRemoteRepositories)
 
     val results = SYSTEM.resolveDependencies(SESSION,
-      new DependencyRequest(request, filter)).getArtifactResults
+      new DependencyRequest(request, filter.getOrElse(null))).getArtifactResults
 
     asScalaIterator(results.iterator())
       .filter(_.getArtifact.getExtension != "pom")

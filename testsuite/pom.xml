@@ -111,6 +111,11 @@
                </systemProperties>
             </configuration>
          </plugin>
+
+         <!--
+            Duplicate plugin definition needed to avoid
+            unnecessary steps in non-scala projects
+         -->
          <plugin>
             <groupId>net.alchim31.maven</groupId>
             <artifactId>scala-maven-plugin</artifactId>
@@ -127,6 +132,10 @@
                <scalaVersion>${version.scala}</scalaVersion>
             </configuration>
          </plugin>
+         <!--
+            Duplicate plugin definition needed to avoid
+            unnecessary steps in non-scala projects
+         -->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>

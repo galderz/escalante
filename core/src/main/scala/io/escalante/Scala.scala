@@ -23,7 +23,7 @@ sealed trait Scala {
   def isMain: Boolean = false
 
   val maven = new MavenArtifact(
-    "org.scala-lang", "scala-library", version, isMain)
+    "org.scala-lang", "scala-library", version, isMain, None)
 }
 
 abstract class SCALA_29x extends Scala {
