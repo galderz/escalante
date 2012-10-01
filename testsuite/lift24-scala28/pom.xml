@@ -13,13 +13,13 @@
    <parent>
       <groupId>io.escalante</groupId>
       <artifactId>escalante-testsuite</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>0.2.0-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
    <groupId>io.escalante</groupId>
    <artifactId>escalante-test-lift24-scala28</artifactId>
-   <version>0.1.0-SNAPSHOT</version>
+   <version>0.2.0-SNAPSHOT</version>
 
    <name>Escalante Testsuite for Lift 2.4 and Scala 2.8</name>
 
