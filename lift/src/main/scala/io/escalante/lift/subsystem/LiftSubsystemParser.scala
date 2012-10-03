@@ -30,7 +30,7 @@ class LiftSubsystemParser
     debug("Write lift subsystem")
 
     // Write out the main subsystem element
-    ctx.startSubsystemElement(LiftExtension.NAMESPACE, false)
+    ctx.startSubsystemElement(LiftExtension.SUBSYSTEM_NAMESPACE, false)
 
     val model = ctx.getModelNode
     val hasPath = model.hasDefined(ThirdPartyModulesRepo.PATH)
@@ -87,13 +87,13 @@ class LiftSubsystemParser
     } else {
       val value = reader.getAttributeValue(attrIndex)
       val attributeName = reader.getAttributeLocalName(attrIndex)
-      val node = attributeName match {
+      attributeName match {
         case ModelDescriptionConstants.RELATIVE_TO =>
-          addSubsystemOp.get(ThirdPartyModulesRepo.RELATIVE_TO)
+          addSubsystemOp.get(ThirdPartyModulesRepo.RELATIVE_TO).set(value)
         case ModelDescriptionConstants.PATH =>
-          addSubsystemOp.get(ThirdPartyModulesRepo.PATH)
+          addSubsystemOp.get(ThirdPartyModulesRepo.PATH).setExpression(value)
       }
-      node.set(value)
+
       parseThirdPartyModulesRepo(attrIndex + 1, attrCount,
         reader, addSubsystemOp)
     }

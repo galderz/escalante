@@ -7,7 +7,6 @@
 package io.escalante.lift.subsystem
 
 import org.jboss.dmr.ModelNode
-import java.util.List
 import org.jboss.msc.service.ServiceController
 import org.jboss.as.server.{DeploymentProcessorTarget, AbstractDeploymentChainStep}
 import org.jboss.as.server.deployment.Phase._
@@ -43,31 +42,33 @@ object LiftSubsystemAdd extends AbstractBoottimeAddStepHandler with Log {
     // Add deployment processors here
     ctx.addStep(new AbstractDeploymentChainStep {
       def execute(target: DeploymentProcessorTarget) {
-        target.addDeploymentProcessor(
+        target.addDeploymentProcessor(LiftExtension.SUBSYSTEM_NAME,
           PARSE, PARSE_WEB_DEPLOYMENT, new LiftParsingProcessor)
-        target.addDeploymentProcessor(
+        target.addDeploymentProcessor(LiftExtension.SUBSYSTEM_NAME,
           DEPENDENCIES, DEPENDENCIES_WAR_MODULE, new LiftDependencyProcessor)
       }
     }, OperationContext.Stage.RUNTIME)
 
+    val pathKey = ThirdPartyModulesRepo.PATH
+    val pathDefined = op.hasDefined(pathKey)
+    val path =
+      if (pathDefined) ctx.resolveExpressions(op.get(pathKey)).asString()
+      else "thirdparty-modules"
+
     val relativeToKey = ThirdPartyModulesRepo.RELATIVE_TO
     val relativeTo =
-      if (op.hasDefined(relativeToKey)) op.get(relativeToKey).asString()
-      else "jboss.home.dir"
-
-    val pathKey = ThirdPartyModulesRepo.PATH
-    val path =
-      if (op.hasDefined(pathKey)) op.get(pathKey).asString()
-      else "thirdparty-modules"
+      if (op.hasDefined(relativeToKey)) Some(op.get(relativeToKey).asString())
+      else if (!pathDefined) Some("jboss.home.dir")
+      else None
 
     val liftService = new LiftService(relativeTo, path)
     val name = LiftService.createServiceName
-    val serviceTarget = ctx.getServiceTarget()
+    val serviceTarget = ctx.getServiceTarget
     // TODO: It is possible to get the path manager from org.jboss.as.controller.ExtensionContext, see org.jboss.as.server.deployment.scanner.DeploymentScannerExtension
     val controller = serviceTarget
       .addService(name, liftService)
       .addDependency(PathManagerService.SERVICE_NAME,
-      classOf[PathManager], liftService.pathManagerInjector)
+          classOf[PathManager], liftService.pathManagerInjector)
       .addListener(verificationHandler)
       .setInitialMode(ServiceController.Mode.ACTIVE)
       .install()

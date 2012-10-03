@@ -7,13 +7,10 @@
 package io.escalante.lift
 
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
-import org.jboss.dmr.ModelNode
-import org.jboss.as.controller.{PathElement, PathAddress}
-import org.junit.{Ignore, Test}
-import subsystem.{ThirdPartyModulesRepo, LiftExtension}
-import xml.Elem
+import org.jboss.as.controller.PathAddress
+import org.junit.Test
+import subsystem.{LiftService, ThirdPartyModulesRepo, LiftExtension}
 import org.jboss.as.subsystem.test.{ControllerInitializer, AdditionalInitialization}
-import java.io.File
 
 /**
  * Unit test for the Lift subsystem.
@@ -24,11 +21,11 @@ import java.io.File
 class LiftSubsystemUnitTest extends AbstractScalaSubsystemTest {
 
   /**
-   * Tests that the xml is parsed into the correct operations
+   * Tests that the xml is parsed into the correct operations.
    */
-  @Test def testParseSubsystem {
+  @Test def testParseSubsystem() {
     // Parse the subsystem xml into operations
-    val subsystemXml = <subsystem xmlns={LiftExtension.NAMESPACE}/>
+    val subsystemXml = <subsystem xmlns={LiftExtension.SUBSYSTEM_NAMESPACE}/>
 
     val operations = super.parse(subsystemXml)
 
@@ -47,9 +44,12 @@ class LiftSubsystemUnitTest extends AbstractScalaSubsystemTest {
     assert(!op.hasDefined(ThirdPartyModulesRepo.PATH))
   }
 
-  @Test def testParseThirdpartyModulesRepo {
+  /**
+   * Tests xml parsing of the thirdparty modules repository location.
+   */
+  @Test def testParseThirdpartyModulesRepo() {
     val subsystemXml =
-      <subsystem xmlns={LiftExtension.NAMESPACE}>
+      <subsystem xmlns={LiftExtension.SUBSYSTEM_NAMESPACE}>
         <thirdparty-modules-repo relative-to="x" path="y"/>
       </subsystem>
 
@@ -70,20 +70,49 @@ class LiftSubsystemUnitTest extends AbstractScalaSubsystemTest {
     assert("y" === op.get(ThirdPartyModulesRepo.PATH).asString())
   }
 
-  // TODO: Ask AS guys on how to best unit test path related tests
+  /**
+   * Tests installation of the lift subsystem with default configuration.
+   */
+  @Test def testInstallLiftSubsystem() {
+    // Parse the subsystem xml and install into the controller
+    val subsystemXml = <subsystem xmlns={LiftExtension.SUBSYSTEM_NAMESPACE} />
+    val services = super.installInController(new PathInitialization(), subsystemXml)
+    val model = services.readWholeModel
+    assert(model.get(SUBSYSTEM).hasDefined(LiftExtension.SUBSYSTEM_NAME))
+    val liftNode = model.get(SUBSYSTEM).get(LiftExtension.SUBSYSTEM_NAME)
+    assert(!liftNode.hasDefined(ThirdPartyModulesRepo.RELATIVE_TO))
+    assert(!liftNode.hasDefined(ThirdPartyModulesRepo.PATH))
+  }
 
-  //   /**
-  //    * Test that the model created from the xml looks as expected
-  //    */
-  //   @Test def testInstallIntoController {
-  //      // Parse the subsystem xml and install into the controller
-  //      val subsystemXml = <subsystem xmlns={LiftExtension.NAMESPACE} />
-  //
-  //      val services = super.installInController(subsystemXml)
-  //      val model = services.readWholeModel
-  //      assert(model.get(SUBSYSTEM).hasDefined(LiftExtension.SUBSYSTEM_NAME))
-  //   }
-  //
+  /**
+   * Tests installation of the lift subsystem with a custom thirdparty modules
+   * repository that requires system property based expression resolution.
+   */
+  @Test def testInstallWithSysPropertyThirdpartyModulesRepoPath() {
+    val key = "my.path.expression"
+    val value = "lift1234"
+    System.setProperty(key, value)
+
+    try {
+      val subsystemXml =
+        <subsystem xmlns={LiftExtension.SUBSYSTEM_NAMESPACE}>
+          <thirdparty-modules-repo path="/path/${my.path.expression}"/>
+        </subsystem>
+
+      val services = super.installInController(new PathInitialization(), subsystemXml)
+      val model = services.readWholeModel
+      assert(model.get(SUBSYSTEM).hasDefined(LiftExtension.SUBSYSTEM_NAME))
+      val liftNode = model.get(SUBSYSTEM).get(LiftExtension.SUBSYSTEM_NAME)
+      assert(!liftNode.hasDefined(ThirdPartyModulesRepo.RELATIVE_TO))
+      val liftService = services.getContainer.getService(
+        LiftService.createServiceName).getValue.asInstanceOf[LiftService]
+      assert("/path/" + value === liftService.thirdPartyModulesPath)
+      assert("/path/${" + key + "}" === liftNode.get(ThirdPartyModulesRepo.PATH).asString())
+    } finally {
+      System.clearProperty(key)
+    }
+  }
+
   //   /**
   //    * Starts a controller with a given subsystem xml and then checks that a
   //    * second controller started with the xml marshalled from the first one
@@ -132,5 +161,12 @@ class LiftSubsystemUnitTest extends AbstractScalaSubsystemTest {
   //      super.compare(modelA, modelB)
   //   }
 
+  class PathInitialization extends AdditionalInitialization {
+
+    override def setupController(init: ControllerInitializer) {
+      init.addPath("jboss.home.dir", "thirdparty-modules", null)
+    }
+
+  }
 
 }

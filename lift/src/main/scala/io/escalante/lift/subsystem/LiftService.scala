@@ -19,7 +19,7 @@ import io.escalante.Version
  * @author Galder Zamarreño
  * @since 1.0
  */
-class LiftService(modulesRelativeTo: String, modulesPath: String)
+class LiftService(modulesRelativeTo: Option[String], modulesPath: String)
   extends Service[LiftService] with Log {
 
   private val pathManager = new InjectedValue[PathManager]()
@@ -31,7 +31,7 @@ class LiftService(modulesRelativeTo: String, modulesPath: String)
 
   def start(context: StartContext) {
     resolvedModulesPath = pathManager.getValue
-      .resolveRelativePathEntry(modulesPath, modulesRelativeTo)
+      .resolveRelativePathEntry(modulesPath, modulesRelativeTo.getOrElse(null))
 
     info("Initializing Escalante Lift subsystem")
 
@@ -53,7 +53,7 @@ class LiftService(modulesRelativeTo: String, modulesPath: String)
 
 object LiftService {
 
-  private[subsystem] def createServiceName =
+  private[lift] def createServiceName =
     ServiceName.of("escalante").append("lift")
 
 }

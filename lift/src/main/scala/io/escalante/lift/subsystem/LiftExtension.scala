@@ -7,7 +7,7 @@
 package io.escalante.lift.subsystem
 
 import org.jboss.as.controller.parsing.ExtensionParsingContext
-import org.jboss.dmr.ModelNode
+import org.jboss.dmr.{ModelType, ModelNode}
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
 import org.jboss.as.controller.descriptions.DescriptionProvider
 import org.jboss.as.controller.descriptions.common.CommonDescriptions
@@ -51,14 +51,14 @@ class LiftExtension extends Extension {
   }
 
   def initializeParsers(ctx: ExtensionParsingContext) {
-    ctx.setSubsystemXmlMapping(SUBSYSTEM_NAME, NAMESPACE, parser)
+    ctx.setSubsystemXmlMapping(SUBSYSTEM_NAME, SUBSYSTEM_NAMESPACE, parser)
   }
 
 }
 
 object LiftExtension extends Log {
 
-  val NAMESPACE = "urn:escalante:lift:1.0"
+  val SUBSYSTEM_NAMESPACE = "urn:escalante:lift:1.0"
 
   val SUBSYSTEM_NAME = "lift"
 
@@ -73,22 +73,31 @@ object LiftExtension extends Log {
       subsystem.get(DESCRIPTION).set("This subsystem deploys Lift applications")
       subsystem.get(HEAD_COMMENT_ALLOWED).set(true)
       subsystem.get(TAIL_COMMENT_ALLOWED).set(true)
-      subsystem.get(NAMESPACE).set(NAMESPACE)
+      subsystem.get(NAMESPACE).set(SUBSYSTEM_NAMESPACE)
       subsystem
     }
   }
 
   val SUBSYSTEM_ADD_DESC = new DescriptionProvider() {
     def getModelDescription(locale: util.Locale): ModelNode = {
-      val subsystem = new ModelNode()
-      subsystem.get(DESCRIPTION).set("Adds the Lift subsystem")
-      subsystem
+      val desc = new ModelNode()
+      desc.get(OPERATION_NAME).set(ADD)
+      desc.get(DESCRIPTION).set("Adds the Lift subsystem")
+      desc.get(REQUEST_PROPERTIES, ThirdPartyModulesRepo.PATH, DESCRIPTION)
+        .set("Thirdparty modules repository path")
+      desc.get(REQUEST_PROPERTIES, ThirdPartyModulesRepo.PATH, TYPE)
+        .set(ModelType.EXPRESSION)
+      // If absent, a default path is used
+      desc.get(REQUEST_PROPERTIES, ThirdPartyModulesRepo.PATH, REQUIRED)
+        .set(false)
+      desc
     }
   }
 
   val SUBSYSTEM_REMOVE_DESC = new DescriptionProvider() {
     def getModelDescription(locale: util.Locale): ModelNode = {
       val subsystem = new ModelNode()
+      subsystem.get(OPERATION_NAME).set(REMOVE)
       subsystem.get(DESCRIPTION).set("Removes the Lift subsystem")
       subsystem
     }
@@ -103,7 +112,8 @@ object LiftExtension extends Log {
 
 }
 
-private object LiftDescribeHandler extends OperationStepHandler with DescriptionProvider {
+private object LiftDescribeHandler
+  extends OperationStepHandler with DescriptionProvider {
 
   import LiftExtension._
 
@@ -111,10 +121,11 @@ private object LiftDescribeHandler extends OperationStepHandler with Description
     CommonDescriptions.getSubsystemDescribeOperation(locale)
 
   def execute(context: OperationContext, operation: ModelNode) {
-    debug("Describe lift extension")
+    debug("Describe Lift extension")
 
     val addOp = createAddSubsystemOperation
-    val model = Resource.Tools.readModel(context.readResource(PathAddress.EMPTY_ADDRESS))
+    val model = Resource.Tools.readModel(context
+      .readResource(PathAddress.EMPTY_ADDRESS))
 
     val pathKey = ThirdPartyModulesRepo.PATH
     if (model.hasDefined(pathKey))
