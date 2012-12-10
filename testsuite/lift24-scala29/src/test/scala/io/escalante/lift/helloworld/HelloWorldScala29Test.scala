@@ -28,13 +28,13 @@ class HelloWorldScala29Test extends AbstractHelloWorldTest {
 
   @Test
   @OperateOnDeployment("helloworld-291")
-  def testHelloWorld281() {
+  def testHelloWorld291() {
     helloWorld("291")
   }
 
   @Test
   @OperateOnDeployment("helloworld-290")
-  def testHelloWorld280() {
+  def testHelloWorld290() {
     helloWorld("290")
   }
 
@@ -42,15 +42,15 @@ class HelloWorldScala29Test extends AbstractHelloWorldTest {
 
 object HelloWorldScala29Test {
 
-  @Deployment(name = "helloworld-default", order = 1)
+  @Deployment(name = "helloworld-default", order = 1, testable = false)
   def deployment: WebArchive =
     HelloWorldTest.deployment("helloworld", "helloworld-default.war",
       Some("2.4"), None, classOf[HelloWorldBoot])
 
-  @Deployment(name = "helloworld-291", order = 2)
+  @Deployment(name = "helloworld-291", order = 2, testable = false)
   def deployment291: WebArchive = deployHelloWorld("2.9.1")
 
-  @Deployment(name = "helloworld-290", order = 3)
+  @Deployment(name = "helloworld-290", order = 3, testable = false)
   def deployment290: WebArchive = deployHelloWorld("2.9.0")
 
   private def deployHelloWorld(scala: String): WebArchive =

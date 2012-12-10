@@ -96,7 +96,7 @@
       <version.scala>2.8.2</version.scala>
       <version.scalatest>1.7.1</version.scalatest>
 
-      <version.jboss.as>7.x.incremental.379</version.jboss.as>
+      <version.jboss.as>7.x.incremental.546</version.jboss.as>
       <!--<version.jboss.as>7.2.0.Alpha1-SNAPSHOT</version.jboss.as>-->
 
       <version.jboss.logging>3.1.0.GA</version.jboss.logging>
