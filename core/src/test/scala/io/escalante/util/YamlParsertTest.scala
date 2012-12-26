@@ -5,9 +5,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package io.io.util
+package io.escalante.util
 
-import io.escalante.util.YamlParser
 import org.junit.Test
 import io.escalante.{LiftYaml, ScalaYaml}
 import org.scalatest.junit.AssertionsForJUnit
