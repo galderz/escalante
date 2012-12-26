@@ -38,7 +38,7 @@ abstract class AbstractLiftWebAppTest extends Log {
     info("Create war deployment: %s", deployName)
 
     val indexHtmlContent = xml(indexHtml)
-    val liftXmlContent = xml(liftXml(lift, scala))
+    val escalanteYamlContent = escalanteYaml(lift, scala)
     val webXmlContent = xml(webXml(bootLoader))
 
     val ideFriendlyPath = "testsuite/lift24-scala28/pom.xml"
@@ -61,7 +61,8 @@ abstract class AbstractLiftWebAppTest extends Log {
       war.addAsWebResource(xml(staticResource), "static/index.html"))
 
     war.addAsWebResource(indexHtmlContent, "index.html")
-      .addAsWebResource(liftXmlContent, "WEB-INF/lift.xml")
+      .addAsWebResource(new StringAsset(escalanteYamlContent),
+          "META-INF/escalante.yml")
       .addAsWebResource(webXmlContent, "WEB-INF/web.xml")
       .addClasses(bootClass, classOf[Closeable])
       .addClasses(classes: _ *)
@@ -79,15 +80,30 @@ abstract class AbstractLiftWebAppTest extends Log {
 
   private def resource(resource: String): Asset = new ClassLoaderAsset(resource)
 
-  private def liftXml(lift: Option[String], scala: Option[String]): Elem = {
+  private def escalanteYaml(lift: Option[String], scala: Option[String]): String = {
     (lift, scala) match {
       case (Some(liftVersion), Some(scalaVersion)) =>
-          <lift-app version={liftVersion} scala-version={scalaVersion}/>
+        """
+          | scala:
+          |   version: %s
+          | lift:
+          |   version: %s
+        """.format(scalaVersion, liftVersion).stripMargin
       case (Some(liftVersion), None) =>
-          <lift-app version={liftVersion}/>
+        """
+          | lift:
+          |   version: %s
+        """.format(liftVersion).stripMargin
       case (None, Some(scalaVersion)) =>
-          <lift-app scala-version={scalaVersion}/>
-      case (None, None) => <lift-app/>
+        """
+          | lift:
+          | scala:
+          |   version: %s
+        """.format(scalaVersion).stripMargin
+      case (None, None) =>
+        """
+          | lift:
+        """.stripMargin
     }
   }
 

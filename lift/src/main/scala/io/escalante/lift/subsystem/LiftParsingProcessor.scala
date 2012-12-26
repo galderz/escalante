@@ -7,15 +7,16 @@
 package io.escalante.lift.subsystem
 
 import org.jboss.as.server.deployment.{Attachments, DeploymentPhaseContext, DeploymentUnit, DeploymentUnitProcessor}
-import io.escalante.util.Closeable._
 import javax.xml.stream.XMLInputFactory
 import io.escalante.logging.Log
-import org.jboss.metadata.parser.util.{MetaDataElementParser, NoopXMLResolver}
+import org.jboss.metadata.parser.util.MetaDataElementParser
 import org.jboss.metadata.parser.servlet.WebMetaDataParser
 import org.jboss.as.web.deployment.WarMetaData
 import java.io.StringReader
 import org.jboss.as.ee.structure.{SpecDescriptorPropertyReplacement, DeploymentType, DeploymentTypeMarker}
 import org.jboss.as.server.deployment.module.ResourceRoot
+import io.escalante.EscalanteYaml
+import io.escalante.util.YamlParser
 
 /**
  * Lift metadata descriptor processor
@@ -34,19 +35,18 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
       return
 
     val root = deployment.getAttachment(Attachments.DEPLOYMENT_ROOT)
-    val liftXml = root.getRoot.getChild(LIFT_XML)
-    if (liftXml.exists()) {
-      trace("Lift application detected in %s", deployment)
+    val escalanteYamlFile = root.getRoot.getChild(EscalanteYaml.ESCALANTE_YAML)
+    if (escalanteYamlFile.exists()) {
+      val escalanteYaml = YamlParser.parse(escalanteYamlFile)
+      escalanteYaml.lift match {
+        case None => info("Not a Lift application %s", deployment)
+        case Some(lift) =>
+          info("Lift application detected in %s", deployment)
 
-      // Custom web xml for lift apps
-      addLiftMetadata(deployment, root)
+          // Custom web xml for lift apps
+          addLiftMetadata(deployment, root)
 
-      use(liftXml.openStream()) {
-        input =>
-          val inputFactory = XMLInputFactory.newInstance
-          inputFactory.setXMLResolver(NoopXMLResolver.create())
-          val xmlReader = inputFactory.createXMLStreamReader(input)
-          val liftMetaData = LiftMetaDataParser.parse(xmlReader)
+          val liftMetaData = LiftMetaDataParser.parse(escalanteYaml)
           deployment.putAttachment(LiftMetaData.ATTACHMENT_KEY, liftMetaData)
       }
     }
@@ -98,8 +98,6 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
 }
 
 object LiftParsingProcessor extends Log {
-
-  val LIFT_XML = "WEB-INF/lift.xml"
 
   val WEB_XML = "WEB-INF/web.xml"
 

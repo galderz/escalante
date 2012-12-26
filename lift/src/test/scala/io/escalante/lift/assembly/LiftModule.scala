@@ -80,6 +80,7 @@ object LiftModule extends EscalanteModule {
         <module name="org.jboss.logging"/>
         <module name="org.jboss.vfs"/>
         <module name="org.scala-lang.scala-library"/>
+        <module name="org.yaml.snakeyaml"/>
         <module name="org.apache.maven.maven-aether-provider"
                 services="import">
           <imports>
