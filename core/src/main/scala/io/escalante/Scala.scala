@@ -91,8 +91,10 @@ case class UnknownScalaVersion(version: String) extends Scala {
   override def moduleXml = null
 }
 
-object ScalaVersion {
+object Scala {
 
+  // TODO: Would Enums be better for this? See:
+  // http://stackoverflow.com/questions/1898932/case-classes-vs-enumerations-in-scala
   def forName(version: String): Scala = {
     version match {
       case "2.9.2" => SCALA_292
@@ -102,6 +104,23 @@ object ScalaVersion {
       case "2.9.0" => SCALA_290
       case "2.8.0" => SCALA_280
       case v => new UnknownScalaVersion(v)
+    }
+  }
+
+  // TODO: Would enums be better for this? (it's code dup!)
+  // http://stackoverflow.com/questions/1898932/case-classes-vs-enumerations-in-scala
+  def main(): Scala = SCALA_292
+
+  def parse(parsed: java.util.Map[String, Object]): Scala = {
+    if (parsed != null) {
+      val tmp = parsed.get("scala")
+      if (tmp != null)
+        forName(tmp.asInstanceOf[java.util.Map[String, Object]]
+          .get("version").toString)
+      else
+        main()
+    } else {
+      main()
     }
   }
 

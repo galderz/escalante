@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Eclipse Public License version 1.0, available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>io.escalante</groupId>
+      <artifactId>escalante-testsuite</artifactId>
+      <version>0.2.0-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+
+   <groupId>io.escalante</groupId>
+   <artifactId>escalante-test-lift-latest</artifactId>
+   <version>0.2.0-SNAPSHOT</version>
+
+   <name>Escalante Testsuite for latest Lift release</name>
+
+   <packaging>jar</packaging>
+
+   <properties>
+      <version.scala>2.9.2</version.scala>
+      <version.lift>2.5-M3</version.lift>
+   </properties>
+
+   <dependencies>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-test-lift24-scala28</artifactId>
+         <type>test-jar</type>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-test-lift24-scala29</artifactId>
+         <type>test-jar</type>
+         <scope>test</scope>
+      </dependency>
+      <!--
+         Explicitly depend on 2.8.2 to make tests portable wrt war construction
+         Besides, 2.8.2 library should just work fine with upper Scala versions
+      -->
+      <dependency>
+         <groupId>org.scalatest</groupId>
+         <artifactId>scalatest_2.8.2</artifactId>
+         <!-- TODO: Why do I need version here?? -->
+         <version>${version.scalatest}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>net.liftweb</groupId>
+         <artifactId>lift-mapper_${version.scala}</artifactId>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+
+</project>

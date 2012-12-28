@@ -54,14 +54,21 @@ object HelloWorldTest extends AbstractLiftWebAppTest {
   @Deployment(name = "helloworld-280", order = 3)
   def deployment280: WebArchive = deployHelloWorld("2.8.0")
 
-  private def deployHelloWorld(scala: String): WebArchive =
+  private def deployHelloWorld(scala: String): WebArchive = {
+    val descriptor =
+      """
+        | scala:
+        |   version: %s
+        | lift:
+      """.format(scala).stripMargin
+
     deployment("helloworld", "helloworld-%s.war".format(scala.replace(".", "")),
-      None, Some(scala), classOf[HelloWorldBoot])
+      descriptor, classOf[HelloWorldBoot])
+  }
 
   def deployment(appName: String, deployName: String,
-    lift: Option[String], scala: Option[String],
-    bootClass: Class[_ <: AnyRef]): WebArchive =
-    deployment(appName, deployName, lift, scala, bootClass,
+    descriptor: String, bootClass: Class[_ <: AnyRef]): WebArchive =
+    deployment(appName, deployName, descriptor, bootClass,
       "io.escalante.lift.helloworld.HelloWorldBoot",
       classOf[HelloWorld], classOf[HelloWorldTest],
       classOf[AbstractHelloWorldTest])

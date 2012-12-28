@@ -10,36 +10,34 @@ import org.jboss.as.server.deployment.AttachmentKey
 import io.escalante._
 import io.escalante.lift.{LIFT_24, Lift}
 import maven.MavenArtifact
-import org.sonatype.aether.graph.DependencyFilter
-import lift.maven.{Lift24Scala28DependencyFilter, Lift24Scala29DependencyFilter}
 
 /**
  * // TODO: Document this
  * @author Galder Zamarreño
  * @since // TODO
  */
-case class LiftMetaData(liftVersion: Lift, scalaVersion: Scala) {
+case class LiftMetaData(
+  liftVersion: Lift,
+  scalaVersion: Scala,
+  modules: Seq[String]) {
 
-  def liftDependencyFilter: DependencyFilter = {
-    (liftVersion, scalaVersion) match {
-      case (LIFT_24, SCALA_292) | (LIFT_24, SCALA_291) | (LIFT_24, SCALA_290)
-      => Lift24Scala29DependencyFilter
-      case (LIFT_24, SCALA_282) | (LIFT_24, SCALA_281) | (LIFT_24, SCALA_280)
-      => Lift24Scala28DependencyFilter
-      case _ => null
-    }
-  }
-
-  def mavenArtifact: MavenArtifact = {
+  def mavenArtifacts: Seq[MavenArtifact] = {
     val mavenScalaVersion =
       (liftVersion, scalaVersion) match {
         case (LIFT_24, SCALA_292) => SCALA_291 // no lift artifact for 2.9.2
         case _ => scalaVersion
       }
 
-    new MavenArtifact("net.liftweb",
-      "lift-mapper_" + mavenScalaVersion.version, liftVersion.version)
+    val customMavenArtifacts =
+      for (module <- modules)
+      yield liftMavenArtifact(module, mavenScalaVersion)
+
+    liftMavenArtifact("webkit", mavenScalaVersion) +: customMavenArtifacts
   }
+
+  private def liftMavenArtifact(module: String, scala: Scala): MavenArtifact =
+    new MavenArtifact("net.liftweb",
+      "lift-" + module + "_" + scala.version, liftVersion.version)
 
 }
 

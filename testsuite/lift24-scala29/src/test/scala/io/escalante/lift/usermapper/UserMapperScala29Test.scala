@@ -27,7 +27,6 @@ class UserMapperScala29Test extends UserMapperTest {
 object UserMapperScala29Test {
 
   @Deployment def deployment: WebArchive =
-    UserMapperTest.deployment(
-      Some("2.4"), Some("2.9.2"), classOf[UserMapperBoot])
+    UserMapperTest.deployment("2.9.2", classOf[UserMapperBoot])
 
 }

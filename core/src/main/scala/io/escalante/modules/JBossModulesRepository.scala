@@ -85,6 +85,7 @@ class JBossModulesRepository(root: File) {
       val jarFiles = (artifact :: subArtifacts).flatMap(artifact =>
         MavenDependencyResolver.resolveArtifact(artifact, artifact.filter))
 
+      // TODO: Parallelize with Scala 2.10 futures...
       jarFiles.foreach(jar => copy(jar, new File(dir, jar.getName)))
 
       val moduleXml = moduleDescriptor.getOrElse {

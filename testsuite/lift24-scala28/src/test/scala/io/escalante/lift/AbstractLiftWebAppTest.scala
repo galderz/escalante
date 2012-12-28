@@ -17,9 +17,10 @@ import java.io.File
 import org.jboss.shrinkwrap.api.asset.{ClassLoaderAsset, StringAsset, Asset}
 
 /**
- * // TODO: Document this
+ * Parent for static methods required for Lift tests.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 abstract class AbstractLiftWebAppTest extends Log {
 
@@ -30,15 +31,13 @@ abstract class AbstractLiftWebAppTest extends Log {
   val static: Option[Elem]
 
   def deployment(appName: String, deployName: String,
-    lift: Option[String], scala: Option[String],
-    bootClass: Class[_ <: AnyRef], bootLoader: String,
+    descriptor: String, bootClass: Class[_ <: AnyRef], bootLoader: String,
     classes: Class[_]*): WebArchive = {
     // Create deployment name
     val war = ShrinkWrap.create(classOf[WebArchive], deployName)
     info("Create war deployment: %s", deployName)
 
     val indexHtmlContent = xml(indexHtml)
-    val escalanteYamlContent = escalanteYaml(lift, scala)
     val webXmlContent = xml(webXml(bootLoader))
 
     val ideFriendlyPath = "testsuite/lift24-scala28/pom.xml"
@@ -61,7 +60,7 @@ abstract class AbstractLiftWebAppTest extends Log {
       war.addAsWebResource(xml(staticResource), "static/index.html"))
 
     war.addAsWebResource(indexHtmlContent, "index.html")
-      .addAsWebResource(new StringAsset(escalanteYamlContent),
+      .addAsWebResource(new StringAsset(descriptor),
           "META-INF/escalante.yml")
       .addAsWebResource(webXmlContent, "WEB-INF/web.xml")
       .addClasses(bootClass, classOf[Closeable])
@@ -80,32 +79,32 @@ abstract class AbstractLiftWebAppTest extends Log {
 
   private def resource(resource: String): Asset = new ClassLoaderAsset(resource)
 
-  private def escalanteYaml(lift: Option[String], scala: Option[String]): String = {
-    (lift, scala) match {
-      case (Some(liftVersion), Some(scalaVersion)) =>
-        """
-          | scala:
-          |   version: %s
-          | lift:
-          |   version: %s
-        """.format(scalaVersion, liftVersion).stripMargin
-      case (Some(liftVersion), None) =>
-        """
-          | lift:
-          |   version: %s
-        """.format(liftVersion).stripMargin
-      case (None, Some(scalaVersion)) =>
-        """
-          | lift:
-          | scala:
-          |   version: %s
-        """.format(scalaVersion).stripMargin
-      case (None, None) =>
-        """
-          | lift:
-        """.stripMargin
-    }
-  }
+//  private def escalanteYaml(lift: Option[String], scala: Option[String]): String = {
+//    (lift, scala) match {
+//      case (Some(liftVersion), Some(scalaVersion)) =>
+//        """
+//          | scala:
+//          |   version: %s
+//          | lift:
+//          |   version: %s
+//        """.format(scalaVersion, liftVersion).stripMargin
+//      case (Some(liftVersion), None) =>
+//        """
+//          | lift:
+//          |   version: %s
+//        """.format(liftVersion).stripMargin
+//      case (None, Some(scalaVersion)) =>
+//        """
+//          | scala:
+//          |   version: %s
+//          | lift:
+//        """.format(scalaVersion).stripMargin
+//      case (None, None) =>
+//        """
+//          | lift:
+//        """.stripMargin
+//    }
+//  }
 
   private def webXml(bootLoader: String): Elem = {
     <web-app version="2.5"

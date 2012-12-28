@@ -11,11 +11,11 @@ import io.escalante.logging.Log
 import java.io.File
 import org.jboss.vfs.{VFS, VirtualFile}
 import org.jboss.as.server.deployment.module._
-import io.escalante.SCALA_292
+import io.escalante.{Scala, SCALA_292}
 import io.escalante.modules.{JBossModule, JBossModulesRepository}
-import io.escalante.maven.{MavenDependencyResolver, MavenArtifact}
+import io.escalante.maven.MavenDependencyResolver
 import org.jboss.msc.service.ServiceRegistry
-import io.escalante.lift.LIFT_24
+import org.sonatype.aether.resolution.DependencyResolutionException
 
 /**
  * A deployment processor that hooks the right dependencies for the Lift
@@ -41,26 +41,11 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
     val service = getLiftService(ctx.getServiceRegistry)
     val repo = new JBossModulesRepository(new File(service.thirdPartyModulesPath))
 
-    // Attach shared dependencies depending of the lift version
-    liftMetaData match {
-      case LiftMetaData(LIFT_24, scala) =>
-        moduleSpec.addSystemDependency(JODA_TIME_MODULE_ID.moduleDependency)
-        moduleSpec.addSystemDependency(SLF4J_MODULE_ID.moduleDependency)
-        moduleSpec.addSystemDependency(COMMONS_CODEC_MODULE_ID.moduleDependency)
-        // Not shipped by JBoss AS, so download and install
-        val module = repo.installModule(
-          new MavenArtifact("commons-fileupload", "commons-fileupload", "1.2.2"),
-          new JBossModule("javax.servlet.api"))
-        moduleSpec.addSystemDependency(module.moduleDependency)
-      case _ => // TODO: Throw exception
-        info("Unknown Lift deployment")
-    }
-
     // Attach Scala dependencies according to the Scala version passed
     liftMetaData match {
-      case LiftMetaData(lift, SCALA_292) =>
+      case LiftMetaData(lift, SCALA_292, modules) =>
         moduleSpec.addSystemDependency(SCALA_MODULE_ID.moduleDependency)
-      case LiftMetaData(lift, scala) =>
+      case LiftMetaData(lift, scala, modules) =>
         val module = repo.installScalaModule(scala)
         moduleSpec.addSystemDependency(module.moduleDependency)
       case _ => // TODO: Throw exception
@@ -71,9 +56,8 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
     // Hack Lift jars into the war file cos Lift framework is currently
     // designed to be solely used by one web-app in (class loader) isolation
     liftMetaData match {
-      case LiftMetaData(lift, scala) =>
-        val liftJars = MavenDependencyResolver.resolveArtifact(
-          liftMetaData.mavenArtifact, Some(liftMetaData.liftDependencyFilter))
+      case LiftMetaData(lift, scala, modules) =>
+        val liftJars = resolveLiftJars(liftMetaData)
         addLiftJars(deployment, liftJars)
       case _ => info("Unknown Lift deployment")
     }
@@ -81,6 +65,30 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor {
 
   def undeploy(unit: DeploymentUnit) {
     // TODO: Do I need to remove the dependencies?
+  }
+
+  private def resolveLiftJars(metaData: LiftMetaData): Seq[File] = {
+    // TODO: Parallelize with Scala 2.10 futures...
+    // Flat map so that each maven dependencies files are then combined into
+    // a single sequence of files to add to deployment unit
+    metaData.mavenArtifacts.flatMap { artifact =>
+      try {
+        MavenDependencyResolver.resolveArtifact(artifact)
+      } catch {
+        case e: DependencyResolutionException =>
+          // Dependency resolution failed, check if Scala version is latest
+          val scala = metaData.scalaVersion
+          val latestScala = Scala.main()
+          if (scala.isMain) throw e
+          else {
+            warn("Artifact not found (exception: %s), but Scala version old (%s), " +
+              "so with a more recent one: %s", e.getMessage, scala, latestScala)
+            // Now try with latest Scala...
+            resolveLiftJars(LiftMetaData(
+              metaData.liftVersion, latestScala, metaData.modules))
+          }
+      }
+    }.distinct // Remove duplicates to avoid duplicate mount errors
   }
 
   private def addLiftJars(deployment: DeploymentUnit, jars: Seq[File]) {
@@ -113,10 +121,10 @@ object LiftDependencyProcessor extends Log {
 
   val SCALA_MODULE_ID = new JBossModule("org.scala-lang.scala-library")
 
-  val JODA_TIME_MODULE_ID = new JBossModule("org.joda.time")
-
-  val SLF4J_MODULE_ID = new JBossModule("org.slf4j")
-
-  val COMMONS_CODEC_MODULE_ID = new JBossModule("org.apache.commons.codec")
+//  val JODA_TIME_MODULE_ID = new JBossModule("org.joda.time")
+//
+//  val SLF4J_MODULE_ID = new JBossModule("org.slf4j")
+//
+//  val COMMONS_CODEC_MODULE_ID = new JBossModule("org.apache.commons.codec")
 
 }

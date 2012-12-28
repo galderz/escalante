@@ -9,9 +9,10 @@ package io.escalante.lift.helloworld
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 
 /**
- * // TODO: Document this
+ * Hello world test.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 abstract class AbstractHelloWorldTest {
 

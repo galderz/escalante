@@ -6,26 +6,63 @@
  */
 package io.escalante.lift.subsystem
 
-import io.escalante.{ScalaYaml, EscalanteYaml, ScalaVersion}
-import io.escalante.lift.LiftVersion
+import io.escalante.Scala
+import io.escalante.lift.Lift
+import org.jboss.vfs.VirtualFile
+import io.escalante.util.YamlParser
+import java.util
+import collection.JavaConversions.asScalaBuffer
+import scala.Some
 
 /**
- * Lift application metadata parser
+ * Lift application metadata parser.
  *
  * @author Galder Zamarreño
  * @since 1.0
  */
 object LiftMetaDataParser {
 
-  def parse(yaml: EscalanteYaml): LiftMetaData = {
-    // If reached this far, it's a Lift app
-    val version = LiftVersion.forName(yaml.lift.get.version)
+  def parse(descriptor: VirtualFile): Option[LiftMetaData] =
+    parse(YamlParser.parse(descriptor))
 
-    // Default Scala version based on last Lift release
-    val scalaVersion = ScalaVersion.forName(
-      yaml.scala.getOrElse(ScalaYaml("2.9.2")).version)
+  def parse(contents: String): Option[LiftMetaData] =
+    parse(YamlParser.parse(contents))
 
-    new LiftMetaData(version, scalaVersion)
+  def parse(parsed: util.Map[String, Object]): Option[LiftMetaData] = {
+    val scala = Scala.parse(parsed)
+    val lift = Lift.parse(parsed)
+
+    // TODO: Merge with Lift?
+    lift match {
+      case Some(l) =>
+        // If lift key found, check if modules present
+        val liftMeta = parsed.get("lift").asInstanceOf[util.Map[String, Object]]
+        val modules =
+          if (liftMeta != null) {
+            val modulesMeta = liftMeta.get("modules")
+            if (modulesMeta != null)
+              asScalaBuffer(modulesMeta.asInstanceOf[util.List[String]]).toSeq
+            else
+              List()
+          } else {
+            List()
+          }
+
+        Some(LiftMetaData(l, scala, modules))
+      case None =>
+        None
+    }
   }
+
+//  def parse(meta: EscalanteDescriptor): LiftMetaData = {
+//    // If reached this far, it's a Lift app
+//    val version = LiftVersion.forName(meta.lift.get.version)
+//
+//    // Default Scala version based on last Lift release
+//    val scalaVersion = Scala.forName(
+//      meta.scala.getOrElse(ScalaDescriptor("2.9.2")).version)
+//
+//    new LiftMetaData(version, scalaVersion)
+//  }
 
 }

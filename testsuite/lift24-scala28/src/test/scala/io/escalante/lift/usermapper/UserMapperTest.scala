@@ -80,13 +80,23 @@ class UserMapperTest {
 object UserMapperTest extends AbstractLiftWebAppTest {
 
   @Deployment def deployment: WebArchive =
-    deployment(Some("2.4"), Some("2.8.2"), classOf[UserMapperBoot])
+    deployment("2.8.2", classOf[UserMapperBoot])
 
-  def deployment(lift: Option[String], scala: Option[String],
-    bootClass: Class[_ <: AnyRef]): WebArchive =
-    deployment("usermapper", "usermapper-%s.war".format(scala.get.replace(".", "")),
-      lift, scala, bootClass, "io.escalante.lift.usermapper.UserMapperBoot",
+  def deployment(scala: String, bootClass: Class[_ <: AnyRef]): WebArchive = {
+    val descriptor =
+      """
+        | scala:
+        |   version: %s
+        | lift:
+        |   version: 2.4
+        |   modules:
+        |     - mapper
+      """.format(scala).stripMargin
+
+    deployment("usermapper", "usermapper-%s.war".format(scala.replace(".", "")),
+      descriptor, bootClass, "io.escalante.lift.usermapper.UserMapperBoot",
       classOf[User], classOf[UserMapperTest])
+  }
 
   override val indexHtml: Elem =
     <html>

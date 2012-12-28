@@ -6,6 +6,8 @@
  */
 package io.escalante.lift
 
+import java.util
+
 /**
  * // TODO: Document this
  * @author Galder Zamarreño
@@ -13,20 +15,41 @@ package io.escalante.lift
  */
 sealed trait Lift {def version: String}
 
+// TODO: Do we need a specific case for 2.4? We support 'any'...
 case object LIFT_24 extends Lift {
   def version = "2.4"
 }
 
 case class UnknownLiftVersion(version: String) extends Lift
 
-object LiftVersion {
+object Lift {
 
-  def forName(version: Option[String]): Lift = {
+  private def forName(version: String): Lift = {
     version match {
-      case Some("2.4") => LIFT_24
-      case Some(v) => new UnknownLiftVersion(v)
-      case None => LIFT_24
+      case "2.4" => LIFT_24
+      case v => new UnknownLiftVersion(v)
     }
   }
 
+  def parse(parsed: java.util.Map[String, Object]): Option[Lift] = {
+    val liftKey = "lift"
+    if (parsed != null) {
+      val hasLift = parsed.containsKey(liftKey)
+      val tmp = parsed.get(liftKey)
+      if (!hasLift)
+        None
+      else if (hasLift && tmp == null)
+        Some(LIFT_24)
+      else {
+        val liftMeta = tmp.asInstanceOf[util.Map[String, Object]]
+        val version = liftMeta.get("version")
+        if (version != null)
+          Some(forName(version.toString))
+        else
+          Some(LIFT_24)
+      }
+    } else {
+      None
+    }
+  }
 }

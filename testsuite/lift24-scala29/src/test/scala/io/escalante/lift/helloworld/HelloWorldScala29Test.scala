@@ -13,9 +13,10 @@ import org.jboss.arquillian.junit.Arquillian
 import org.junit.Test
 
 /**
- * // TODO: Document this
+ * Hello world test with Scala 2.9.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 @RunWith(classOf[Arquillian])
 class HelloWorldScala29Test extends AbstractHelloWorldTest {
@@ -44,19 +45,41 @@ object HelloWorldScala29Test {
 
   @Deployment(name = "helloworld-default", order = 1, testable = false)
   def deployment: WebArchive =
-    HelloWorldTest.deployment("helloworld", "helloworld-default.war",
-      Some("2.4"), None, classOf[HelloWorldBoot])
+    deployHelloWorld(Some("2.4"), None)
 
   @Deployment(name = "helloworld-291", order = 2, testable = false)
-  def deployment291: WebArchive = deployHelloWorld("2.9.1")
+  def deployment291: WebArchive =
+      deployHelloWorld(Some("2.4"), Some("2.9.1"))
 
   @Deployment(name = "helloworld-290", order = 3, testable = false)
-  def deployment290: WebArchive = deployHelloWorld("2.9.0")
+  def deployment290: WebArchive =
+      deployHelloWorld(Some("2.4"), Some("2.9.0"))
 
-  private def deployHelloWorld(scala: String): WebArchive =
-    HelloWorldTest.deployment("helloworld",
-      "helloworld-%s.war".format(scala.replace(".", "")),
-      Some("2.4"), Some(scala), classOf[HelloWorldBoot])
+  private[escalante] def deployHelloWorld(
+      liftVersion: Option[String], scalaVersion: Option[String]): WebArchive = {
+    scalaVersion match {
+      case Some(scala) =>
+        val descriptor =
+          """
+            | scala:
+            |   version: %s
+            | lift:
+          """.format(scala).stripMargin
+
+        HelloWorldTest.deployment("helloworld",
+          "helloworld-%s.war".format(scala.replace(".", "")),
+          descriptor, classOf[HelloWorldBoot])
+      case None =>
+        val descriptor =
+          """
+            | scala:
+            | lift:
+          """.stripMargin
+
+        HelloWorldTest.deployment("helloworld", "helloworld-default.war",
+          descriptor, classOf[HelloWorldBoot])
+    }
+  }
 
 }
 

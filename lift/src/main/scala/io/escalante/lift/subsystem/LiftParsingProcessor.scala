@@ -15,8 +15,6 @@ import org.jboss.as.web.deployment.WarMetaData
 import java.io.StringReader
 import org.jboss.as.ee.structure.{SpecDescriptorPropertyReplacement, DeploymentType, DeploymentTypeMarker}
 import org.jboss.as.server.deployment.module.ResourceRoot
-import io.escalante.EscalanteYaml
-import io.escalante.util.YamlParser
 
 /**
  * Lift metadata descriptor processor
@@ -35,18 +33,16 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
       return
 
     val root = deployment.getAttachment(Attachments.DEPLOYMENT_ROOT)
-    val escalanteYamlFile = root.getRoot.getChild(EscalanteYaml.ESCALANTE_YAML)
-    if (escalanteYamlFile.exists()) {
-      val escalanteYaml = YamlParser.parse(escalanteYamlFile)
-      escalanteYaml.lift match {
-        case None => info("Not a Lift application %s", deployment)
-        case Some(lift) =>
-          info("Lift application detected in %s", deployment)
-
+    val descriptor = root.getRoot.getChild(
+        LiftParsingProcessor.ESCALANTE_DESCRIPTOR)
+    if (descriptor.exists()) {
+      val metaData = LiftMetaDataParser.parse(descriptor)
+      metaData match {
+        case None => debug("Not a Lift application %s", deployment)
+        case Some(liftMetaData) =>
+          debug("Lift application detected in %s", deployment)
           // Custom web xml for lift apps
           addLiftMetadata(deployment, root)
-
-          val liftMetaData = LiftMetaDataParser.parse(escalanteYaml)
           deployment.putAttachment(LiftMetaData.ATTACHMENT_KEY, liftMetaData)
       }
     }
@@ -100,5 +96,7 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
 object LiftParsingProcessor extends Log {
 
   val WEB_XML = "WEB-INF/web.xml"
+
+  val ESCALANTE_DESCRIPTOR = "META-INF/escalante.yml"
 
 }
