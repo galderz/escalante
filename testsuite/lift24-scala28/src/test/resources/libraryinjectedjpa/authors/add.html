@@ -1,0 +1,15 @@
+<!--
+  ~ Copyright 2013 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Eclipse Public License version 1.0, available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  -->
+
+<lift:surround with="default" at="content">
+  <lift:msgs showAll="true" />
+  <form class="lift:authorsInjectedJpa.add?form=post">
+    <input type="hidden" />
+    <p>Name: <input type="text" /></p>
+    <input type="submit" />
+  </form>  
+</lift:surround>

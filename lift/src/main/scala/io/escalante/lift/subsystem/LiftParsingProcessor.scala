@@ -33,10 +33,10 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
       return
 
     val root = deployment.getAttachment(Attachments.DEPLOYMENT_ROOT)
-    val descriptor = root.getRoot.getChild(
-        LiftParsingProcessor.ESCALANTE_DESCRIPTOR)
+    val descriptor = root.getRoot.getChild(ESCALANTE_DESCRIPTOR)
     if (descriptor.exists()) {
-      val metaData = LiftMetaDataParser.parse(descriptor)
+      val persistXml = root.getRoot.getChild(PERSISTENCE_XML)
+      val metaData = LiftMetaDataParser.parse(descriptor, persistXml.exists())
       metaData match {
         case None => debug("Not a Lift application %s", deployment)
         case Some(liftMetaData) =>
@@ -98,5 +98,7 @@ object LiftParsingProcessor extends Log {
   val WEB_XML = "WEB-INF/web.xml"
 
   val ESCALANTE_DESCRIPTOR = "META-INF/escalante.yml"
+
+  val PERSISTENCE_XML = "WEB-INF/classes/META-INF/persistence.xml"
 
 }

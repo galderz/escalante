@@ -69,9 +69,8 @@ object HelloWorldTest extends AbstractLiftWebAppTest {
   def deployment(appName: String, deployName: String,
     descriptor: String, bootClass: Class[_ <: AnyRef]): WebArchive =
     deployment(appName, deployName, descriptor, bootClass,
-      "io.escalante.lift.helloworld.HelloWorldBoot",
-      classOf[HelloWorld], classOf[HelloWorldTest],
-      classOf[AbstractHelloWorldTest])
+      List(classOf[HelloWorld], classOf[HelloWorldTest],
+      classOf[AbstractHelloWorldTest]))
 
   override val indexHtml: Elem =
     <lift:surround with="default" at="content">
@@ -81,7 +80,9 @@ object HelloWorldTest extends AbstractLiftWebAppTest {
       </p>
     </lift:surround>
 
-  override val templates: Seq[String] = List("templates-hidden/default.html")
+  override val webResources: Map[String, String] = Map(
+    "templates-hidden/default.html" -> ""
+  )
 
   override val static: Option[Elem] = None
 

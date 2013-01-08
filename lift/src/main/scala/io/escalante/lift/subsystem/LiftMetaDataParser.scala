@@ -22,13 +22,13 @@ import scala.Some
  */
 object LiftMetaDataParser {
 
-  def parse(descriptor: VirtualFile): Option[LiftMetaData] =
-    parse(YamlParser.parse(descriptor))
+  def parse(descriptor: VirtualFile, isImplicitJpa: Boolean): Option[LiftMetaData] =
+    parse(YamlParser.parse(descriptor), isImplicitJpa)
 
-  def parse(contents: String): Option[LiftMetaData] =
-    parse(YamlParser.parse(contents))
+  def parse(contents: String, isImplicitJpa: Boolean): Option[LiftMetaData] =
+    parse(YamlParser.parse(contents), isImplicitJpa)
 
-  def parse(parsed: util.Map[String, Object]): Option[LiftMetaData] = {
+  def parse(parsed: util.Map[String, Object], isImplicitJpa: Boolean): Option[LiftMetaData] = {
     val scala = Scala.parse(parsed)
     val lift = Lift.parse(parsed)
 
@@ -37,32 +37,29 @@ object LiftMetaDataParser {
       case Some(l) =>
         // If lift key found, check if modules present
         val liftMeta = parsed.get("lift").asInstanceOf[util.Map[String, Object]]
-        val modules =
-          if (liftMeta != null) {
-            val modulesMeta = liftMeta.get("modules")
-            if (modulesMeta != null)
-              asScalaBuffer(modulesMeta.asInstanceOf[util.List[String]]).toSeq
-            else
-              List()
-          } else {
-            List()
-          }
-
+        val modules = extractModules(liftMeta, isImplicitJpa)
         Some(LiftMetaData(l, scala, modules))
       case None =>
         None
     }
   }
 
-//  def parse(meta: EscalanteDescriptor): LiftMetaData = {
-//    // If reached this far, it's a Lift app
-//    val version = LiftVersion.forName(meta.lift.get.version)
-//
-//    // Default Scala version based on last Lift release
-//    val scalaVersion = Scala.forName(
-//      meta.scala.getOrElse(ScalaDescriptor("2.9.2")).version)
-//
-//    new LiftMetaData(version, scalaVersion)
-//  }
+  private def extractModules(
+        liftMeta: util.Map[String, Object],
+        isImplicitJpa: Boolean): Seq[String] = {
+    val modules = new util.ArrayList[String]()
+    // Add jpa module if implicitly enabled
+    if (isImplicitJpa)
+      modules.add("jpa")
+
+    if (liftMeta != null) {
+      val modulesMeta = liftMeta.get("modules")
+      if (modulesMeta != null) {
+        modules.addAll(modulesMeta.asInstanceOf[util.List[String]])
+      }
+    }
+
+    asScalaBuffer(modules).toSeq
+  }
 
 }

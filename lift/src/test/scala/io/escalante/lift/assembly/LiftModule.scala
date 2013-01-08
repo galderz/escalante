@@ -37,7 +37,12 @@ object LiftModule extends EscalanteModule {
 
     // 2. Create jar with the extension
     val archive = ShrinkWrap.create(classOf[JavaArchive], jarName)
+
+    // TODO: Move all test resources to under io/escalante/test
+    //       To make it easier to filter out test resources,
+    //       particularly in testing from IDE
     archive.addPackages(true, "io/escalante")
+
     archive.addAsServiceProvider(classOf[Extension], classOf[LiftExtension])
     val jarInput = archive.as(classOf[ZipExporter]).exportAsInputStream()
 
@@ -81,6 +86,8 @@ object LiftModule extends EscalanteModule {
         <module name="org.jboss.vfs"/>
         <module name="org.scala-lang.scala-library"/>
         <module name="org.yaml.snakeyaml"/>
+        <!-- Optional dependencies for JPA -->
+        <module name="org.apache.xerces" optional="true"/>
         <module name="org.apache.maven.maven-aether-provider"
                 services="import">
           <imports>

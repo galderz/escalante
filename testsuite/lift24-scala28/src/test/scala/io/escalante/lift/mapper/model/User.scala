@@ -4,7 +4,7 @@
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package io.escalante.lift.usermapper.model
+package io.escalante.lift.mapper.model
 
 import net.liftweb.common.Full
 import net.liftweb.mapper.{MappedTextarea, MegaProtoUser, MetaMegaProtoUser}

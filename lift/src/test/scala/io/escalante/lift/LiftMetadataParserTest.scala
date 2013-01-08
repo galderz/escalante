@@ -32,10 +32,13 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         |     - mongodb
       """.stripMargin
 
-    val meta = LiftMetaDataParser.parse(descriptor)
+    val meta = LiftMetaDataParser.parse(descriptor, false)
     assert(meta.get.liftVersion === LIFT_24)
     assert(meta.get.scalaVersion === SCALA_292)
     assert(meta.get.modules === List("record", "mongodb"))
+
+    assert(LiftMetaDataParser.parse(descriptor, true).get.modules
+      === List("jpa", "record", "mongodb"))
   }
 
   @Test def testHalfScalaDescriptor() {
@@ -45,7 +48,7 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         |   version: 2.9.2
       """.stripMargin
 
-    val meta = LiftMetaDataParser.parse(descriptor)
+    val meta = LiftMetaDataParser.parse(descriptor, false)
     assert(meta === None)
   }
 
@@ -55,7 +58,7 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         | scala:
       """.stripMargin
 
-    val meta = LiftMetaDataParser.parse(descriptor)
+    val meta = LiftMetaDataParser.parse(descriptor, false)
     assert(meta === None)
   }
 
@@ -65,7 +68,7 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         | lift:
       """.stripMargin
 
-    val meta = LiftMetaDataParser.parse(descriptor)
+    val meta = LiftMetaDataParser.parse(descriptor, false)
     assert(meta.get.liftVersion === LIFT_24)
     assert(meta.get.scalaVersion === SCALA_292)
     assert(meta.get.modules === List())
@@ -78,7 +81,7 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         |   version: 2.4
       """.stripMargin
 
-    val meta = LiftMetaDataParser.parse(descriptor)
+    val meta = LiftMetaDataParser.parse(descriptor, false)
     assert(meta.get.liftVersion === LIFT_24)
     assert(meta.get.scalaVersion === SCALA_292)
     assert(meta.get.modules === List())
@@ -92,15 +95,27 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         |     - mapper
       """.stripMargin
 
-    val meta = LiftMetaDataParser.parse(descriptor)
+    val meta = LiftMetaDataParser.parse(descriptor, false)
     assert(meta.get.liftVersion === LIFT_24)
     assert(meta.get.scalaVersion === SCALA_292)
     assert(meta.get.modules === List("mapper"))
   }
 
+  @Test def testLiftJpaModuleDescriptor() {
+    val descriptor =
+      """
+        | lift:
+        |   modules:
+        |     - jpa
+      """.stripMargin
+
+    val meta = LiftMetaDataParser.parse(descriptor, false)
+    assert(meta.get.modules === List("jpa"))
+  }
+
   @Test def testEmptyDescriptor() {
     val descriptor = ""
-    val meta = LiftMetaDataParser.parse(descriptor)
+    val meta = LiftMetaDataParser.parse(descriptor, false)
     assert(meta === None)
   }
 

@@ -4,15 +4,15 @@
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package io.escalante.lift.usermapper
+package io.escalante.lift.mapper
 
-import model.User
 import net.liftweb.sitemap.{Loc, Menu, SiteMap}
 import net.liftweb.sitemap.Loc.Link
 import net.liftweb.common.Full
 import net.liftweb.http._
 import net.liftweb.mapper.{DB, Schemifier}
 import net.liftweb.db.DefaultConnectionIdentifier
+import io.escalante.lift.mapper.model.User
 
 /**
  * Boot class for Lift model, HTML 5, application

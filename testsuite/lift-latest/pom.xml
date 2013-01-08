@@ -36,11 +36,32 @@
          <artifactId>escalante-test-lift24-scala28</artifactId>
          <type>test-jar</type>
          <scope>test</scope>
+         <!--<exclusions>-->
+            <!--<exclusion>-->
+               <!--<groupId>net.liftweb</groupId>-->
+               <!--<artifactId>lift-mapper_2.8.2</artifactId>-->
+            <!--</exclusion>-->
+            <!--<exclusion>-->
+               <!--<groupId>net.liftweb</groupId>-->
+               <!--<artifactId>lift-jpa_2.8.2</artifactId>-->
+            <!--</exclusion>-->
+         <!--</exclusions>-->
       </dependency>
       <dependency>
          <groupId>${project.groupId}</groupId>
          <artifactId>escalante-test-lift24-scala29</artifactId>
          <type>test-jar</type>
+         <scope>test</scope>
+         <!--<exclusions>-->
+            <!--<exclusion>-->
+               <!--<groupId>net.liftweb</groupId>-->
+               <!--<artifactId>lift-mapper_2.9.2</artifactId>-->
+            <!--</exclusion>-->
+         <!--</exclusions>-->
+      </dependency>
+      <dependency>
+         <groupId>org.hibernate.javax.persistence</groupId>
+         <artifactId>hibernate-jpa-2.0-api</artifactId>
          <scope>test</scope>
       </dependency>
       <!--
@@ -57,6 +78,13 @@
       <dependency>
          <groupId>net.liftweb</groupId>
          <artifactId>lift-mapper_${version.scala}</artifactId>
+         <!--<version>${version.lift}</version>-->
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>net.liftweb</groupId>
+         <artifactId>lift-jpa_${version.scala}</artifactId>
+         <!--<version>${version.lift}</version>-->
          <scope>test</scope>
       </dependency>
    </dependencies>

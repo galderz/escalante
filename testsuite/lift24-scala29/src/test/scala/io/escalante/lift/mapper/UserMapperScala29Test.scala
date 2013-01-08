@@ -4,7 +4,7 @@
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package io.escalante.lift.usermapper
+package io.escalante.lift.mapper
 
 import org.junit.runner.RunWith
 import org.jboss.arquillian.junit.Arquillian
@@ -27,6 +27,6 @@ class UserMapperScala29Test extends UserMapperTest {
 object UserMapperScala29Test {
 
   @Deployment def deployment: WebArchive =
-    UserMapperTest.deployment("2.9.2", classOf[UserMapperBoot])
+    UserMapperTest.deployment("2.9.2", classOf[UserMapperBoot], List())
 
 }

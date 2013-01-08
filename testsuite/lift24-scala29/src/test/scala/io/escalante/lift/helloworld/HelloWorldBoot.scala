@@ -12,6 +12,8 @@ import net.liftweb.sitemap.{SiteMap, Loc, Menu}
 /**
  * Boot class.
  *
+ * TODO: Do we really need this duplicate class?
+ *
  * @author Galder Zamarreño
  * @since 1.0
  * @see This code is based on sample code provided in the

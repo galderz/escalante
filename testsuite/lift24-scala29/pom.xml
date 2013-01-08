@@ -52,6 +52,11 @@
          <artifactId>lift-mapper_${version.scala}</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>net.liftweb</groupId>
+         <artifactId>lift-jpa_${version.scala}</artifactId>
+         <scope>test</scope>
+      </dependency>
    </dependencies>
 
 </project>

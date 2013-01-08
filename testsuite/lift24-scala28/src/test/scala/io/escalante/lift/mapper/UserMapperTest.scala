@@ -4,10 +4,10 @@
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package io.escalante.lift.usermapper
+package io.escalante.lift.mapper
 
-import model.User
 import io.escalante.lift.AbstractLiftWebAppTest
+import model.User
 import scala.xml.Elem
 import org.jboss.arquillian.container.test.api.Deployment
 import org.jboss.shrinkwrap.api.spec.WebArchive
@@ -80,9 +80,10 @@ class UserMapperTest {
 object UserMapperTest extends AbstractLiftWebAppTest {
 
   @Deployment def deployment: WebArchive =
-    deployment("2.8.2", classOf[UserMapperBoot])
+    deployment("2.8.2", classOf[UserMapperBoot], List())
 
-  def deployment(scala: String, bootClass: Class[_ <: AnyRef]): WebArchive = {
+  def deployment(scala: String, bootClass: Class[_ <: AnyRef],
+        classes: Seq[Class[_]]): WebArchive = {
     val descriptor =
       """
         | scala:
@@ -94,8 +95,7 @@ object UserMapperTest extends AbstractLiftWebAppTest {
       """.format(scala).stripMargin
 
     deployment("usermapper", "usermapper-%s.war".format(scala.replace(".", "")),
-      descriptor, bootClass, "io.escalante.lift.usermapper.UserMapperBoot",
-      classOf[User], classOf[UserMapperTest])
+      descriptor, bootClass, List(classOf[User], classOf[UserMapperTest]) ++ classes)
   }
 
   override val indexHtml: Elem =
@@ -114,8 +114,10 @@ object UserMapperTest extends AbstractLiftWebAppTest {
       </body>
     </html>
 
-  override val templates: Seq[String] = List(
-    "templates-hidden/default.html", "templates-hidden/wizard-all.html")
+  override val webResources: Map[String, String] = Map(
+    "templates-hidden/default.html" -> "",
+    "templates-hidden/wizard-all.html" -> ""
+  )
 
   override val static: Option[Elem] = Some {
     <div id="main" class="lift:surround?with=default;at=content">

@@ -36,10 +36,32 @@
          <scope>test</scope>
       </dependency>
       <dependency>
+         <groupId>net.liftweb</groupId>
+         <artifactId>lift-jpa_${version.scala}</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
          <groupId>org.scalatest</groupId>
          <artifactId>scalatest_${version.scala}</artifactId>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>org.hibernate.javax.persistence</groupId>
+         <artifactId>hibernate-jpa-2.0-api</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.hibernate.javax.persistence</groupId>
+         <artifactId>hibernate-jpa-2.0-api</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <!--&lt;!&ndash; For debugging from IDE... &ndash;&gt;-->
+      <!--<dependency>-->
+         <!--<groupId>org.jboss.as</groupId>-->
+         <!--<artifactId>jboss-as-jpa</artifactId>-->
+         <!--<scope>test</scope>-->
+      <!--</dependency>-->
+
    </dependencies>
 
 </project>

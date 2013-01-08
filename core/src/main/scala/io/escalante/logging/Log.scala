@@ -38,6 +38,14 @@ trait Log {
     log.warnf(msg, param1, param2, param3)
   }
 
+  def error(msg: => String) {
+    log.error(msg)
+  }
+
+  def error(t: Throwable, msg: => String) {
+    log.errorf(t, msg)
+  }
+
   def debug(msg: => String) {
     log.debug(msg)
   }

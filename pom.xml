@@ -96,6 +96,7 @@
       <version.scala>2.8.2</version.scala>
       <version.scalatest>1.7.1</version.scalatest>
 
+      <!-- Commit hash: 8c80b1a233abc6b91ecf6d26bac9d13f6639d64c -->
       <version.jboss.as>7.x.incremental.546</version.jboss.as>
       <!--<version.jboss.as>7.2.0.Alpha1-SNAPSHOT</version.jboss.as>-->
 
@@ -112,6 +113,8 @@
       <version.maven.source>2.1.2</version.maven.source>
       <!-- Keep Snake Yaml version in synch with what AS uses -->
       <version.snakeyaml>1.8</version.snakeyaml>
+      <version.javax.persistence>1.0.1.Final</version.javax.persistence>
+      <version.scalajpa>1.4</version.scalajpa>
    </properties>
 
    <modules>
@@ -208,6 +211,11 @@
          <dependency>
             <groupId>net.liftweb</groupId>
             <artifactId>lift-mapper_${version.scala}</artifactId>
+            <version>${version.lift}</version>
+         </dependency>
+         <dependency>
+            <groupId>net.liftweb</groupId>
+            <artifactId>lift-jpa_${version.scala}</artifactId>
             <version>${version.lift}</version>
          </dependency>
 
@@ -415,6 +423,23 @@
             <artifactId>selenium-htmlunit-driver</artifactId>
             <version>${version.selenium}</version>
          </dependency>
+
+         <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>${version.javax.persistence}</version>
+         </dependency>
+         <!--<dependency>-->
+            <!--<groupId>org.jboss.as</groupId>-->
+            <!--<artifactId>jboss-as-jpa-hibernate4</artifactId>-->
+            <!--<version>${version.jboss.as}</version>-->
+         <!--</dependency>-->
+         <!--<dependency>-->
+            <!--<groupId>org.jboss.as</groupId>-->
+            <!--<artifactId>jboss-as-jpa</artifactId>-->
+            <!--<version>${version.jboss.as}</version>-->
+         <!--</dependency>-->
+
       </dependencies>
    </dependencyManagement>
 

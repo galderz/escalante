@@ -15,6 +15,7 @@ import org.jboss.shrinkwrap.api.{GenericArchive, ShrinkWrap}
 import io.escalante.util.Closeable
 import java.io.File
 import org.jboss.shrinkwrap.api.asset.{ClassLoaderAsset, StringAsset, Asset}
+import scala.collection.JavaConversions._
 
 /**
  * Parent for static methods required for Lift tests.
@@ -26,19 +27,19 @@ abstract class AbstractLiftWebAppTest extends Log {
 
   val indexHtml: Elem
 
-  val templates: Seq[String]
+  val webResources: Map[String, String]
 
   val static: Option[Elem]
 
   def deployment(appName: String, deployName: String,
-    descriptor: String, bootClass: Class[_ <: AnyRef], bootLoader: String,
-    classes: Class[_]*): WebArchive = {
+    descriptor: String, bootClass: Class[_ <: AnyRef],
+    classes: Seq[Class[_]]): WebArchive = {
     // Create deployment name
     val war = ShrinkWrap.create(classOf[WebArchive], deployName)
     info("Create war deployment: %s", deployName)
 
     val indexHtmlContent = xml(indexHtml)
-    val webXmlContent = xml(webXml(bootLoader))
+    val webXmlContent = xml(webXml(bootClass.getName))
 
     val ideFriendlyPath = "testsuite/lift24-scala28/pom.xml"
     // Figure out an IDE and Maven friendly path:
@@ -50,11 +51,12 @@ abstract class AbstractLiftWebAppTest extends Log {
     val resolver = DependencyResolvers.use(classOf[MavenDependencyResolver])
       .loadMetadataFromPom(path)
 
-    // Add hidden templates
-    templates.foreach {
-      template =>
-        war.addAsWebResource(resource("%s/%s".format(appName, template)), template)
-    }
+    // Add web resources
+    for ((location, target) <- webResources)
+    yield
+      war.addAsWebResource(
+        resource("%s/%s".format(appName, location)),
+        "%s/%s".format(target, location))
 
     static.map(staticResource =>
       war.addAsWebResource(xml(staticResource), "static/index.html"))
@@ -65,46 +67,22 @@ abstract class AbstractLiftWebAppTest extends Log {
       .addAsWebResource(webXmlContent, "WEB-INF/web.xml")
       .addClasses(bootClass, classOf[Closeable])
       .addClasses(classes: _ *)
+      .addClasses(classOf[AbstractLiftWebAppTest], classOf[Log])
       .addAsLibraries(resolver
       .artifacts("org.scalatest:scalatest_2.8.2")
       .exclusion("org.scala-lang:scala-library")
       .artifacts("org.seleniumhq.selenium:selenium-htmlunit-driver")
       .resolveAs(classOf[GenericArchive]))
 
-    info("War deployment created")
+    val separator = System.getProperty("line.separator")
+    val files = separator + war.getContent.values().mkString(separator)
+    info("War deployment created, content:" + files)
     war
   }
 
   private def xml(e: Elem): Asset = new StringAsset(e.toString())
 
   private def resource(resource: String): Asset = new ClassLoaderAsset(resource)
-
-//  private def escalanteYaml(lift: Option[String], scala: Option[String]): String = {
-//    (lift, scala) match {
-//      case (Some(liftVersion), Some(scalaVersion)) =>
-//        """
-//          | scala:
-//          |   version: %s
-//          | lift:
-//          |   version: %s
-//        """.format(scalaVersion, liftVersion).stripMargin
-//      case (Some(liftVersion), None) =>
-//        """
-//          | lift:
-//          |   version: %s
-//        """.format(liftVersion).stripMargin
-//      case (None, Some(scalaVersion)) =>
-//        """
-//          | scala:
-//          |   version: %s
-//          | lift:
-//        """.format(scalaVersion).stripMargin
-//      case (None, None) =>
-//        """
-//          | lift:
-//        """.stripMargin
-//    }
-//  }
 
   private def webXml(bootLoader: String): Elem = {
     <web-app version="2.5"
