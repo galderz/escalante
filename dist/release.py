@@ -181,7 +181,8 @@ def update_versions(base_dir, version):
 
     regexp = re.compile('\s*val (MAJOR|MINOR|MICRO|MODIFIER|SNAPSHOT)')
     pieces = re.compile('[\.\-]').split(version)
-    snapshot = True if len(pieces) > 2 else False
+    snapshot = True if len(pieces) > 3 else False
+    prettyprint("Is snapshot release? %s" % snapshot, Levels.DEBUG)
     try:
         for l in f_in:
             if regexp.match(l):

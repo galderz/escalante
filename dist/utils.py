@@ -211,13 +211,12 @@ class Git(object):
             raise Error("Cannot handle argument of type %s" % type(opts))
         if self.settings.verbose:
             prettyprint('Executing %s' % call, Levels.DEBUG)
-            # Non-interactive shells have issues with piping, so do normal check calls
+        # Non-interactive shells have issues with piping, so do normal check calls
         if self.settings.non_interactive:
             return subprocess.check_call(call)
         else:
-            return
-            subprocess.Popen(call, stdout=subprocess.PIPE).communicate()[
-            0].split('\n')
+            return subprocess.Popen(
+                call, stdout=subprocess.PIPE).communicate()[0].split('\n')
 
     def is_git_directory(self):
         if self.settings.non_interactive:
