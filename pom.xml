@@ -1,12 +1,5 @@
-<!--
-  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
-  ~
-  ~ Licensed under the Eclipse Public License version 1.0, available at
-  ~ http://www.eclipse.org/legal/epl-v10.html
-  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
    <modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +11,7 @@
 
    <groupId>io.escalante</groupId>
    <artifactId>escalante</artifactId>
-   <version>0.2.0-SNAPSHOT</version>
+   <version>0.2.0</version>
    <packaging>pom</packaging>
    <name>Escalante</name>
 
@@ -68,16 +61,16 @@
       <system>jira</system>
       <url>https://jira.jboss.com/jira/browse/ESC</url>
    </issueManagement>
-   <!--<ciManagement>-->
-      <!--<system>hudson</system>-->
-      <!--<url>http://hudson.jboss.org/hudson/view/Infinispan</url>-->
-      <!--<notifiers>-->
-         <!--<notifier>-->
-            <!--<type>mail</type>-->
-            <!--<address>infinispan-commits@lists.jboss.org</address>-->
-         <!--</notifier>-->
-      <!--</notifiers>-->
-   <!--</ciManagement>-->
+   
+      
+      
+      
+         
+            
+            
+         
+      
+   
 
    <distributionManagement>
       <repository>
@@ -96,9 +89,9 @@
       <version.scala>2.8.2</version.scala>
       <version.scalatest>1.7.1</version.scalatest>
 
-      <!-- Commit hash: 8c80b1a233abc6b91ecf6d26bac9d13f6639d64c -->
+      
       <version.jboss.as>7.x.incremental.546</version.jboss.as>
-      <!--<version.jboss.as>7.2.0.Alpha1-SNAPSHOT</version.jboss.as>-->
+      
 
       <version.jboss.logging>3.1.0.GA</version.jboss.logging>
       <version.junit>4.8.2</version.junit>
@@ -111,7 +104,7 @@
       <version.sonatype.aether>1.13.1</version.sonatype.aether>
       <version.selenium>2.21.0</version.selenium>
       <version.maven.source>2.1.2</version.maven.source>
-      <!-- Keep Snake Yaml version in synch with what AS uses -->
+      
       <version.snakeyaml>1.8</version.snakeyaml>
       <version.javax.persistence>1.0.1.Final</version.javax.persistence>
       <version.scalajpa>1.4</version.scalajpa>
@@ -204,8 +197,7 @@
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_${version.scala}</artifactId>
             <version>${version.scalatest}</version>
-            <!-- Do not add exclusion for org.scala-lang:scala-library,
-                 otherwise FSC from IDE does not work -->
+            
          </dependency>
 
          <dependency>
@@ -417,7 +409,7 @@
                </exclusion>
             </exclusions>
          </dependency>
-         <!-- Required so that Shrinkwrap resolver can resolve without explicit version -->
+         
          <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-htmlunit-driver</artifactId>
@@ -429,16 +421,16 @@
             <artifactId>hibernate-jpa-2.0-api</artifactId>
             <version>${version.javax.persistence}</version>
          </dependency>
-         <!--<dependency>-->
-            <!--<groupId>org.jboss.as</groupId>-->
-            <!--<artifactId>jboss-as-jpa-hibernate4</artifactId>-->
-            <!--<version>${version.jboss.as}</version>-->
-         <!--</dependency>-->
-         <!--<dependency>-->
-            <!--<groupId>org.jboss.as</groupId>-->
-            <!--<artifactId>jboss-as-jpa</artifactId>-->
-            <!--<version>${version.jboss.as}</version>-->
-         <!--</dependency>-->
+         
+            
+            
+            
+         
+         
+            
+            
+            
+         
 
       </dependencies>
    </dependencyManagement>

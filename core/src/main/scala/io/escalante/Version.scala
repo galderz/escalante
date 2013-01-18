@@ -17,7 +17,7 @@ object Version {
   val MAJOR = 0
   val MINOR = 2
   val MICRO = 0
-  val SNAPSHOT = true
+  val SNAPSHOT = false
 
   val VERSION = "%s.%s.%s%s".format(MAJOR, MINOR, MICRO, if (SNAPSHOT) "-SNAPSHOT" else "")
 

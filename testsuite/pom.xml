@@ -1,25 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
-  ~
-  ~ Licensed under the Eclipse Public License version 1.0, available at
-  ~ http://www.eclipse.org/legal/epl-v10.html
-  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
       <groupId>io.escalante</groupId>
       <artifactId>escalante</artifactId>
-      <version>0.2.0-SNAPSHOT</version>
+      <version>0.2.0</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
    <groupId>io.escalante</groupId>
    <artifactId>escalante-testsuite</artifactId>
-   <version>0.2.0-SNAPSHOT</version>
+   <version>0.2.0</version>
 
    <packaging>pom</packaging>
 
@@ -112,10 +104,7 @@
             </configuration>
          </plugin>
 
-         <!--
-            Duplicate plugin definition needed to avoid
-            unnecessary steps in non-scala projects
-         -->
+         
          <plugin>
             <groupId>net.alchim31.maven</groupId>
             <artifactId>scala-maven-plugin</artifactId>
@@ -132,10 +121,7 @@
                <scalaVersion>${version.scala}</scalaVersion>
             </configuration>
          </plugin>
-         <!--
-            Duplicate plugin definition needed to avoid
-            unnecessary steps in non-scala projects
-         -->
+         
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
