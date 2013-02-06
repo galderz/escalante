@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2013 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Eclipse Public License version 1.0, available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:escalante:artifact:1.0"
+           xmlns="urn:escalante:artifact:1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           version="1.0">
+
+   <!-- The subsystem root element -->
+   <xs:element name="subsystem" type="escalanteArtifactType" />
+
+   <xs:complexType name="escalanteArtifactType">
+      <xs:annotation>
+         <xs:documentation>
+            The Artifact subsystem, used to configure how artifact
+            resolution, installation and attachment happens.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="1" name="thirdparty-modules-repo"
+                     type="thirdpartyModulesRepoType" />
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="thirdpartyModulesRepoType">
+      <xs:annotation>
+         <xs:documentation>
+            Configuration of third party modules repository.
+         </xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="relative-to" type="xs:string" default="jboss.home.dir">
+         <xs:annotation>
+            <xs:documentation>
+               The name of another previously named path, or of one of the
+               standard paths provided by the system. If 'relative-to' is
+               provided, the value of the 'path' attribute is treated as
+               relative to the path specified by this attribute.
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="path" type="xs:string" default="thirdparty-modules">
+         <xs:annotation>
+            <xs:documentation>
+               The path of the third party modules repository.
+            </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+
+</xs:schema>

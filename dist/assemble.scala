@@ -5,11 +5,12 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
+import io.escalante.io
 import java.io._
 import java.lang.String
 import io.escalante.assembly.RuntimeAssembly
 import io.escalante.lift.assembly.LiftModule
-import io.escalante.util.FileSystem._
+import io.FileSystem._
 import io.escalante.util.ScalaXmlParser._
 import io.escalante.util.JBossEnvironment._
 
