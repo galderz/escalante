@@ -59,78 +59,34 @@
    <build>
       <!-- Source directory defined so that source jar can be correctly built -->
       <sourceDirectory>src/main/scala</sourceDirectory>
-      <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.12</version>
-            <configuration>
-               <systemProperties>
-                  <property>
-                     <name>surefire.basedir</name>
-                     <value>${basedir}/..</value>
-                  </property>
-               </systemProperties>
-            </configuration>
-         </plugin>
-         <!--<plugin>-->
-            <!--<groupId>org.jboss.tattletale</groupId>-->
-            <!--<artifactId>tattletale-maven</artifactId>-->
-            <!--&lt;!&ndash; The version of the plugin you want to use &ndash;&gt;-->
-            <!--<version>1.1.0.Final</version>-->
-            <!--<executions>-->
-               <!--<execution>-->
-                  <!--<goals>-->
-                     <!--<goal>report</goal>-->
-                  <!--</goals>-->
-               <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-               <!--&lt;!&ndash;-->
-                  <!--This is the location which will be scanned-->
-                  <!--for generating tattletale reports-->
-               <!--&ndash;&gt;-->
-               <!--<source>${project.build.directory}/classes</source>-->
-               <!--&lt;!&ndash; This is where the reports will be generated &ndash;&gt;-->
-               <!--<destination>${project.build.directory}/site/tattletale</destination>-->
-            <!--</configuration>-->
-         <!--</plugin>-->
+      <testSourceDirectory>src/test/scala</testSourceDirectory>
 
-         <!--
-            Duplicate plugin definition needed to avoid
-            unnecessary steps in non-scala projects
-         -->
+      <plugins>
          <plugin>
             <groupId>net.alchim31.maven</groupId>
             <artifactId>scala-maven-plugin</artifactId>
-            <version>${version.scala.tools}</version>
-            <executions>
-               <execution>
-                  <goals>
-                     <goal>compile</goal>
-                     <goal>testCompile</goal>
-                  </goals>
-               </execution>
-            </executions>
-            <configuration>
-               <scalaVersion>${version.scala}</scalaVersion>
-            </configuration>
          </plugin>
-         <!--
-            Duplicate plugin definition needed to avoid
-            unnecessary steps in non-scala projects
-         -->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+         </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <executions>
-               <execution>
-                  <id>build-test-jar</id>
-                  <goals>
-                     <goal>test-jar</goal>
-                  </goals>
-               </execution>
-            </executions>
+         </plugin>
+
+         <!-- Plugins for Tattletale -->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+         </plugin>
+         <plugin>
+            <groupId>org.jboss.tattletale</groupId>
+            <artifactId>tattletale-maven</artifactId>
          </plugin>
       </plugins>
    </build>

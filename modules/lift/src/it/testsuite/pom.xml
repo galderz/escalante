@@ -89,21 +89,25 @@
          <artifactId>arquillian-junit-container</artifactId>
          <scope>test</scope>
       </dependency>
-      <!--<dependency>-->
-         <!--<groupId>org.jboss.arquillian.protocol</groupId>-->
-         <!--<artifactId>arquillian-protocol-servlet</artifactId>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
-      <!-- TODO: use jboss-as-arquillian-container-embedded when AS7-6440 integrated -->
       <dependency>
          <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-arquillian-container-managed</artifactId>
+         <artifactId>jboss-as-arquillian-container-embedded</artifactId>
          <scope>test</scope>
       </dependency>
 
       <dependency>
          <groupId>org.hibernate.javax.persistence</groupId>
          <artifactId>hibernate-jpa-2.0-api</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>javax.validation</groupId>
+         <artifactId>validation-api</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.spec.javax.transaction</groupId>
+         <artifactId>jboss-transaction-api_1.1_spec</artifactId>
          <scope>test</scope>
       </dependency>
 
@@ -135,103 +139,5 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
-
-   <build>
-      <testSourceDirectory>src/test/scala</testSourceDirectory>
-
-      <plugins>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>2.12</version>
-            <configuration>
-               <systemProperties>
-                  <property>
-                     <name>surefire.basedir</name>
-                     <value>${basedir}/../../../../../</value>
-                  </property>
-               </systemProperties>
-            </configuration>
-         </plugin>
-
-         <!-- Plugins for Tattletale -->
-
-         <!-- Tattletale is expecting a folder with jars in it,
-              so I need to gather those together -->
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.1</version>
-            <executions>
-               <execution>
-                  <id>copy-dependency-jars-to-tattletale-source-directory</id>
-                  <phase>pre-site</phase>
-                  <goals>
-                     <goal>copy-dependencies</goal>
-                  </goals>
-                  <configuration>
-                     <outputDirectory>${tt.src.dir}</outputDirectory>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-         <!-- ... gather up the last jars -->
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>2.4.2</version>
-            <executions>
-               <execution>
-                  <id>copy-project-jar-and-java-rt-jar-to-tattletale-source-directory</id>
-                  <phase>pre-site</phase>
-                  <goals>
-                     <goal>copy-resources</goal>
-                  </goals>
-                  <configuration>
-                     <outputDirectory>${tt.src.dir}</outputDirectory>
-                     <resources>
-                        <resource>
-                           <directory>${project.build.directory}</directory>
-                           <filtering>false</filtering>
-                           <includes>
-                              <include>${project.build.finalName}.jar</include>
-                           </includes>
-                        </resource>
-                        <resource>
-                           <directory>${java.home}/lib</directory>
-                           <filtering>false</filtering>
-                           <includes>
-                              <include>rt.jar</include>
-                           </includes>
-                        </resource>
-                     </resources>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
-            <groupId>org.jboss.tattletale</groupId>
-            <artifactId>tattletale-maven</artifactId>
-            <version>1.1.0.Final</version>
-            <executions>
-               <execution>
-                  <id>run-tattletale-report</id>
-                  <!-- mvn clean package site -Dmaven.test.skip.exec=true -Dinvoker.skip=true -->
-                  <phase>site</phase>
-                  <goals>
-                     <goal>report</goal>
-                  </goals>
-                  <configuration>
-                     <source>${tt.src.dir}</source>
-                     <destination>${tt.dst.dir}</destination>
-                     <profiles>
-                        <profile>java5</profile>
-                     </profiles>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
-   </build>
 
 </project>
