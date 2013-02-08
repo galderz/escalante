@@ -5,20 +5,18 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-import io.escalante.io
-import java.io._
-import java.lang.String
-import io.escalante.assembly.RuntimeAssembly
-import io.escalante.lift.assembly.LiftModule
-import io.FileSystem._
-import io.escalante.util.ScalaXmlParser._
-import io.escalante.util.JBossEnvironment._
+import io.escalante.test.AppServer
+import io.escalante.test.artifact.ArtifactModule
+import io.escalante.test.lift.LiftModule
+import java.io.{FilenameFilter, File}
+import io.escalante.io.FileSystem._
+import io.escalante.xml.ScalaXmlParser._
 
 // Assemble Escalante
 val baseDir = project.getBasedir.getCanonicalPath
-val jbossVersion = project("version.jboss.as")
-val scalaVersion = project("version.scala")
-val projectVersion = project("version")
+val jbossVersion = project.getProperties.getProperty("version.jboss.as")
+val scalaVersion = project.getProperties.getProperty("version.scala")
+val projectVersion = project.getVersion
 val jbossPrefix = "jboss-as-"
 val escalantePrefix = "escalante-"
 val userHome = System.getProperty("user.home")
@@ -40,6 +38,7 @@ println( """|-------------------
          """.format(baseDir, jbossVersion, scalaVersion).stripMargin)
 
 // 1. Extract JBoss AS distro, if necessary...
+println("Extract JBoss Application Server distribution")
 val target = new File(targetDir)
 val escalanteTarget = new File(
   "%s/%s".format(targetDir, escalantePrefix + projectVersion))
@@ -65,27 +64,41 @@ if (escalanteDirs.length > 0) {
 }
 
 // 2. Build Escalante, reusing the code used to unit test Escalante (how cool!!!)
-RuntimeAssembly.build(new File("%s/modules".format(escalanteTarget)),
-  escalanteTarget, LiftModule)
+println("Build modules")
+val modulePath = new File("%s/modules".format(escalanteTarget))
+ArtifactModule.build(modulePath)
+LiftModule.build(modulePath)
 
 // 3. Add extension(s) and subsystem(s) to configuration file
-val (xml, xmlBackup) = backupStandaloneXml(escalanteTarget)
+println("Apply extension and subsystem definitions to configuration")
+val (xml, xmlBackup) = AppServer.backupStandaloneXml(escalanteTarget)
 
-val withExtension = addXmlElement(
-  "extensions", <extension module="io.escalante.lift"/>, xmlBackup)
-val withSubsystem = addXmlElement(
-  "profile",
-  <subsystem xmlns="urn:escalante:lift:1.0">
-    <thirdparty-modules-repo relative-to="jboss.home.dir" path="modules"/>
-  </subsystem>,
-  withExtension)
+val withExtensions =
+  addXmlElement("extensions",
+      <extension module="io.escalante.lift"/>,
+  addXmlElement("extensions",
+      <extension module="io.escalante.artifact"/>,
+    xmlBackup))
 
-saveXml(xml, withSubsystem)
-println("Escalante Lift extension added to configuration file")
+val withSubsystems =
+  addXmlElement("profile",
+    <subsystem xmlns="urn:escalante:lift:1.0"/>,
+  addXmlElement("profile",
+    <subsystem xmlns="urn:escalante:artifact:1.0">
+      <thirdparty-modules-repo relative-to="jboss.home.dir" path="modules"/>
+    </subsystem>,
+  withExtensions))
+
+saveXml(xml, withSubsystems)
 
 // 4. Copy xsd files
-copy("%s/../lift/target/classes/schema".format(baseDir),
+println("Copy susystem XML schema files")
+for (module <- List("lift", "artifact"))
+yield
+  copy("%s/../modules/%s/target/classes/schema".format(baseDir, module),
      "%s/docs/schema".format(escalanteTarget.getCanonicalPath))
+
+println("Escalante assembled")
 
 
 

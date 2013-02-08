@@ -7,21 +7,32 @@ Escalante Roadmap
 * Scala versions supported: `2.8.x`, `2.9.x`
 * Integration with JBoss Developer Studio 5
 * Simple Lift deployment quickstarts
+* Initial OpenShift support
 
-0.2.0 (~November 2012)
----------------------
-* Optimise deployment of Play 2.0 applications in AS7
-(@Jorge, @Sebastian and @Galder)
-* Further integration with Lift (security? clustering? TBD)
-* OpenShift cartridge for Lift applications on Escalante
-* [SBT build files for quickstarts](https://github.com/escalante/escalante-quickstart/issues/2)
+0.2.0 (January 2013)
+--------------------
 
-0.3.0 (~January 2013)
----------------------
-* Exposing EE/AS components to Scala app via DSLs (most relevant ones...)
-* OpenShift cartdridge for Play 2.0 applications on Escalante
-* Akka on Escalante using HornetQ as transport (@Brian)
-* Exposing EE/AS components to Scala app via DSLs (more)
+* Lift JPA integration and quickstart
+* Abandon XML and use Yaml for Escalante descriptor
+* Add definition of optional modules for Lift (i.e. mapper, jpa...etc)
+* Support any Scala version
+* Escalante SBT plugin
+* SBT build files for Escalante quickstarts
+
+0.3.0 (~April 2013)
+-------------------
+
+* Play 2.0 integration
+   * Compilation on the fly to avoid tying to a Scala version?
+* Lift Clustering integration and quickstart
+* OpenShift application type for Lift apps (see CapeDwarf)
+
+0.4.0 (~July 2013)
+------------------
+
+* Scaladin (Vaadin for Scala)
+* Inject CDI components into Play/Lift applications
+* Exposing EE/AS components to Scala app via DSLs
 
 1.0
 ---

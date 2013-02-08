@@ -10,7 +10,7 @@ import org.jboss.msc.service.{ServiceName, StartContext, StopContext, Service}
 import org.jboss.msc.value.InjectedValue
 import org.jboss.msc.inject.Injector
 import io.escalante.logging.Log
-import io.escalante.Scala
+import io.escalante.{Version, Scala}
 import io.escalante.artifact.{JBossModule, ArtifactRepository}
 import io.escalante.artifact.maven.MavenArtifact
 import org.jboss.as.server.deployment.DeploymentUnit
@@ -32,6 +32,7 @@ class LiftService extends Service[LiftService] with Log {
    */
   def start(context: StartContext) {
     info("Start Escalante Lift subsystem")
+    info("Welcome to Escalante %s - http://escalante.io/", Version.VERSION)
   }
 
   /**

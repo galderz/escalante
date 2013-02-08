@@ -39,7 +39,7 @@ object ScalaXmlParser {
   private def addChild(n: Node, newChild: Node) = n match {
     case Elem(prefix, label, attribs, scope, child@_*) =>
       Elem(prefix, label, attribs, scope, child ++ newChild: _*)
-    case _ => error("Can only add children to elements!")
+    case _ => sys.error("Can only add children to elements!")
   }
 
   private class AddChildrenTo(label: String, newChild: Node) extends RewriteRule {

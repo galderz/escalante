@@ -83,7 +83,6 @@ object LiftModule {
   }
 
   def build(destDir: File) {
-    ArtifactModule.build(destDir)
     buildLiftModule(destDir)
 
 //    val modulePath = "io/escalante/lift/main"

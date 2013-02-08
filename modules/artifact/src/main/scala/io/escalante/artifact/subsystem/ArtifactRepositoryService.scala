@@ -15,7 +15,6 @@ import org.jboss.as.server.deployment.DeploymentUnit
 import scala.xml.Elem
 import org.jboss.msc.value.InjectedValue
 import org.jboss.as.controller.services.path.PathManager
-import io.escalante.Version
 import org.jboss.msc.inject.Injector
 import java.io.File
 
@@ -64,8 +63,6 @@ class ArtifactRepositoryService(
     repository = new AppServerRepository(new File(thirdPartyModulesPath))
 
     info("Start Escalante Artifact subsystem")
-
-    info("Welcome to Escalante %s - http://escalante.io/", Version.VERSION)
   }
 
   /**

@@ -1,0 +1,133 @@
+<!--
+  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Eclipse Public License version 1.0, available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>io.escalante</groupId>
+      <artifactId>escalante</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+
+   <groupId>io.escalante</groupId>
+   <artifactId>escalante-assembly</artifactId>
+   <version>0.3.0-SNAPSHOT</version>
+
+   <name>Escalante Assembly</name>
+
+   <packaging>pom</packaging>
+
+   <!-- Provided scopes won't work here!!! -->
+   <dependencies>
+      <dependency>
+         <groupId>org.scala-lang</groupId>
+         <artifactId>scala-library</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>net.alchim31.maven</groupId>
+         <artifactId>scala-maven-plugin</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.scalatest</groupId>
+         <artifactId>scalatest_${version.scala.artifactId}</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-artifact</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-testsuite-artifact</artifactId>
+         <type>test-jar</type>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-lift</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-testsuite-lift</artifactId>
+         <type>test-jar</type>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven</groupId>
+         <artifactId>maven-aether-provider</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven</groupId>
+         <artifactId>maven-settings</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven</groupId>
+         <artifactId>maven-settings-builder</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.sonatype.aether</groupId>
+         <artifactId>aether-connector-wagon</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.maven.wagon</groupId>
+         <artifactId>wagon-http-lightweight</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.shrinkwrap</groupId>
+         <artifactId>shrinkwrap-impl-base</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.logging</groupId>
+         <artifactId>jboss-logging</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.as</groupId>
+         <artifactId>jboss-as-controller</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.as</groupId>
+         <artifactId>jboss-as-server</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.as</groupId>
+         <artifactId>jboss-as-dist</artifactId>
+         <type>zip</type>
+         <scope>provided</scope>
+      </dependency>
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>scala-maven-plugin</artifactId>
+            <version>${version.scala.tools}</version>
+            <executions>
+               <execution>
+                  <id>scala-magic</id>
+                  <phase>prepare-package</phase>
+                  <goals>
+                     <goal>script</goal>
+                  </goals>
+                  <configuration>
+                     <!-- TODO: try saved compiled -->
+                     <keepGeneratedScript>true</keepGeneratedScript>
+                     <!-- To debug script, run with: mvnDebug -->
+                     <scriptFile>assemble.scala</scriptFile>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+
+</project>

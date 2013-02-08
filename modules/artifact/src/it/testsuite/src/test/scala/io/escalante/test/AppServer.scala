@@ -68,6 +68,15 @@ object AppServer extends Log with AssertionsForJUnit {
     }
   }
 
+  def backupStandaloneXml(home: File): (File, File) = {
+    val cfg = standaloneXmlPath(home)
+    val cfgBackup = standaloneXmlBackupFile(cfg)
+    if (!cfgBackup.exists())
+      copy(cfg, cfgBackup) // Backup original standalone config
+
+    (cfg, cfgBackup)
+  }
+
   private def validateResponse(r: ModelNode): ModelNode = {
     val outcome = r.get(OUTCOME).asString()
     if (outcome == FAILED) {
@@ -88,15 +97,6 @@ object AppServer extends Log with AssertionsForJUnit {
 
   private def standaloneXmlPath(home: File) = new File(
     "%s/standalone/configuration/standalone.xml".format(home))
-
-  private def backupStandaloneXml(home: File): (File, File) = {
-    val cfg = standaloneXmlPath(home)
-    val cfgBackup = standaloneXmlBackupFile(cfg)
-    if (!cfgBackup.exists())
-      copy(cfg, cfgBackup) // Backup original standalone config
-
-    (cfg, cfgBackup)
-  }
 
   private def standaloneXmlBackupFile(cfg: File): File =
     new File("%s.original".format(cfg.getCanonicalPath))

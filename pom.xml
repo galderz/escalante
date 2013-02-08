@@ -134,10 +134,8 @@
       <module>modules/core</module>
       <module>modules/artifact</module>
       <module>modules/lift</module>
-      <!--<module>testsuite</module>-->
-      <!--<module>testsuite/lift24-scala28</module>-->
-      <!--<module>testsuite/lift24-scala29</module>-->
-      <!--<module>dist</module>-->
+      <module>assembly</module>
+      <module>dist</module>
    </modules>
 
    <dependencyManagement>
@@ -159,12 +157,6 @@
             </exclusions>
          </dependency>
 
-         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>escalante-dist</artifactId>
-            <version>${project.version}</version>
-            <type>pom</type>
-         </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>escalante-build</artifactId>
@@ -201,20 +193,38 @@
          </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>escalante-lift</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>escalante-lift</artifactId>
-            <version>${project.version}</version>
-            <type>test-jar</type>
-         </dependency>
-         <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>escalante-testsuite-artifact</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>escalante-lift</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>escalante-lift</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>escalante-testsuite-lift</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>escalante-assembly</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
+         </dependency>
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>escalante-dist</artifactId>
+            <version>${project.version}</version>
+            <type>pom</type>
          </dependency>
 
          <dependency>

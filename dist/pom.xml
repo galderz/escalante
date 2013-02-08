@@ -25,114 +25,6 @@
 
    <packaging>pom</packaging>
 
-   <!-- Provided scopes won't work here!!! -->
-   <dependencies>
-      <dependency>
-         <groupId>org.scala-lang</groupId>
-         <artifactId>scala-library</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>net.alchim31.maven</groupId>
-         <artifactId>scala-maven-plugin</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>escalante-lift</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>escalante-lift</artifactId>
-         <type>test-jar</type>
-      </dependency>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>escalante-core</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>${project.groupId}</groupId>
-         <artifactId>escalante-core</artifactId>
-         <type>test-jar</type>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.maven</groupId>
-         <artifactId>maven-aether-provider</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.maven</groupId>
-         <artifactId>maven-settings</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.maven</groupId>
-         <artifactId>maven-settings-builder</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.sonatype.aether</groupId>
-         <artifactId>aether-connector-wagon</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.maven.wagon</groupId>
-         <artifactId>wagon-http-lightweight</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.shrinkwrap</groupId>
-         <artifactId>shrinkwrap-impl-base</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.logging</groupId>
-         <artifactId>jboss-logging</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-controller</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>org.jboss.as</groupId>
-         <artifactId>jboss-as-dist</artifactId>
-         <type>zip</type>
-         <scope>provided</scope>
-      </dependency>
-   </dependencies>
-
-   <build>
-      <plugins>
-         <plugin>
-            <groupId>net.alchim31.maven</groupId>
-            <artifactId>scala-maven-plugin</artifactId>
-            <version>${version.scala.tools}</version>
-            <executions>
-               <execution>
-                  <id>scala-magic</id>
-                  <phase>prepare-package</phase>
-                  <goals>
-                     <goal>script</goal>
-                  </goals>
-                  <configuration>
-                     <keepGeneratedScript>true</keepGeneratedScript>
-                     <!-- To debug script, run with: mvnDebug -->
-                     <scriptFile>assemble.scala</scriptFile>
-                     <!--
-                        Remove aether util 1.7 from classpath because it
-                        causes issues with the distribution assembly code that
-                        uses a newer aether-util version (1.13.1).
-
-                        Otherwise, in some environments you'll see the following
-                        when building distribution:
-
-                        Caused by: java.lang.NoSuchMethodError:
-                        org.sonatype.aether.util.listener.DefaultTransferResource.<init>(
-                        Ljava/lang/String;Ljava/lang/String;Ljava/io/File;Lorg/sonatype/aether/RequestTrace;)V
-
-                        Once a newer scala maven plugin that depends on a newer
-                        maven version (minimum, 3.0.4), remove this.
-                     -->
-                     <removeFromClasspath>aether-util-1.7,aether-spi-1.7,aether-impl-1.7,aether-api-1.7</removeFromClasspath>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
-   </build>
-
    <profiles>
       <profile>
          <id>release</id>
@@ -145,9 +37,7 @@
                      <execution>
                         <id>assemble</id>
                         <phase>package</phase>
-                        <goals>
-                           <goal>single</goal>
-                        </goals>
+                        <goals><goal>single</goal></goals>
                         <configuration>
                            <descriptors>
                               <descriptor>assembly.xml</descriptor>
