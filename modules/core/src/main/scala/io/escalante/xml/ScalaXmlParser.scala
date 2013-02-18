@@ -12,9 +12,10 @@ import scala.xml._
 import scala.Predef._
 
 /**
- * // TODO: Document this
+ * Scala XML parser util class.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object ScalaXmlParser {
 
@@ -22,10 +23,20 @@ object ScalaXmlParser {
     addXmlElement(parentElem, element, XML.loadFile(xmlFile))
 
   def addXmlElement(parentElem: String, element: Node, xml: Node): Node =
-    addXmlRules(xml, new AddChildrenTo(parentElem, element))
+    addXmlRules(xml, new AddChildrenTo(parentElem, null, element))
+
+  def addXmlElement(
+      parentElem: String,
+      parentUri: String,
+      element: Node,
+      xml: Node): Node =
+    addXmlRules(xml, new AddChildrenTo(parentElem, parentUri, element))
 
   def addXmlElements(parentElem: String, elements: Seq[Node], xml: Node): Node =
-    addXmlRules(xml, elements.map(new AddChildrenTo(parentElem, _)): _*)
+    addXmlRules(xml, elements.map(new AddChildrenTo(parentElem, null, _)): _*)
+
+  def replaceXmlElement(elementToReplace: String, element: Node, xml: Node) =
+    addXmlRules(xml, new ReplaceElement(elementToReplace, element))
 
   def saveXml(fileName: String, xmlNode: Node): Any =
     XML.save(fileName, xmlNode, "UTF-8", xmlDecl = true, doctype = null)
@@ -42,13 +53,32 @@ object ScalaXmlParser {
     case _ => sys.error("Can only add children to elements!")
   }
 
-  private class AddChildrenTo(label: String, newChild: Node) extends RewriteRule {
-
+  private def replaceElement(n: Node, newElement: Node) = n match {
+    case Elem(prefix, label, attribs, scope, child@_*) => newElement
+    case _ => sys.error("Can only add children to elements!")
+  }
+  private class AddChildrenTo(
+      label: String,
+      uri: String,
+      newChild: Node) extends RewriteRule {
     override def transform(n: Node) = n match {
-      case n@Elem(_, `label`, _, _, _*) => addChild(n, newChild)
+      case n@Elem(_, `label`, _, _, _*)
+            if uri == null =>
+        addChild(n, newChild)
+      case n@Elem(_, `label`, _, _, _*)
+            if uri != null && n.scope.uri.startsWith(uri) =>
+        addChild(n, newChild)
       case other => other
     }
+  }
 
+  private class ReplaceElement(
+      label: String,
+      newElement: Node) extends RewriteRule {
+    override def transform(n: Node) = n match {
+      case n@Elem(_, `label`, _, _, _*) => replaceElement(n, newElement)
+      case other => other
+    }
   }
 
 }

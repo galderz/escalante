@@ -48,33 +48,6 @@ object AppServer extends Log with AssertionsForJUnit {
     setUp(home, new File("%s/modules".format(home)), modules, isTest = false)
   }
 
-  private def testHome(): File =
-    new File(System.getProperty("surefire.basedir", ".")
-        + "/build/target/jboss-as")
-
-  private def setUp(
-      home: File,
-      modulesDir: File,
-      modules: List[BuildableModule],
-      isTest: Boolean) {
-    info("Build modules %s into %s", modules, modulesDir)
-
-    // Backup standalone configuration
-    val (xml, xmlBackup) = backupStandaloneXml(home)
-    val xmlForEdit: Node = XML.loadFile(xmlBackup)
-
-    // Build each module and let it apply changes to XML
-    val config = buildModules(modulesDir, modules, xmlForEdit)
-
-    // TODO: Change logging settings when testing to see debug/trace info
-    // Includes: adding:
-    // <logger category="io.escalante"><level name="TRACE"/></logger>
-    // And change CONSOLE level to TRACE
-
-    // Save the XML
-    saveXml(xml, config)
-  }
-
   def tearDown() {
     val stdCfg = standaloneXmlPath(testHome())
     val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
@@ -94,7 +67,29 @@ object AppServer extends Log with AssertionsForJUnit {
     }
   }
 
-  def backupStandaloneXml(home: File): (File, File) = {
+  private def testHome(): File =
+    new File(System.getProperty("surefire.basedir", ".")
+        + "/build/target/jboss-as")
+
+  private def setUp(
+      home: File,
+      modulesDir: File,
+      modules: List[BuildableModule],
+      isTest: Boolean) {
+    info("Build modules %s into %s", modules, modulesDir)
+
+    // Backup standalone configuration
+    val (xml, xmlBackup) = backupStandaloneXml(home)
+    val xmlForEdit: Node = XML.loadFile(xmlBackup)
+
+    // Build each module and let it apply changes to XML
+    val config = buildModules(modulesDir, modules, xmlForEdit)
+
+    // Save the XML
+    saveXml(xml, config)
+  }
+
+  private def backupStandaloneXml(home: File): (File, File) = {
     val cfg = standaloneXmlPath(home)
     val cfgBackup = standaloneXmlBackupFile(cfg)
     if (!cfgBackup.exists())
