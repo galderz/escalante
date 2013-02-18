@@ -33,7 +33,7 @@ class ArquillianListener extends LoadableExtension with Log {
 
   def executeBeforeStart(@Observes event: BeforeStart) {
     info("Execute beforeStart for Artifact")
-    ArtifactModule.build(AppServer.setUp("standalone-artifact.xml"))
+    AppServer.testSetUp(List(ArtifactModule))
   }
 
   def executeAfterStop(@Observes event: AfterStop) {

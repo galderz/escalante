@@ -35,17 +35,19 @@ distributable in .zip format.
 * `build/` Contains code related to building Escalante, including downloading
 and unzipping a base JBoss Application Server used for testing.
 
-* `core/` Includes common code use by several Escalante components.
+* `modules/core` Includes common code use by several Escalante components.
 
-* `lift/` Includes code to run the Escalante Lift module.
+* `modules/artifact` Includes code to resolve dependencies and build modules.
+It also contains an integration test subproject that's executed via Maven
+Invoker plugin which runs Arquillian tests to check this module works as
+expected.
+
+* `modules/lift` Includes code for Lift scala web framework integration.
+It also contains an integration test subproject that's executed via Maven
+Invoker plugin which runs Arquillian tests to check this module works as
+expected.
 
 * `modules/` Parent project for all Escalante modules.
-
-* `testsuite/` Parent project containing integration testsuites for testing
-Escalante modules.
-
-* `integration-tests/` Contains a series of Arquillian-based tests
-  against the packaged distribution.
 
 Development Tips
 ----------------

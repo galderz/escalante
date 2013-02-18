@@ -26,6 +26,10 @@ trait Log {
     log.infof(msg, param1)
   }
 
+  def info(msg: => String, param1: Any, param2: Any) {
+    log.infof(msg, param1, param2)
+  }
+
   def info(msg: => String, param1: Any, param2: Any, param3: Any) {
     log.infof(msg, param1, param2, param3)
   }

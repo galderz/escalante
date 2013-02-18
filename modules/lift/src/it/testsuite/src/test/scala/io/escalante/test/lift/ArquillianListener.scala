@@ -34,9 +34,7 @@ class ArquillianListener extends LoadableExtension with Log {
 
   def executeBeforeStart(@Observes event: BeforeStart) {
     info("Execute beforeStart for Lift")
-    val modulesDir = AppServer.setUp("standalone-lift.xml")
-    ArtifactModule.build(modulesDir)
-    LiftModule.build(modulesDir)
+    AppServer.testSetUp(List(ArtifactModule, LiftModule))
   }
 
   def executeAfterStop(@Observes event: AfterStop) {

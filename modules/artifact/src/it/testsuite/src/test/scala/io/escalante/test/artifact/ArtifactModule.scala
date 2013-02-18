@@ -15,7 +15,9 @@ import io.escalante.{Version, Scala}
 import org.sonatype.aether.graph.{DependencyNode, DependencyFilter}
 import util.matching.Regex
 import scala.List
-import io.escalante.test.ModuleBuilder
+import io.escalante.test.{BuildableModule, ModuleBuilder}
+import scala.Some
+import scala.xml.Node
 
 /**
  * Defines how the Artifact JBoss module is constructed, including the
@@ -24,7 +26,7 @@ import io.escalante.test.ModuleBuilder
  * @author Galder Zamarreño
  * @since 1.0
  */
-object ArtifactModule {
+object ArtifactModule extends BuildableModule {
 
   private def buildCoreModule(destDir: File) {
     val pkg = "io/escalante"
@@ -99,20 +101,6 @@ object ArtifactModule {
           <module name="org.jboss.modules"/>
           <module name="org.jboss.staxmapper"/>
           <module name="org.jboss.vfs"/>
-
-          <!--
-          <module name="org.jboss.as.server"/>
-          <module name="org.jboss.metadata"/>
-          <module name="org.yaml.snakeyaml"/>
-          <module name="org.apache.maven.maven-aether-provider"
-                  services="import">
-            <imports>
-              <include-set>
-                <path name="META-INF/plexus"/>
-              </include-set>
-            </imports>
-          </module>
-          -->
         </dependencies>
       </module>
 
@@ -120,9 +108,20 @@ object ArtifactModule {
         archive, new File(destDir, modulePath), moduleXml)
   }
 
-  def build(destDir: File) {
+  def injectConfiguration(config: Node): Node = {
+    addExtensionSubsystem(
+      <extension module="io.escalante.artifact"/>,
+      <subsystem xmlns="urn:escalante:artifact:1.0">
+        <thirdparty-modules-repo relative-to="jboss.home.dir" path="modules"/>
+      </subsystem>,
+      config
+    )
+  }
+
+  def build(destDir: File, config: Node): Node = {
     buildCoreModule(destDir)
     buildArtifactModule(destDir)
+    injectConfiguration(config)
   }
 
   private object PlexusUtilsFilter extends DependencyFilter {

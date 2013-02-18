@@ -38,6 +38,12 @@
       </dependency>
       <dependency>
          <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-core</artifactId>
+         <type>test-jar</type>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
          <artifactId>escalante-artifact</artifactId>
          <scope>test</scope>
       </dependency>

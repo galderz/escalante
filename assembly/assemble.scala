@@ -10,7 +10,6 @@ import io.escalante.test.artifact.ArtifactModule
 import io.escalante.test.lift.LiftModule
 import java.io.{FilenameFilter, File}
 import io.escalante.io.FileSystem._
-import io.escalante.xml.ScalaXmlParser._
 
 // Assemble Escalante
 val baseDir = project.getBasedir.getCanonicalPath
@@ -64,32 +63,8 @@ if (escalanteDirs.length > 0) {
 }
 
 // 2. Build Escalante, reusing the code used to unit test Escalante (how cool!!!)
-println("Build modules")
-val modulePath = new File("%s/modules".format(escalanteTarget))
-ArtifactModule.build(modulePath)
-LiftModule.build(modulePath)
-
-// 3. Add extension(s) and subsystem(s) to configuration file
-println("Apply extension and subsystem definitions to configuration")
-val (xml, xmlBackup) = AppServer.backupStandaloneXml(escalanteTarget)
-
-val withExtensions =
-  addXmlElement("extensions",
-      <extension module="io.escalante.lift"/>,
-  addXmlElement("extensions",
-      <extension module="io.escalante.artifact"/>,
-    xmlBackup))
-
-val withSubsystems =
-  addXmlElement("profile",
-    <subsystem xmlns="urn:escalante:lift:1.0"/>,
-  addXmlElement("profile",
-    <subsystem xmlns="urn:escalante:artifact:1.0">
-      <thirdparty-modules-repo relative-to="jboss.home.dir" path="modules"/>
-    </subsystem>,
-  withExtensions))
-
-saveXml(xml, withSubsystems)
+println("Build modules and apply XML configuration changes")
+AppServer.distSetUp(escalanteTarget, List(ArtifactModule, LiftModule))
 
 // 4. Copy xsd files
 println("Copy susystem XML schema files")

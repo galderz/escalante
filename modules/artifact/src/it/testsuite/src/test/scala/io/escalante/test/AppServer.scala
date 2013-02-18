@@ -10,47 +10,73 @@ package io.escalante.test
 import io.escalante.logging.Log
 import io.escalante.io.FileSystem._
 import io.escalante.io.Closeable._
-import java.io.{FileOutputStream, File}
-import org.jboss.shrinkwrap.api.asset.ClassLoaderAsset
+import java.io.File
 import org.jboss.dmr.ModelNode
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
 import org.scalatest.junit.AssertionsForJUnit
 import org.jboss.as.controller.client.ModelControllerClient
 import java.net.InetAddress
+import scala.xml.{XML, Node}
+import io.escalante.xml.ScalaXmlParser._
+import annotation.tailrec
 
 /**
- * // TODO: Document this
+ * Set up and tear down helper methods for the application server
+ * so that it's ready for testing deployments.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object AppServer extends Log with AssertionsForJUnit {
 
-  private val jbossHome = new File(
-    System.getProperty("surefire.basedir", ".") + "/build/target/jboss-as")
+  def testSetUp(modules: List[BuildableModule]) {
+    val home = testHome()
+    val modulesDir =
+      new File(System.getProperty("java.io.tmpdir"), "test-module")
 
-  private val testModuleDir =
-    new File(System.getProperty("java.io.tmpdir"), "test-module")
-
-  def setUp(standaloneXml: String): File = {
     // Cleanup thirdparty deployments module dir, if present
-    deleteDirectoryIfPresent(new File(jbossHome, "thirdparty-modules"))
+    deleteDirectoryIfPresent(new File(home, "thirdparty-modules"))
 
     // Delete directory is present...
-    mkDirs(testModuleDir, deleteIfPresent = true)
-    info("Build module into %s", testModuleDir)
+    mkDirs(modulesDir, deleteIfPresent = true)
+
+    // Set up modules
+    setUp(home, modulesDir, modules, isTest = true)
+  }
+
+  def distSetUp(home: File, modules: List[BuildableModule]) {
+    setUp(home, new File("%s/modules".format(home)), modules, isTest = false)
+  }
+
+  private def testHome(): File =
+    new File(System.getProperty("surefire.basedir", ".")
+        + "/build/target/jboss-as")
+
+  private def setUp(
+      home: File,
+      modulesDir: File,
+      modules: List[BuildableModule],
+      isTest: Boolean) {
+    info("Build modules %s into %s", modules, modulesDir)
 
     // Backup standalone configuration
-    backupStandaloneXml(jbossHome)
+    val (xml, xmlBackup) = backupStandaloneXml(home)
+    val xmlForEdit: Node = XML.loadFile(xmlBackup)
 
-    // Copy test standalone xml to server
-    copy(new ClassLoaderAsset(standaloneXml).openStream(),
-      new FileOutputStream(standaloneXmlPath(jbossHome)))
+    // Build each module and let it apply changes to XML
+    val config = buildModules(modulesDir, modules, xmlForEdit)
 
-    testModuleDir
+    // TODO: Change logging settings when testing to see debug/trace info
+    // Includes: adding:
+    // <logger category="io.escalante"><level name="TRACE"/></logger>
+    // And change CONSOLE level to TRACE
+
+    // Save the XML
+    saveXml(xml, config)
   }
 
   def tearDown() {
-    val stdCfg = standaloneXmlPath(jbossHome)
+    val stdCfg = standaloneXmlPath(testHome())
     val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
     copy(stdCfgOriginal, stdCfg) // Restore original standalone config
   }
@@ -75,6 +101,18 @@ object AppServer extends Log with AssertionsForJUnit {
       copy(cfg, cfgBackup) // Backup original standalone config
 
     (cfg, cfgBackup)
+  }
+
+  @tailrec
+  private def buildModules(
+      modulesDir: File,
+      modules: List[BuildableModule],
+      config: Node): Node = {
+    modules match {
+      case List() => config
+      case module :: moreModules =>
+        buildModules(modulesDir, moreModules, module.build(modulesDir, config))
+    }
   }
 
   private def validateResponse(r: ModelNode): ModelNode = {
