@@ -129,7 +129,6 @@
    </properties>
 
    <modules>
-      <module>build</module>
       <module>modules</module>
       <module>modules/core</module>
       <module>modules/artifact</module>

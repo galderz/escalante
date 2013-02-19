@@ -11,10 +11,10 @@
 
 	<container qualifier="jboss" default="true">
 		<configuration>
-         <property name="jbossHome">${surefire.basedir:.}/build/target/jboss-as</property>
-         <property name="modulePath">${java.io.tmpdir:.}/test-module:${surefire.basedir:.}/build/target/jboss-as/modules:${surefire.basedir:.}/build/target/jboss-as/thirdparty-modules</property>
+         <property name="jbossHome">${java.io.tmpdir}/jboss-as</property>
+         <property name="modulePath">${java.io.tmpdir}/test-module:${java.io.tmpdir}/jboss-as/modules:${java.io.tmpdir}/jboss-as/thirdparty-modules</property>
          <!-- Workaround for https://issues.jboss.org/browse/AS7-6471 -->
-         <property name="bundlePath">${surefire.basedir:.}/build/target/jboss-as/bundles</property>
+         <property name="bundlePath">${java.io.tmpdir}/jboss-as/bundles</property>
 
          <!-- Options below are for managed JBoss instances, do not remove! -->
 			<!--<property name="allowConnectingToRunningServer">true</property>-->

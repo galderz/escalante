@@ -9,7 +9,7 @@ Building
 
 Install the project using the provided settings.xml:
 
-    mvn -s build/settings.xml install
+    mvn -s settings.xml install
 
 If you will be building the project often, you'll want to
 create/modify your own ~/.m2/settings.xml file.
@@ -29,11 +29,12 @@ Once your repositories are configured, simply type:
 Layout
 ------
 
-* `assembly/` Contains the instructions for creating the final binary
-distributable in .zip format.
+* `assembly/` Contains the instructions for creating the final server
+distribution structure.
 
-* `build/` Contains code related to building Escalante, including downloading
-and unzipping a base JBoss Application Server used for testing.
+* `dist/` Takes the distribution created by `assembly` and creates a .zip
+file and Maven artifact that it can be published. You must use execute the
+`release` profile for the ZIP to be generated.
 
 * `modules/core` Includes common code use by several Escalante components.
 
@@ -48,17 +49,3 @@ Invoker plugin which runs Arquillian tests to check this module works as
 expected.
 
 * `modules/` Parent project for all Escalante modules.
-
-Development Tips
-----------------
-
-Before you attempt to do any testing, whether it's via command line Maven,
-or any IDE, please make sure `build/` project is built, so that base
-JBoss Application Server is downloaded and unzipped in designated location.
-If you want to avoid building the entire project, you can simply build the
-individual module via:
-
-    mvn install -pl build
-
-Once the base JBoss Application Server has been installed, simply run your
-tests via command line or the IDE.

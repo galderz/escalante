@@ -32,6 +32,11 @@ class ArquillianListener extends LoadableExtension with Log {
     builder.observer(classOf[ArquillianListener])
   }
 
+  def executeBeforeSetup(@Observes event: BeforeSetup) {
+    info("Execute BeforeSetup for Artifact")
+    AppServer.testUnzipAppServer()
+  }
+
   def executeBeforeStart(@Observes event: BeforeStart) {
     info("Execute beforeStart for Lift")
     AppServer.testSetUp(List(ArtifactModule, LiftModule))
