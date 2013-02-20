@@ -23,8 +23,8 @@ object JavaXmlParser {
    * @return the exception
    */
   def unexpectedElement(reader: XMLStreamReader): XMLStreamException = {
-    new XMLStreamException("Unexpected element '%s' encountered".format(
-      reader.getName), reader.getLocation)
+    new XMLStreamException(
+      s"Unexpected element '${reader.getName}' encountered", reader.getLocation)
   }
 
   /**
@@ -114,8 +114,9 @@ object JavaXmlParser {
    * @return the exception
    */
   def unexpectedAttribute(reader: XMLStreamReader, index: Int): XMLStreamException = {
-    new XMLStreamException("Unexpected attribute '%s' encountered".format(
-      reader.getAttributeName(index)), reader.getLocation)
+    new XMLStreamException(
+      s"Unexpected attribute '${reader.getAttributeName(index)}' encountered",
+      reader.getLocation)
   }
 
   /**

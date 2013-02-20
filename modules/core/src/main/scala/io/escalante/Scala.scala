@@ -37,7 +37,7 @@ sealed trait Scala {
 
 object Scala {
 
-  private val DEFAULT_SCALA = Scala2x("2.9.2", isMain = true)
+  private val DEFAULT_SCALA = Scala2x("2.10.0", isMain = true)
 
   def apply(): Scala = DEFAULT_SCALA
 
@@ -67,11 +67,11 @@ object Scala {
       val micro: Byte,
       val isMain: Boolean) extends Scala {
 
-    private val scalaVersion: String = "%s.%s.%s".format(major, minor, micro)
+    private val scalaVersion: String = s"$major.$minor.$micro"
 
-    private val scalaUrlVersion: String = "%s%s%s".format(major, minor, micro)
+    private val scalaUrlVersion: String = f"$major%s$minor%s$micro%s"
 
-    private val scalaMinorVersion: String = "%s.%s".format(major, minor)
+    private val scalaMinorVersion: String = s"$major.$minor"
 
     def version: String = scalaVersion
 
@@ -100,7 +100,7 @@ object Scala {
       </module>
     }
 
-    override def toString: String = "Scala(%s)".format(version)
+    override def toString: String = s"Scala($version)"
 
     override def hashCode(): Int =
       41 * (41 + major) * (41 + minor) + micro

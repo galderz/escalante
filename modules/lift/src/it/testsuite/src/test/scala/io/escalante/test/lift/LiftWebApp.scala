@@ -20,9 +20,10 @@ import io.escalante.Scala
 import io.escalante.lift.Lift
 
 /**
- * // TODO: Document this
+ * Builds a Lift web app for testing.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object LiftWebApp extends Log {
 
@@ -59,22 +60,16 @@ object LiftWebApp extends Log {
     for ((location, target) <- webResources)
     yield
       war.addAsWebResource(
-        resource("%s/%s".format(appName, location)),
-        "%s/%s".format(target, location))
-
-//    static.map(staticResource =>
-//      war.addAsWebResource(xml(staticResource), "static/index.html"))
+        resource(s"$appName/$location"), s"$target/$location")
 
     war.addAsWebResource(indexHtmlContent, "index.html")
         .addAsWebResource(new StringAsset(descriptor),
-      "META-INF/escalante.yml")
+            "META-INF/escalante.yml")
         .addAsWebResource(webXmlContent, "WEB-INF/web.xml")
         .addClasses(bootClass)
         .addClasses(classes: _ *)
         .addClasses(classOf[Log])
         .addAsLibraries(resolver
-//        .artifacts("org.scalatest:scalatest_2.8.2")
-//        .exclusion("org.scala-lang:scala-library")
         .artifacts("org.seleniumhq.selenium:selenium-htmlunit-driver")
         .resolveAs(classOf[GenericArchive]))
 

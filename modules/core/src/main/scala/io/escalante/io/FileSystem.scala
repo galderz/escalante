@@ -124,14 +124,12 @@ object FileSystem extends Log {
           deleteDirectory(file)
         } else {
           if (!file.delete) {
-            throw new RuntimeException(
-              "Failed to delete file: %s".format(file))
+            throw new RuntimeException(s"Failed to delete file: $file")
           }
         }
       }
       if (!directory.delete) {
-        throw new RuntimeException(
-          "Failed to delete directory: %s".format(directory))
+        throw new RuntimeException(s"Failed to delete directory: $directory")
       }
     }
     else {

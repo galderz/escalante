@@ -41,7 +41,7 @@ class Authors extends Log {
         ".name" #> a.name &
           ".books" #> SHtml.link("/books/add",
             () => authorVar(a),
-            Text("%s books (Add more)".format(a.books.size))) &
+            Text(s"${a.books.size} books (Add more)")) &
           ".edit" #> SHtml.link("add", () => authorVar(a), Text("Edit"))
     }
     sel

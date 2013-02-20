@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2013 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
@@ -18,21 +18,21 @@ val scalaVersion = project.getProperties.getProperty("version.scala")
 val projectVersion = project.getVersion
 val escalantePrefix = "escalante-"
 
-val targetDir = "%s/target".format(baseDir)
+val targetDir = s"$baseDir/target"
 
 // 0. Log startup
 println()
-println( """|-------------------
+println(s"""|-------------------
            | Assemble Escalante
            |-------------------
-           | baseDir = %s
-           | jbossVersion = %s
-           | scalaVersion = %s
-         """.format(baseDir, jbossVersion, scalaVersion).stripMargin)
+           | baseDir = $baseDir
+           | jbossVersion = $jbossVersion
+           | scalaVersion = $scalaVersion
+         """.stripMargin)
 
 // 1. Extract JBoss AS distro, if necessary...
-val escalanteHome = new File(
-  "%s/%s".format(targetDir, escalantePrefix + projectVersion))
+val escalanteDirName = escalantePrefix + projectVersion
+val escalanteHome = new File(s"$targetDir/$escalanteDirName")
 AppServer.unzipAppServer(escalanteHome, jbossVersion)
 
 // 2. Build Escalante, reusing the code used to unit test Escalante (how cool!!!)
@@ -42,9 +42,11 @@ AppServer.distSetUp(escalanteHome, List(ArtifactModule, LiftModule))
 // 3. Copy xsd files
 println("Copy susystem XML schema files")
 for (module <- List("lift", "artifact"))
-yield
-  copy("%s/../modules/%s/target/classes/schema".format(baseDir, module),
-     "%s/docs/schema".format(escalanteHome.getCanonicalPath))
+yield {
+  val canonicalPath = escalanteHome.getCanonicalPath
+  copy(s"$baseDir/../modules/$module/target/classes/schema",
+    s"$canonicalPath/docs/schema")
+}
 
 println("Escalante assembled")
 

@@ -43,8 +43,6 @@ case class LiftMetaData(
           -> MavenArtifact("org.slf4j", "slf4j-api"),
       JBossModule("org.joda.time")
           -> MavenArtifact("joda-time", "joda-time"),
-      JBossModule("org.apache.commons.codec")
-          -> MavenArtifact("commons-codec", "commons-codec"),
       JBossModule("javax.mail.api")
           -> MavenArtifact("javax.mail", "mail"),
       JBossModule("javax.activation.api")
@@ -53,7 +51,8 @@ case class LiftMetaData(
   }
 
   private def liftMavenArtifact(module: String, scala: Scala): MavenArtifact = {
-    val artifactId = "lift-%s_%s".format(module, scala.artifactIdVersion)
+    val artifactIdVersion = scala.artifactIdVersion
+    val artifactId = f"lift-$module%s_$artifactIdVersion%s"
     new MavenArtifact("net.liftweb", artifactId, liftVersion.version,
       Some(new LiftDependencyFilter(systemDependencies)))
   }

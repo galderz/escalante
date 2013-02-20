@@ -37,23 +37,23 @@ class JpaTest {
     assert(driver.getPageSource.contains("JEE Examples"))
 
     // 2. Add an author
-    driver.get("%s/authors/add".format(appUrl))
+    driver.get(s"$appUrl/authors/add")
     driver.findElement(By.cssSelector("input[type='text']")).sendKeys("Galder")
     driver.findElement(By.cssSelector("input[type='submit']")).click()
 
     // 3. Check if author list contains the added author
-    driver.get("%s/authors/index".format(appUrl))
+    driver.get(s"$appUrl/authors/index")
     assert(driver.getPageSource.contains("Galder"))
     assert(driver.getPageSource.contains("0 books"))
 
     // 4. Add a new Book with the added author
-    driver.get("%s/books/add".format(appUrl))
+    driver.get(s"$appUrl/books/add")
     // First text input is Title
     driver.findElement(By.cssSelector("input[type='text']")).sendKeys("Escalante In Action")
     driver.findElement(By.cssSelector("input[type='submit']")).click()
 
     // 5. Check if the books for the author have been updated
-    driver.get("%s/authors".format(appUrl))
+    driver.get(s"$appUrl/authors")
     assert(driver.getPageSource.contains("Galder"))
     assert(driver.getPageSource.contains("1 books"))
   }
@@ -62,20 +62,15 @@ class JpaTest {
 
 object JpaTest {
 
-  @Deployment def deployment: WebArchive = deployment(None)
-
-  private def deployment(scalaVersion: Option[Scala]): WebArchive = {
-    scalaVersion match {
-      case None =>
-        val descriptor =
-          """
+  @Deployment def deployment: WebArchive = {
+    val descriptor =
+      s"""
             | scala:
             | lift:
-            |   version: %s
-          """.format(LiftWebApp.LIFT_VERSION).stripMargin
+            |   version: ${LiftWebApp.LIFT_VERSION}
+          """.stripMargin
 
-        createWebApp(descriptor, "jpa-default.war")
-    }
+    createWebApp(descriptor, "jpa-default.war")
   }
 
   private def createWebApp(
@@ -104,17 +99,5 @@ object JpaTest {
       ),
       indexHtml)
   }
-
-//  @Deployment def deployment: WebArchive = {
-//    deployment("2.8.2", "2.4", classOf[LibraryJpaBoot], List())
-//  }
-//
-//  def deployment(scala: String, lift: String, bootClass: Class[_ <: AnyRef],
-//        classes: Seq[Class[_]]): WebArchive = {
-//    deployment("libraryjpa", "libraryjpa-%s.war".format(scala.replace(".", "")),
-//      descriptor(scala, lift), bootClass,
-//      List(classOf[Author], classOf[Book], classOf[Model],
-//        classOf[Authors], classOf[Books]) ++ classes)
-//  }
 
 }

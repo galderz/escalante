@@ -30,7 +30,7 @@ class MapperTest {
   val driver = new HtmlUnitDriver()
 
   @Test def testStaticContent() {
-    driver.get("%s/static/index".format(appUrl))
+    driver.get(s"$appUrl/static/index")
     val source = driver.getPageSource
     assert(source.contains("Static content... everything you put in the /static"),
       "Instead, page source contains: " + source)
@@ -38,7 +38,7 @@ class MapperTest {
 
   @Test def testUserSignUpAndLogin() {
     // Load sign up page
-    driver.get("%s/user_mgt/sign_up".format(appUrl))
+    driver.get(s"$appUrl/user_mgt/sign_up")
     // Fill in fields
     driver.findElement(By.id("txtFirstName")).sendKeys("Galder")
     driver.findElement(By.id("txtLastName")).sendKeys("Zamarreño")
@@ -56,10 +56,10 @@ class MapperTest {
     findLogout()
 
     // Click logout
-    driver.get("%s/user_mgt/logout".format(appUrl))
+    driver.get(s"$appUrl/user_mgt/logout")
 
     // Click on login and fill in details
-    driver.get("%s/user_mgt/login".format(appUrl))
+    driver.get(s"$appUrl/user_mgt/login")
     driver.findElement(By.name("username")).sendKeys("athletic@bilbao.com")
     driver.findElement(By.name("password")).sendKeys("boomoo")
     driver.findElement(By.cssSelector("input[type='submit']")).click()
@@ -79,22 +79,17 @@ class MapperTest {
 
 object MapperTest {
 
-  @Deployment def deployment: WebArchive = deployment(None)
+  @Deployment def deployment: WebArchive = {
+    val descriptor =
+      s"""
+        | scala:
+        | lift:
+        |   version: ${LiftWebApp.LIFT_VERSION}
+        |   modules:
+        |     - mapper
+      """.stripMargin
 
-  private def deployment(scalaVersion: Option[Scala]): WebArchive = {
-    scalaVersion match {
-      case None =>
-        val descriptor =
-          """
-            | scala:
-            | lift:
-            |   version: %s
-            |   modules:
-            |     - mapper
-          """.format(LiftWebApp.LIFT_VERSION).stripMargin
-
-        createWebApp(descriptor, "mapper-default.war")
-    }
+    createWebApp(descriptor, "mapper-default.war")
   }
 
   private def createWebApp(

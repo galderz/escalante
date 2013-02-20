@@ -35,8 +35,10 @@ class ScalaXmlParserTest extends AssertionsForJUnit {
     val newXml = addXmlElement(
       "subsystem", "urn:jboss:logging", <b></b>, xml)
 
-    assert(newXml.toString().contains(
-      """<subsystem xmlns="urn:jboss:logging:1.2"><b></b></subsystem>"""))
+    val newXmlString = newXml.toString()
+    assert(newXmlString.contains(
+      """<subsystem xmlns="urn:jboss:logging:1.2"><b></b></subsystem>"""),
+      newXmlString)
   }
 
   @Test def testModifyAttribute() {
@@ -55,10 +57,9 @@ class ScalaXmlParserTest extends AssertionsForJUnit {
         <level name="TRACE"></level><formatter/>
       </console-handler>, xml)
 
-    println(newXml.toString())
-
-    assert(newXml.toString().contains(
-      """<level name="TRACE"></level><formatter></formatter>"""))
+    val newXmlString = newXml.toString()
+    assert(newXmlString.contains(
+      """<level name="TRACE"></level><formatter/>"""), newXmlString)
   }
 
 

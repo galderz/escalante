@@ -45,23 +45,22 @@ object AppServer extends Log with AssertionsForJUnit {
     if (xml.exists())
       info("Base JBoss AS distribution already extracted")
     else {
-      info("Unzip base JBoss AS distribution to %s"
-          .format(home.getCanonicalPath))
+      info(s"Unzip base JBoss AS distribution to ${home.getCanonicalPath}")
 
       val userHome = System.getProperty("user.home")
-      val m2Repo = "%s/.m2/repository".format(userHome)
-      val jbossZip = "%1$s/org/jboss/as/jboss-as-dist/%2$s/jboss-as-dist-%2$s.zip"
-          .format(m2Repo, VERSION)
+      val m2Repo = s"$userHome/.m2/repository"
+      val jbossZip =
+        s"$m2Repo/org/jboss/as/jboss-as-dist/$VERSION/jboss-as-dist-$VERSION.zip"
 
       // Unzip
       unzip(new File(jbossZip), new File(TMP_DIR))
-      val unzippedDir = "%s/jboss-as-%s".format(TMP_DIR, VERSION)
+      val unzippedDir = s"$TMP_DIR/jboss-as-$VERSION"
       val renamed = new File(unzippedDir).renameTo(home)
       if (!renamed)
-        error("Unable to rename to %s".format(home))
+        error(s"Unable to rename to $home")
 
       // Change permissions of .sh files
-      val executables = new File("%s/bin".format(home)).listFiles(
+      val executables = new File(s"$home/bin").listFiles(
         new FilenameFilter {
           def accept(dir: File, name: String) = name.endsWith(".sh")
         })
@@ -84,12 +83,12 @@ object AppServer extends Log with AssertionsForJUnit {
   }
 
   def distSetUp(home: File, modules: List[BuildableModule]) {
-    setUp(home, new File("%s/modules".format(home)), modules, isTest = false)
+    setUp(home, new File(s"$home/modules"), modules, isTest = false)
   }
 
   def tearDown() {
     val stdCfg = standaloneXmlPath(TEST_HOME)
-    val stdCfgOriginal = new File("%s.original".format(stdCfg.getCanonicalPath))
+    val stdCfgOriginal = new File(s"${stdCfg.getCanonicalPath}.original")
     copy(stdCfgOriginal, stdCfg) // Restore original standalone config
   }
 
@@ -164,9 +163,9 @@ object AppServer extends Log with AssertionsForJUnit {
   }
 
   private def standaloneXmlPath(home: File) = new File(
-    "%s/standalone/configuration/standalone.xml".format(home))
+    s"$home/standalone/configuration/standalone.xml")
 
   private def standaloneXmlBackupFile(cfg: File): File =
-    new File("%s.original".format(cfg.getCanonicalPath))
+    new File(s"${cfg.getCanonicalPath}.original")
 
 }

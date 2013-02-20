@@ -4,6 +4,7 @@
   ~ Licensed under the Eclipse Public License version 1.0, available at
   ~ http://www.eclipse.org/legal/epl-v10.html
   -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -30,6 +31,10 @@
       <dependency>
          <groupId>org.scala-lang</groupId>
          <artifactId>scala-library</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.scala-lang</groupId>
+         <artifactId>scala-compiler</artifactId>
       </dependency>
       <dependency>
          <groupId>net.alchim31.maven</groupId>
@@ -127,9 +132,13 @@
                      <keepGeneratedScript>true</keepGeneratedScript>
                      <!-- To debug script, run with: mvnDebug -->
                      <scriptFile>assemble.scala</scriptFile>
+                     <removeFromClasspath>scala-library-2.9.2</removeFromClasspath>
                   </configuration>
                </execution>
             </executions>
+            <configuration>
+               <scalaVersion>${version.scala}</scalaVersion>
+            </configuration>
          </plugin>
       </plugins>
    </build>

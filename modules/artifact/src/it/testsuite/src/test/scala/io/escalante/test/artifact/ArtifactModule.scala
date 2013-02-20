@@ -30,11 +30,10 @@ object ArtifactModule extends BuildableModule {
 
   private def buildCoreModule(destDir: File) {
     val pkg = "io/escalante"
-    val modulePath = "%s/core/main".format(pkg)
+    val modulePath = s"$pkg/core/main"
     val archive = ModuleBuilder.buildJavaArchive(
       destDir, modulePath, "escalante-core.jar",
-      List("%s/io".format(pkg),  "%s/xml".format(pkg),
-          "%s/logging".format(pkg), "%s/yaml".format(pkg)),
+      List(s"$pkg/io", s"$pkg/xml", s"$pkg/logging", s"$pkg/yaml"),
       List(classOf[Scala], Version.getClass))
 
     val moduleXml =

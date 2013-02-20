@@ -33,8 +33,7 @@ class HelloWorldTest {
 
   private def helloWorld(appVersion: String) {
     val driver = new HtmlUnitDriver()
-    driver.get("http://localhost:8080/helloworld-%s/index.html"
-        .format(appVersion))
+    driver.get(s"http://localhost:8080/helloworld-$appVersion/index.html")
     assert(driver.getPageSource.contains("Hello World!"))
   }
 
@@ -49,23 +48,23 @@ object HelloWorldTest {
     scalaVersion match {
       case None =>
         val descriptor =
-          """
+          s"""
             | scala:
             | lift:
-            |   version: %s
-          """.format(LiftWebApp.LIFT_VERSION).stripMargin
+            |   version: ${LiftWebApp.LIFT_VERSION}
+          """.stripMargin
 
         createWebApp(descriptor, "helloworld-default.war")
       case Some(scala) =>
         val descriptor =
-          """
+          s"""
             | scala:
-            |   version: %s
+            |   version: ${scala.version}
             | lift:
-            |   version: %s
-          """.format(scala.version, LiftWebApp.LIFT_VERSION).stripMargin
+            |   version: ${LiftWebApp.LIFT_VERSION}
+          """.stripMargin
 
-        createWebApp(descriptor, "helloworld-%s.war".format(scala.urlVersion))
+        createWebApp(descriptor, s"helloworld-${scala.urlVersion}.war")
     }
   }
 
