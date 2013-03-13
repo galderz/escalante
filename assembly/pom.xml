@@ -132,6 +132,9 @@
                      <keepGeneratedScript>true</keepGeneratedScript>
                      <!-- To debug script, run with: mvnDebug -->
                      <scriptFile>assemble.scala</scriptFile>
+                     <!-- Transitive Scala 2.9.2 dependency conflicting
+                     with Scala 2.10. Exclude old Scala dependency to avoid
+                     runtime NoMethodError. -->
                      <removeFromClasspath>scala-library-2.9.2</removeFromClasspath>
                   </configuration>
                </execution>

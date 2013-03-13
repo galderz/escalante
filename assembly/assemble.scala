@@ -8,7 +8,7 @@
 import io.escalante.test.AppServer
 import io.escalante.test.artifact.ArtifactModule
 import io.escalante.test.lift.LiftModule
-import java.io.{FilenameFilter, File}
+import java.io.File
 import io.escalante.io.FileSystem._
 
 // Assemble Escalante

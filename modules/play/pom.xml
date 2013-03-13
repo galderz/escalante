@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
+  ~
+  ~ Licensed under the Eclipse Public License version 1.0, available at
+  ~ http://www.eclipse.org/legal/epl-v10.html
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+
+   <parent>
+      <groupId>io.escalante</groupId>
+      <artifactId>escalante-modules</artifactId>
+      <version>0.3.0-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+
+   <groupId>io.escalante</groupId>
+   <artifactId>escalante-play</artifactId>
+   <version>0.3.0-SNAPSHOT</version>
+
+   <name>Escalante Lift Module</name>
+
+   <packaging>jar</packaging>
+
+   <dependencies>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-core</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>escalante-artifact</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.jboss.as</groupId>
+         <artifactId>jboss-as-server</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.as</groupId>
+         <artifactId>jboss-as-controller</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <!--<dependency>-->
+         <!--<groupId>org.apache.maven</groupId>-->
+         <!--<artifactId>maven-aether-provider</artifactId>-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+         <!--<groupId>org.apache.maven</groupId>-->
+         <!--<artifactId>maven-settings</artifactId>-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+         <!--<groupId>org.apache.maven</groupId>-->
+         <!--<artifactId>maven-settings-builder</artifactId>-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+         <!--<groupId>org.sonatype.aether</groupId>-->
+         <!--<artifactId>aether-connector-wagon</artifactId>-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+         <!--<groupId>org.apache.maven.wagon</groupId>-->
+         <!--<artifactId>wagon-http-lightweight</artifactId>-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
+
+      <dependency>
+         <groupId>org.yaml</groupId>
+         <artifactId>snakeyaml</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
+      <!-- TODO: Avoid Play subsystem depending on a specific Play version -->
+      <dependency>
+         <groupId>play</groupId>
+         <artifactId>play_${version.scala.artifactId}</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <!--<dependency>-->
+         <!--<groupId>com.typesafe.sbt</groupId>-->
+         <!--<artifactId>incremental-compiler</artifactId>-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+         <!--<groupId>org.pegdown</groupId>-->
+         <!--<artifactId>pegdown</artifactId>-->
+         <!--<scope>provided</scope>-->
+      <!--</dependency>-->
+
+      <!--&lt;!&ndash; Test dependencies &ndash;&gt;-->
+      <!--<dependency>-->
+         <!--<groupId>${project.groupId}</groupId>-->
+         <!--<artifactId>escalante-artifact</artifactId>-->
+         <!--<type>test-jar</type>-->
+         <!--<scope>test</scope>-->
+      <!--</dependency>-->
+      <!--<dependency>-->
+         <!--<groupId>org.jboss.as</groupId>-->
+         <!--<artifactId>jboss-as-subsystem-test</artifactId>-->
+         <!--<scope>test</scope>-->
+      <!--</dependency>-->
+   </dependencies>
+
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-invoker-plugin</artifactId>
+         </plugin>
+
+      </plugins>
+   </build>
+
+</project>

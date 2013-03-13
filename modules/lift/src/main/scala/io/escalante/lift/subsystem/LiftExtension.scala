@@ -10,7 +10,6 @@ import org.jboss.as.controller.parsing.ExtensionParsingContext
 import org.jboss.dmr.ModelNode
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
 import org.jboss.as.controller.descriptions.DescriptionProvider
-import org.jboss.as.controller.descriptions.common.CommonDescriptions
 import org.jboss.as.controller._
 import io.escalante.logging.Log
 import io.escalante.Version
@@ -18,9 +17,10 @@ import registry.{Resource, OperationEntry}
 import java.util
 
 /**
- * // TODO: Document this
+ * Lift extension.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 class LiftExtension extends Extension {
 
@@ -118,8 +118,7 @@ private object LiftDescribeHandler
     debug("Describe Lift extension")
 
     val addOp = createAddSubsystemOperation
-    val model = Resource.Tools.readModel(context
-      .readResource(PathAddress.EMPTY_ADDRESS))
+    Resource.Tools.readModel(context.readResource(PathAddress.EMPTY_ADDRESS))
 
     // Add the main operation
     context.getResult.add(addOp)

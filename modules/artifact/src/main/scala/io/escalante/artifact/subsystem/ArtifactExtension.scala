@@ -14,14 +14,14 @@ import org.jboss.as.controller.descriptions.DescriptionProvider
 import java.util
 import org.jboss.dmr.{ModelType, ModelNode}
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
-import org.jboss.as.controller.descriptions.common.CommonDescriptions
 import registry.{OperationEntry, Resource}
 import io.escalante.Version
 
 /**
- * // TODO: Document this
+ * Artifact extension.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 class ArtifactExtension extends Extension {
 

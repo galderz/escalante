@@ -10,7 +10,7 @@ package io.escalante.test
 import io.escalante.logging.Log
 import io.escalante.io.FileSystem._
 import io.escalante.io.Closeable._
-import java.io.{FilenameFilter, File}
+import java.io.File
 import org.jboss.dmr.ModelNode
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
 import org.scalatest.junit.AssertionsForJUnit
@@ -19,6 +19,7 @@ import java.net.InetAddress
 import scala.xml.{XML, Node}
 import io.escalante.xml.ScalaXmlParser._
 import annotation.tailrec
+import io.escalante.util.matching.RegularExpressions
 
 /**
  * Set up and tear down helper methods for the application server
@@ -29,14 +30,14 @@ import annotation.tailrec
  */
 object AppServer extends Log with AssertionsForJUnit {
 
-  val VERSION = "7.x.incremental.667" // TODO: Avoid duplication with root pom
+  final val Version = "7.x.incremental.667" // TODO: Avoid duplication with root pom
 
-  val TMP_DIR = System.getProperty("java.io.tmpdir")
+  final val TmpDir = System.getProperty("java.io.tmpdir")
 
-  val TEST_HOME = new File(TMP_DIR, "jboss-as")
+  final val TestHome = new File(TmpDir, "jboss-as")
 
   def testUnzipAppServer() {
-    unzipAppServer(TEST_HOME, VERSION)
+    unzipAppServer(TestHome, Version)
   }
 
   def unzipAppServer(home: File, version: String) {
@@ -47,30 +48,32 @@ object AppServer extends Log with AssertionsForJUnit {
     else {
       info(s"Unzip base JBoss AS distribution to ${home.getCanonicalPath}")
 
+      if (home.exists()) {
+        info("Old JBoss AS distribution exists, clean it up first")
+        deleteDirectory(home)
+      }
+
       val userHome = System.getProperty("user.home")
       val m2Repo = s"$userHome/.m2/repository"
       val jbossZip =
-        s"$m2Repo/org/jboss/as/jboss-as-dist/$VERSION/jboss-as-dist-$VERSION.zip"
+        s"$m2Repo/org/jboss/as/jboss-as-dist/$Version/jboss-as-dist-$Version.zip"
 
       // Unzip
-      unzip(new File(jbossZip), new File(TMP_DIR))
-      val unzippedDir = s"$TMP_DIR/jboss-as-$VERSION"
+      unzip(new File(jbossZip), new File(TmpDir))
+      val unzippedDir = s"$TmpDir/jboss-as-$Version"
       val renamed = new File(unzippedDir).renameTo(home)
       if (!renamed)
         error(s"Unable to rename to $home")
 
       // Change permissions of .sh files
-      val executables = new File(s"$home/bin").listFiles(
-        new FilenameFilter {
-          def accept(dir: File, name: String) = name.endsWith(".sh")
-        })
-      executables.foreach(_.setExecutable(true))
+      findAll(new File(s"$home/bin"), RegularExpressions.ExecutableFilesRegex)
+          .foreach(_.setExecutable(true))
     }
   }
 
   def testSetUp(modules: List[BuildableModule]) {
-    val home = TEST_HOME
-    val modulesDir = new File(TMP_DIR, "test-module")
+    val home = TestHome
+    val modulesDir = new File(TmpDir, "test-module")
 
     // Cleanup thirdparty deployments module dir, if present
     deleteDirectoryIfPresent(new File(home, "thirdparty-modules"))
@@ -87,7 +90,7 @@ object AppServer extends Log with AssertionsForJUnit {
   }
 
   def tearDown() {
-    val stdCfg = standaloneXmlPath(TEST_HOME)
+    val stdCfg = standaloneXmlPath(TestHome)
     val stdCfgOriginal = new File(s"${stdCfg.getCanonicalPath}.original")
     copy(stdCfgOriginal, stdCfg) // Restore original standalone config
   }

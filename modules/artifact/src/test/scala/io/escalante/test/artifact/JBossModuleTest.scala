@@ -9,8 +9,8 @@ package io.escalante.test.artifact
 
 import org.junit.Test
 import io.escalante.Scala
-import io.escalante.artifact.JBossModule
 import org.scalatest.junit.AssertionsForJUnit
+import io.escalante.server.JBossModule
 
 /**
  * // TODO: Document this

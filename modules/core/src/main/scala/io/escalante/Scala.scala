@@ -90,6 +90,7 @@ object Scala {
         </resources>
         <dependencies>
           <module name="javax.api"/>
+          <module name="sun.jdk"/>
           <system export="true">
             <paths>
               <path name="org/xml/sax"/>
@@ -128,14 +129,14 @@ object Scala {
       val minor = versionNumbers(1).toByte
       val micro = versionNumbers(2).toByte
       if (minor < 10)
-        new Scala2xx(major, minor, micro, isMain)
+        new Scala29x(major, minor, micro, isMain)
       else
         new Scala2x(major, minor, micro, isMain)
     }
 
   }
 
-  private class Scala2xx(
+  private class Scala29x(
       major: Byte,
       minor: Byte,
       micro: Byte,
@@ -150,30 +151,5 @@ object Scala {
     override def artifactIdVersion: String = version
 
   }
-
-//  private class Scala28x(
-//      major: Byte,
-//      minor: Byte,
-//      micro: Byte) extends Scala2x(major, minor, micro, false) {
-//
-//    override def moduleXml: Elem = {
-//      val slot = if (isMain) "main" else version
-//      <module name="org.scala-lang.scala-library" slot={slot}
-//              xmlns="urn:jboss:module:1.1">
-//        <resources>
-//          <resource-root path={"scala-library-" + version + ".jar"}/>
-//        </resources>
-//        <dependencies>
-//          <system export="true">
-//            <paths>
-//              <path name="org/xml/sax"/>
-//              <path name="org/xml/sax/helpers"/>
-//            </paths>
-//          </system>
-//        </dependencies>
-//      </module>
-//    }
-//
-//  }
 
 }

@@ -10,9 +10,10 @@ import org.jboss.as.controller.{OperationContext, AbstractRemoveStepHandler}
 import org.jboss.dmr.ModelNode
 
 /**
- * // TODO: Document this
+ * Lift subsystem 'remove' operation.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 object LiftSubsystemRemove extends AbstractRemoveStepHandler {
 

@@ -12,6 +12,7 @@ import io.escalante.io.Closeable._
 import java.net.URISyntaxException
 import io.escalante.logging.Log
 import java.util.jar.JarFile
+import util.matching.Regex
 
 /**
  * Filesystem related utility methods
@@ -29,20 +30,7 @@ object FileSystem extends Log {
    * @return a File composed of the parent and child
    */
   def mkDirs(parent: File, child: String): File =
-    mkDirs(parent, child, deleteIfPresent = false)
-
-  /**
-   * Make a directory, deleting it first if already present.
-   *
-   * @param parent File instance representing the parent directory
-   * @param child name of child directory to create
-   * @param deleteIfPresent if true, directory must be deleted before
-   *                        recreating it
-   * @return a File composed of the parent and child
-   */
-  def mkDirs(parent: File, child: String, deleteIfPresent: Boolean): File = {
-    mkDirs(new File(parent, child), deleteIfPresent)
-  }
+    mkDirs(new File(parent, child), deleteIfPresent = false)
 
   /**
    * Make a directory, deleting it first if already present.
@@ -113,7 +101,8 @@ object FileSystem extends Log {
   }
 
   /**
-   * Recursively deletes a directory and all its contents.
+   * Recursively deletes a directory and all its contents. If directory
+   * does not exist, an exception is thrown.
    *
    * @param directory File representing the directory to delete
    */
@@ -139,6 +128,12 @@ object FileSystem extends Log {
     }
   }
 
+  /**
+   * Recursively deletes a directory and all its contents,
+   * if directory is present.
+   *
+   * @param directory File representing the directory to delete
+   */
   def deleteDirectoryIfPresent(directory: File) {
     if (directory.exists()) deleteDirectory(directory)
   }
@@ -180,6 +175,53 @@ object FileSystem extends Log {
   def printToFile(f: java.io.File)(op: java.io.PrintWriter => Unit) {
     val p = new java.io.PrintWriter(f)
     try {op(p)} finally {p.close()}
+  }
+
+  /**
+   * Deletes a given File, if present. If the File denotes a directory, it
+   * will only work if the directory is empty. If the intention is to delete
+   * the contents of a directory recursively, use
+   * [[io.escalante.io.FileSystem.deleteDirectory()]] or
+   * [[io.escalante.io.FileSystem.deleteDirectoryIfPresent()]] methods.
+   *
+   * @param f file to delete
+   * @return true if file exists and was deleted, false if file not present,
+   *         or delete did not work
+   */
+  def deleteIfPresent(f: File): Boolean = {
+    if (f.exists()) f.delete()
+    else false
+  }
+
+  /**
+   * Find first file matching the given regular expression in the directory.
+   * Note that the search is not recursive.
+   *
+   * @param directory File denoting directory to search files in
+   * @param regex regular expression to match
+   * @return an [[scala.Option]] representing the search result. Returns
+   *         [[scala.None]] if no file was found, otherwise returns
+   *         [[scala.Some]] with the found file
+   */
+  def findFirst(directory: File, regex: Regex): Option[File] = {
+    findAll(directory, regex).headOption
+  }
+
+  /**
+   * Find all files matching the given regular expression in the directory.
+   * Note that the search is not recursive.
+   *
+   * @param directory File denoting directory to search files in
+   * @param regex regular expression to match
+   * @return an [[scala.Seq]] representing the collection of files matching
+   *         the regular expression
+   */
+  def findAll(directory: File, regex: Regex): Seq[File] = {
+    directory.listFiles(new FilenameFilter {
+      def accept(dir: File, name: String): Boolean = {
+        regex.findFirstIn(name).isDefined
+      }
+    })
   }
 
 }

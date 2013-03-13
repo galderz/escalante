@@ -9,7 +9,7 @@ package io.escalante.artifact.subsystem
 
 import org.jboss.msc.service.{ServiceName, StartContext, StopContext, Service}
 import io.escalante.logging.Log
-import io.escalante.artifact.{JBossModule, AppServerRepository, ArtifactRepository}
+import io.escalante.artifact.{ArtifactRepository}
 import io.escalante.artifact.maven.MavenArtifact
 import org.jboss.as.server.deployment.DeploymentUnit
 import scala.xml.Elem
@@ -17,6 +17,7 @@ import org.jboss.msc.value.InjectedValue
 import org.jboss.as.controller.services.path.PathManager
 import org.jboss.msc.inject.Injector
 import java.io.File
+import io.escalante.server.{JBossModule, AppServerRepository}
 
 /**
  * // TODO: Document this
@@ -76,9 +77,15 @@ class ArtifactRepositoryService(
 
   def installArtifact(
       artifact: MavenArtifact,
-      moduleXml: Option[Elem],
+      moduleXml: Elem): JBossModule = {
+    repository.installArtifact(artifact, moduleXml)
+  }
+
+  def installArtifact(
+      artifact: MavenArtifact,
+      dependencies: Seq[JBossModule],
       subArtifacts: Seq[MavenArtifact]): JBossModule = {
-    repository.installArtifact(artifact, moduleXml, subArtifacts)
+    repository.installArtifact(artifact, dependencies, subArtifacts)
   }
 
   def attachArtifacts(

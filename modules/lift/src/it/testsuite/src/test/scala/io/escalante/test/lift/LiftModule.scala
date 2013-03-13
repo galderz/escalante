@@ -10,7 +10,6 @@ import java.io.File
 import org.jboss.as.controller.Extension
 import io.escalante.lift.subsystem.LiftExtension
 import io.escalante.test.{BuildableModule, ModuleBuilder}
-import io.escalante.xml.ScalaXmlParser._
 import scala.xml.Node
 
 /**

@@ -10,7 +10,6 @@ import java.io.File
 import org.jboss.as.controller.Extension
 import io.escalante.artifact.subsystem.ArtifactExtension
 import io.escalante.artifact.maven.{RegexDependencyFilter, MavenArtifact}
-import io.escalante.artifact.AppServerRepository
 import io.escalante.{Version, Scala}
 import org.sonatype.aether.graph.{DependencyNode, DependencyFilter}
 import util.matching.Regex
@@ -18,6 +17,8 @@ import scala.List
 import io.escalante.test.{BuildableModule, ModuleBuilder}
 import scala.Some
 import scala.xml.Node
+import io.escalante.server.AppServerRepository
+import io.escalante.util.matching.RegularExpressions
 
 /**
  * Defines how the Artifact JBoss module is constructed, including the
@@ -33,7 +34,7 @@ object ArtifactModule extends BuildableModule {
     val modulePath = s"$pkg/core/main"
     val archive = ModuleBuilder.buildJavaArchive(
       destDir, modulePath, "escalante-core.jar",
-      List(s"$pkg/io", s"$pkg/xml", s"$pkg/logging", s"$pkg/yaml"),
+      List(s"$pkg/io", s"$pkg/xml", s"$pkg/logging", s"$pkg/yaml", s"$pkg/util"),
       List(classOf[Scala], Version.getClass))
 
     val moduleXml =
@@ -58,14 +59,14 @@ object ArtifactModule extends BuildableModule {
     val modulePath = "io/escalante/artifact/main"
     val archive = ModuleBuilder.buildJavaArchive(
       destDir, modulePath, "escalante-artifact.jar",
-      List("io/escalante/artifact"), List())
+      List("io/escalante/artifact", "io/escalante/server"), List())
 
     archive.addAsServiceProvider(
       classOf[Extension], classOf[ArtifactExtension])
 
     val repo = new AppServerRepository(destDir)
     val scala = Scala()
-    repo.installArtifact(MavenArtifact(scala), Some(scala.moduleXml), List())
+    repo.installArtifact(MavenArtifact(scala), scala.moduleXml)
 
     val subArtifacts =
       new MavenArtifact("org.apache.maven", "maven-settings", "3.0.4",
@@ -80,7 +81,7 @@ object ArtifactModule extends BuildableModule {
 
     repo.installArtifact(new MavenArtifact("org.apache.maven",
       "maven-aether-provider", "3.0.4", Some(PlexusUtilsFilter)),
-      None, subArtifacts)
+      List(), subArtifacts)
 
     val moduleXml =
       <module xmlns="urn:jboss:module:1.1" name="io.escalante.artifact">
@@ -134,7 +135,7 @@ object ArtifactModule extends BuildableModule {
   }
 
   private object ConnectorWagonDependenciesFilter extends RegexDependencyFilter {
-    def createRegex: Regex = new Regex("^(?!.*(sisu|wagon-provider-api)).*$")
+    def createRegex: Regex = RegularExpressions.NoSisuWagonArtifactsRegex
   }
 
 }

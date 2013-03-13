@@ -13,16 +13,18 @@ import io.escalante.logging.Log
 import io.escalante.xml.JavaXmlParser
 
 /**
- * // TODO: Document this
+ * Lift subsystem parser.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 class LiftSubsystemParser
     extends XMLElementReader[java.util.List[ModelNode]]
     with XMLElementWriter[SubsystemMarshallingContext]
     with Log {
 
-  override def writeContent(writer: XMLExtendedStreamWriter,
+  def writeContent(
+      writer: XMLExtendedStreamWriter,
       ctx: SubsystemMarshallingContext) {
     debug("Write Lift subsystem")
 
@@ -33,7 +35,9 @@ class LiftSubsystemParser
     writer.writeEndElement()
   }
 
-  override def readElement(reader: XMLExtendedStreamReader, ops: java.util.List[ModelNode]) {
+  def readElement(
+      reader: XMLExtendedStreamReader,
+      ops: java.util.List[ModelNode]) {
     // Require no attributes
     JavaXmlParser.requireNoAttributes(reader)
     // Require no content

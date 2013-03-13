@@ -28,9 +28,12 @@ object LiftSubsystemAdd extends AbstractBoottimeAddStepHandler with Log {
     debug("Populate Lift model")
   }
 
-  override def performBoottime(ctx: OperationContext, op: ModelNode,
-    model: ModelNode, verificationHandler: ServiceVerificationHandler,
-    newControllers: util.List[ServiceController[_]]) {
+  override def performBoottime(
+      ctx: OperationContext,
+      op: ModelNode,
+      model: ModelNode,
+      verificationHandler: ServiceVerificationHandler,
+      newControllers: util.List[ServiceController[_]]) {
     // Add deployment processors here
     ctx.addStep(new AbstractDeploymentChainStep {
       def execute(target: DeploymentProcessorTarget) {

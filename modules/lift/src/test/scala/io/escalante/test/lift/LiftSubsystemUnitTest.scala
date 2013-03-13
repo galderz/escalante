@@ -4,14 +4,14 @@
  * Licensed under the Eclipse Public License version 1.0, available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package io.escalante.lift
+package io.escalante.test.lift
 
 import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
 import org.jboss.as.controller.PathAddress
 import org.junit.Test
-import subsystem.LiftExtension
 import io.escalante.artifact.subsystem.ThirdPartyModulesRepo
 import io.escalante.test.subsystem.AbstractScalaSubsystemTest
+import io.escalante.lift.subsystem.LiftExtension
 
 /**
  * Unit test for the Lift subsystem.

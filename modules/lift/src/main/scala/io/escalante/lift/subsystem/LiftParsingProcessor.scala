@@ -36,7 +36,7 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
     val descriptor = root.getRoot.getChild(ESCALANTE_DESCRIPTOR)
     if (descriptor.exists()) {
       val persistXml = root.getRoot.getChild(PERSISTENCE_XML)
-      val metaData = LiftMetaDataParser.parse(descriptor, persistXml.exists())
+      val metaData = LiftMetaData.parse(descriptor, persistXml.exists())
       metaData match {
         case None => debug("Not a Lift application %s", deployment)
         case Some(liftMetaData) =>

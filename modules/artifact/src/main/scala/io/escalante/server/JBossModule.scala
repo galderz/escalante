@@ -5,13 +5,13 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 
-package io.escalante.artifact
+package io.escalante.server
 
-import maven.MavenArtifact
 import org.jboss.modules.{Module, ModuleIdentifier}
 import org.jboss.as.server.deployment.module.ModuleDependency
 import scala.Predef._
 import io.escalante.Scala
+import io.escalante.artifact.maven.MavenArtifact
 
 /**
  * Metadata representation of a JBoss Module.

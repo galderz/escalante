@@ -13,12 +13,18 @@ import io.escalante.artifact.maven.{RegexDependencyFilter, MavenArtifact}
 import org.sonatype.aether.graph.DependencyNode
 import java.util
 import scala.util.matching.Regex
-import io.escalante.artifact.JBossModule
+import org.jboss.vfs.VirtualFile
+import io.escalante.yaml.YamlParser
+import collection.JavaConversions._
+import scala.Some
+import io.escalante.server.JBossModule
+import io.escalante.util.matching.RegularExpressions
 
 /**
- * // TODO: Document this
+ * Lift metadata for a particular deployment.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 case class LiftMetaData(
   liftVersion: Lift,
@@ -58,11 +64,10 @@ case class LiftMetaData(
   }
 
   private class LiftDependencyFilter(
-      systemModules: Map[JBossModule, MavenArtifact]) extends RegexDependencyFilter {
+      systemModules: Map[JBossModule, MavenArtifact])
+      extends RegexDependencyFilter {
 
-    import LiftDependencyFilter.REGEX
-
-    def createRegex: Regex = REGEX
+    def createRegex: Regex = RegularExpressions.NotProvidedByServerRegex
 
     override def accept(
         node: DependencyNode,
@@ -82,16 +87,52 @@ case class LiftMetaData(
 
   }
 
-  private object LiftDependencyFilter {
-    val REGEX = new Regex(
-      "^(?!.*(scala-compiler|scala-library|scala-reflect|scalap|specs2*)).*$")
-  }
-
 }
 
 object LiftMetaData {
 
   val ATTACHMENT_KEY: AttachmentKey[LiftMetaData] =
     AttachmentKey.create(classOf[LiftMetaData])
+
+  def parse(descriptor: VirtualFile, isImplicitJpa: Boolean): Option[LiftMetaData] =
+    parse(YamlParser.parse(descriptor), isImplicitJpa)
+
+  def parse(contents: String, isImplicitJpa: Boolean): Option[LiftMetaData] =
+    parse(YamlParser.parse(contents), isImplicitJpa)
+
+  private def parse(
+      parsed: util.Map[String, Object],
+      isImplicitJpa: Boolean): Option[LiftMetaData] = {
+    val scala = Scala(parsed)
+    val lift = Lift(parsed)
+
+    lift match {
+      case Some(l) =>
+        // If lift key found, check if modules present
+        val liftMeta = parsed.get("lift").asInstanceOf[util.Map[String, Object]]
+        val modules = extractModules(liftMeta, isImplicitJpa)
+        Some(LiftMetaData(l, scala, modules))
+      case None =>
+        None
+    }
+  }
+
+  private def extractModules(
+      liftMeta: util.Map[String, Object],
+      isImplicitJpa: Boolean): Seq[String] = {
+    val modules = new util.ArrayList[String]()
+    // Add jpa module if implicitly enabled
+    if (isImplicitJpa)
+      modules.add("jpa")
+
+    if (liftMeta != null) {
+      val modulesMeta = liftMeta.get("modules")
+      if (modulesMeta != null) {
+        modules.addAll(modulesMeta.asInstanceOf[util.List[String]])
+      }
+    }
+
+    asScalaBuffer(modules).toSeq
+  }
 
 }

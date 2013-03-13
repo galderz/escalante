@@ -11,9 +11,10 @@ import org.jboss.msc.value.InjectedValue
 import org.jboss.msc.inject.Injector
 import io.escalante.logging.Log
 import io.escalante.{Version, Scala}
-import io.escalante.artifact.{JBossModule, ArtifactRepository}
+import io.escalante.artifact.{ArtifactRepository}
 import io.escalante.artifact.maven.MavenArtifact
 import org.jboss.as.server.deployment.DeploymentUnit
+import io.escalante.server.JBossModule
 
 /**
  * The Lift module service
@@ -65,12 +66,11 @@ class LiftService extends Service[LiftService] with Log {
    *
    * @param scala [[io.escalante.Scala]] instance representing scala version
    *             to install
-   * @return a [[io.escalante.artifact.JBossModule]] representation of the
+   * @return a [[JBossModule]] representation of the
    *         installed Scala instance
    */
   def installScalaModule(scala: Scala): JBossModule = {
-    repository.getValue.installArtifact(
-      MavenArtifact(scala), Some(scala.moduleXml), List())
+    repository.getValue.installArtifact(MavenArtifact(scala), scala.moduleXml)
   }
 
   /**
@@ -90,6 +90,6 @@ class LiftService extends Service[LiftService] with Log {
 
 object LiftService {
 
-  val SERVICE_NAME = ServiceName.of("escalante").append("lift")
+  val SERVICE_NAME: ServiceName = ServiceName.of("escalante").append("lift")
 
 }

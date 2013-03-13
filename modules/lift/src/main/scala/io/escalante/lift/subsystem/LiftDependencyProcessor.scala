@@ -9,7 +9,7 @@ package io.escalante.lift.subsystem
 import org.jboss.as.server.deployment.{Attachments, DeploymentPhaseContext, DeploymentUnit, DeploymentUnitProcessor}
 import io.escalante.logging.Log
 import org.jboss.msc.service.ServiceRegistry
-import io.escalante.artifact.JBossModule
+import io.escalante.server.JBossModule
 
 /**
  * A deployment processor that hooks the right dependencies for the Lift

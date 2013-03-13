@@ -1,0 +1,8 @@
+<ivysettings>
+   <settings defaultResolver="typesafe"/>
+   <resolvers>
+      <ibiblio name="typesafe"
+               m2compatible="true"
+               root="http://repo.typesafe.com/typesafe/releases/"/>
+   </resolvers>
+</ivysettings>

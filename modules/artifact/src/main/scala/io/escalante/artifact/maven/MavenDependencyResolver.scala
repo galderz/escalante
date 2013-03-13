@@ -18,6 +18,7 @@ import org.apache.maven.repository.internal.{MavenServiceLocator, MavenRepositor
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory
 import org.sonatype.aether.connector.wagon.{WagonRepositoryConnectorFactory, WagonProvider}
 import java.io._
+import io.escalante.util.classload.ClassLoading
 
 /**
  * Maven dependency resolver.
@@ -73,18 +74,14 @@ object MavenDependencyResolver {
   }
 
   private def createSystem(): RepositorySystem = {
-    // Has to be done within the TCCL...
-    val prevCl = Thread.currentThread().getContextClassLoader
-    try {
-      Thread.currentThread().setContextClassLoader(this.getClass.getClassLoader)
+    val cl = this.getClass.getClassLoader
+    ClassLoading.withContextClassLoader[RepositorySystem](cl) {
       // Without ioc, yayyy!
       val locator = new MavenServiceLocator()
       locator.setServices(classOf[WagonProvider], ManualWagonProvider)
       locator.addService(classOf[RepositoryConnectorFactory],
         classOf[WagonRepositoryConnectorFactory])
       locator.getService(classOf[RepositorySystem])
-    } finally {
-      Thread.currentThread().setContextClassLoader(prevCl)
     }
   }
 

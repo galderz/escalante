@@ -10,6 +10,7 @@ package io.escalante.artifact
 import maven.MavenArtifact
 import org.jboss.as.server.deployment.DeploymentUnit
 import scala.xml.Elem
+import io.escalante.server.JBossModule
 
 /**
  * // TODO: Document this
@@ -31,14 +32,28 @@ trait ArtifactRepository {
    * metadata represented as an instance of JBossModule.
    *
    * @param artifact maven artifact to install as JBoss Module
-   * @param moduleXml optional module.xml for this JBoss module
+   * @param dependencies optional collection of JBoss modules on which
+   *                     this artifact depends, typically used to hook
+   *                     existing modules into an artifact
    * @param subArtifacts optional collection of maven artifacts that need to
    *                     be installed within the same module
    * @return a JBossModule representing the installed JBoss module
    */
   def installArtifact(
       artifact: MavenArtifact,
-      moduleXml: Option[Elem],
-      subArtifacts: Seq[MavenArtifact]): JBossModule
+      dependencies: Seq[JBossModule],
+      subArtifacts: Seq[MavenArtifact] = List()): JBossModule
+
+  /**
+   * Install a Maven artifact in the artifact repository, returning a module
+   * metadata represented as an instance of JBossModule.
+   *
+   * @param artifact maven artifact to install as JBoss Module
+   * @param moduleXml module.xml for this JBoss module
+   * @return a JBossModule representing the installed JBoss module
+   */
+  def installArtifact(
+      artifact: MavenArtifact,
+      moduleXml: Elem): JBossModule
 
 }

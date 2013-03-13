@@ -33,7 +33,7 @@ class ArquillianListener extends LoadableExtension with Log {
   }
 
   def executeBeforeSetup(@Observes event: BeforeSetup) {
-    info("Execute BeforeSetup for Artifact")
+    info("Execute BeforeSetup for Lift")
     AppServer.testUnzipAppServer()
   }
 
