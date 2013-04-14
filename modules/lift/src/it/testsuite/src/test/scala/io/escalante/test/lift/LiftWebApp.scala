@@ -29,7 +29,7 @@ object LiftWebApp extends Log {
 
   val SCALA_VERSION: Scala = Scala()
 
-  val LIFT_VERSION: String = Lift("2.5-M4").version
+  val LIFT_VERSION: String = Lift("2.5-RC4").version
 
   def apply(
       appName: String,
