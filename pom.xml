@@ -106,7 +106,7 @@
       <version.junit>4.8.2</version.junit>
       <version.lift>2.5-M4</version.lift>
       <!--<version.pegdown>1.1.0</version.pegdown>-->
-      <version.play>2.1.0</version.play>
+      <version.play>2.1.1</version.play>
       <!--<version.sbt.inc.compiler>0.12.2</version.sbt.inc.compiler>-->
       <version.selenium>2.21.0</version.selenium>
 

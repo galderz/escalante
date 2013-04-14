@@ -23,7 +23,7 @@ sealed trait Play {
 
 object Play {
 
-  private val DEFAULT = Play21x("2.1.0")
+  private val DEFAULT = Play21x("2.1.1")
 
   def apply(): Play = DEFAULT
 

@@ -40,7 +40,7 @@ object PlayModule extends BuildableModule {
     // Play version used by the application
     val repo = new AppServerRepository(destDir)
     val playArtifact = new MavenArtifact(
-      "play", "play_2.10", "2.1.0", Some(ScalaLibraryFilter))
+      "play", "play_2.10", "2.1.1", Some(ScalaLibraryFilter))
     val playModuleDeps = List(
         JBossModule("org.scala-lang.scala-library"),
         JBossModule("javax.api"),
