@@ -1,34 +1,93 @@
 package io.escalante.play.subsystem
 
-import java.io.File
-import org.jboss.vfs.VirtualFile
-import io.escalante.yaml.YamlParser
+import io.escalante.Scala
+import io.escalante.artifact.maven.{RegexDependencyFilter, MavenArtifact}
 import io.escalante.io.FileSystem._
-import java.util
-import org.jboss.as.server.deployment.{DeploymentUnit, AttachmentKey, DeploymentUnitProcessingException}
-import io.escalante.server.{JBossModule, Deployments}
+import io.escalante.play.Play
+import io.escalante.server.JBossModule
+import io.escalante.util.matching.RegularExpressions
 import io.escalante.util.matching.RegularExpressions._
+import io.escalante.yaml.YamlParser
+import java.io.File
+import java.util
+import scala.Some
+import scala.util.matching.Regex
+import org.jboss.vfs.VirtualFile
+import org.jboss.as.server.deployment.DeploymentUnitProcessingException
+import org.sonatype.aether.graph.DependencyNode
 
 /**
  * // TODO: Document this
  * @author Galder Zamarreño
  * @since // TODO
  */
-trait PlayMetadata {
+case class PlayMetadata(
+    playVersion: Play,
+    scalaVersion: Scala,
+    appName: String,
+    appPath: File,
+    modules: Seq[String]) {
 
-  def attachTo(deployment: DeploymentUnit)
+  def applicationJar: Option[File] = {
+    for {
+      scalaDir <- findFirst(new File(appPath, "target"), ScalaFolderRegex)
+      jar <- findFirst(scalaDir, JarFileRegex)
+    } yield jar
+  }
 
-  def appName: String
+  def libraryDependencies: Seq[MavenArtifact] = {
+    // Generate maven artifacts based on the Scala version given by the user
+    for (
+      module <- modules
+    ) yield {
+      playMavenArtifact(module, scalaVersion)
+    }
+  }
 
-  def appPath: File
+  def systemDependencies: Map[JBossModule, MavenArtifact] = Map(
+    JBossModule("play.play_2_10")
+        -> MavenArtifact("play", "play_2.10"),
+    JBossModule("org.scala-lang.scala-library")
+        -> MavenArtifact("org.scala-lang", "scala-library")
+  )
 
-  def systemDependencies: Seq[JBossModule]
+  private def playMavenArtifact(module: String, scala: Scala): MavenArtifact = {
+    val artifactIdVersion = scala.artifactIdVersion
+    val artifactId = f"$module%s_$artifactIdVersion%s"
+    // TODO: Add exclusions for h2, hibernate-validator, javax.sevlet.api... check play-jbdc pom
+    // And provide those as system dependencies, just like for Lift metadata
+    new MavenArtifact("play", artifactId, playVersion.version,
+      Some(new PlayDependencyFilter(systemDependencies)))
+  }
+
+  // TODO: Dup with LiftDependencyFilter
+  private class PlayDependencyFilter(
+      systemModules: Map[JBossModule, MavenArtifact])
+      extends RegexDependencyFilter {
+
+    def createRegex: Regex = RegularExpressions.NotProvidedByServerRegex
+
+    override def accept(
+        node: DependencyNode,
+        parents: util.List[DependencyNode]): Boolean = {
+      // First phase, check regular expression
+      val firstPhaseAccept = super.accept(node, parents)
+      if (firstPhaseAccept) {
+        // If first phase accepted it, check whether it's a system dependency
+        val secondPhaseAccept = !systemModules.exists( entry =>
+          entry._2.groupId == node.getDependency.getArtifact.getGroupId &&
+              entry._2.artifactId == node.getDependency.getArtifact.getArtifactId)
+        return secondPhaseAccept
+      }
+
+      false
+    }
+
+  }
+
 }
 
 object PlayMetadata {
-
-  private val MetadataAttachmentKey: AttachmentKey[PlayMetadata] =
-    AttachmentKey.create(classOf[PlayMetadata])
 
   val DESCRIPTOR_SUFFIX = ".yml"
 
@@ -40,57 +99,19 @@ object PlayMetadata {
     parse(YamlParser.parse(contents), appName)
 
   def parse(parsed: util.Map[String, Object], appName: String): Option[PlayMetadata] = {
-    if (parsed != null) {
-      val playKey = "play"
-      val hasPlay = parsed.containsKey(playKey)
-      val tmp = parsed.get(playKey)
-      if (!hasPlay) {
-        None // element not present
-      } else if ((hasPlay && tmp == null)) {
+    for (
+      play <- Play(parsed)
+    ) yield {
+      val playMeta = parsed.get("play").asInstanceOf[util.Map[String, Object]]
+      if (playMeta != null && playMeta.containsKey("path")) {
+        val path = playMeta.get("path")
+        PlayMetadata(play, Scala(parsed), appName,
+          new File(path.toString), YamlParser.extractModules(playMeta))
+      } else {
         throw new DeploymentUnitProcessingException(
           "Play application path required")
-      } else {
-        val playMeta = tmp.asInstanceOf[util.Map[String, Object]]
-        val path = playMeta.get("path")
-        if (path != null)
-          Some(StaticPlayAppMetadata(appName, new File(path.toString)))
-        else
-          throw new DeploymentUnitProcessingException(
-            "Play application path required")
-      }
-    } else {
-      None
-    }
-  }
-
-  def fromDeployment(deployment: DeploymentUnit): Option[PlayMetadata] = {
-    val attachment = deployment.getAttachment(MetadataAttachmentKey)
-    if (attachment != null) Some(attachment) else None
-  }
-
-  private case class StaticPlayAppMetadata(
-      appName: String, appPath: File) extends PlayMetadata {
-
-    def attachTo(deployment: DeploymentUnit) {
-      deployment.putAttachment(MetadataAttachmentKey, this)
-
-      // If deploying static Play app, a jar containing the applications classes
-      // is expected to be found (as a result of calling Play SBT package).
-      // The app is normally located in places like this:
-      // [PLAY_APP_ROOT]/target/scala-2.10/play21-helloworld_2.10-1.0-SNAPSHOT.jar
-      for {
-        scalaDir <- findFirst(new File(appPath, "target"), ScalaFolderRegex)
-        jar <- findFirst(scalaDir, JarFileRegex)
-      } yield {
-        Deployments.attachTo(deployment, "app-lib", jar)
       }
     }
-
-    def systemDependencies: Seq[JBossModule] = List(
-      JBossModule("play.play_2_10"),
-      JBossModule("org.scala-lang.scala-library")
-    )
-
   }
 
 }

@@ -12,6 +12,7 @@ import org.junit.Test
 import io.escalante.play.subsystem.PlayMetadata
 import java.io.File
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException
+import io.escalante.Scala
 
 /**
  * Tests parsing of Escalante descriptor.
@@ -24,12 +25,32 @@ class PlayMetadataParserTest extends AssertionsForJUnit {
   @Test def testFullDescriptor() {
     val descriptor =
       """
+        | scala:
+        |   version: 2.9.2
+        | play:
+        |   path: /path/to/application
+        |   modules:
+        |     - play-jdbc
+        |     - anorm
+      """.stripMargin
+    val meta = PlayMetadata.parse(descriptor, "my-app").get
+    assert(Scala("2.9.2") === meta.scalaVersion)
+    assert("my-app" === meta.appName)
+    assert(new File("/path/to/application") === meta.appPath)
+    assert(List("play-jdbc", "anorm") === meta.modules)
+  }
+
+  @Test def testNoModules() {
+    val descriptor =
+      """
         | play:
         |   path: /path/to/application
       """.stripMargin
-    val meta = PlayMetadata.parse(descriptor, "my-app")
-    assert("my-app" === meta.get.appName)
-    assert(new File("/path/to/application") === meta.get.appPath)
+    val meta = PlayMetadata.parse(descriptor, "your-app").get
+    assert(Scala("2.10.0") === meta.scalaVersion)
+    assert("your-app" === meta.appName)
+    assert(new File("/path/to/application") === meta.appPath)
+    assert(List() === meta.modules)
   }
 
   @Test(expected = classOf[DeploymentUnitProcessingException])

@@ -6,7 +6,7 @@
  */
 package io.escalante.lift.subsystem
 
-import org.jboss.as.server.deployment.AttachmentKey
+import org.jboss.as.server.deployment.{DeploymentUnit, AttachmentKey}
 import io.escalante.lift.Lift
 import io.escalante.Scala
 import io.escalante.artifact.maven.{RegexDependencyFilter, MavenArtifact}
@@ -15,7 +15,6 @@ import java.util
 import scala.util.matching.Regex
 import org.jboss.vfs.VirtualFile
 import io.escalante.yaml.YamlParser
-import collection.JavaConversions._
 import scala.Some
 import io.escalante.server.JBossModule
 import io.escalante.util.matching.RegularExpressions
@@ -26,12 +25,14 @@ import io.escalante.util.matching.RegularExpressions
  * @author Galder Zamarreño
  * @since 1.0
  */
-case class LiftMetaData(
+case class LiftMetadata(
   liftVersion: Lift,
   scalaVersion: Scala,
   modules: Seq[String]) {
 
-  def mavenArtifacts: Seq[MavenArtifact] = {
+  import LiftMetadata._
+
+  def libraryDependencies: Seq[MavenArtifact] = {
     // Generate maven artifacts based on the Scala version given by the user
     // If lift+scala combo does not exist, the artifact repository will be
     // clever enough to figure out the right combo.
@@ -43,17 +44,19 @@ case class LiftMetaData(
     liftMavenArtifact("webkit", scalaVersion) +: customMavenArtifacts
   }
 
-  def systemDependencies: Map[JBossModule, MavenArtifact] = {
-    Map(
-      JBossModule("org.slf4j")
-          -> MavenArtifact("org.slf4j", "slf4j-api"),
-      JBossModule("org.joda.time")
-          -> MavenArtifact("joda-time", "joda-time"),
-      JBossModule("javax.mail.api")
-          -> MavenArtifact("javax.mail", "mail"),
-      JBossModule("javax.activation.api")
-          -> MavenArtifact("javax.activation", "activation")
-    )
+  def systemDependencies: Map[JBossModule, MavenArtifact] = Map(
+    JBossModule("org.slf4j")
+        -> MavenArtifact("org.slf4j", "slf4j-api"),
+    JBossModule("org.joda.time")
+        -> MavenArtifact("joda-time", "joda-time"),
+    JBossModule("javax.mail.api")
+        -> MavenArtifact("javax.mail", "mail"),
+    JBossModule("javax.activation.api")
+        -> MavenArtifact("javax.activation", "activation")
+  )
+
+  def addToDeployment(deployment: DeploymentUnit) {
+    deployment.putAttachment(MetadataAttachmentKey, this)
   }
 
   private def liftMavenArtifact(module: String, scala: Scala): MavenArtifact = {
@@ -89,50 +92,34 @@ case class LiftMetaData(
 
 }
 
-object LiftMetaData {
+object LiftMetadata {
 
-  val ATTACHMENT_KEY: AttachmentKey[LiftMetaData] =
-    AttachmentKey.create(classOf[LiftMetaData])
+  private val MetadataAttachmentKey: AttachmentKey[LiftMetadata] =
+    AttachmentKey.create(classOf[LiftMetadata])
 
-  def parse(descriptor: VirtualFile, isImplicitJpa: Boolean): Option[LiftMetaData] =
+  def parse(descriptor: VirtualFile, isImplicitJpa: Boolean): Option[LiftMetadata] =
     parse(YamlParser.parse(descriptor), isImplicitJpa)
 
-  def parse(contents: String, isImplicitJpa: Boolean): Option[LiftMetaData] =
+  def parse(contents: String, isImplicitJpa: Boolean): Option[LiftMetadata] =
     parse(YamlParser.parse(contents), isImplicitJpa)
 
   private def parse(
       parsed: util.Map[String, Object],
-      isImplicitJpa: Boolean): Option[LiftMetaData] = {
-    val scala = Scala(parsed)
-    val lift = Lift(parsed)
-
-    lift match {
-      case Some(l) =>
-        // If lift key found, check if modules present
-        val liftMeta = parsed.get("lift").asInstanceOf[util.Map[String, Object]]
-        val modules = extractModules(liftMeta, isImplicitJpa)
-        Some(LiftMetaData(l, scala, modules))
-      case None =>
-        None
+      isImplicitJpa: Boolean): Option[LiftMetadata] = {
+    for (
+      lift <- Lift(parsed)
+    ) yield {
+      // If lift key found, check if modules present
+      val liftMeta = parsed.get("lift").asInstanceOf[util.Map[String, Object]]
+      val modules = YamlParser.extractModules(liftMeta)
+      LiftMetadata(lift, Scala(parsed),
+          if (isImplicitJpa) "jpa" +: modules else modules)
     }
   }
 
-  private def extractModules(
-      liftMeta: util.Map[String, Object],
-      isImplicitJpa: Boolean): Seq[String] = {
-    val modules = new util.ArrayList[String]()
-    // Add jpa module if implicitly enabled
-    if (isImplicitJpa)
-      modules.add("jpa")
-
-    if (liftMeta != null) {
-      val modulesMeta = liftMeta.get("modules")
-      if (modulesMeta != null) {
-        modules.addAll(modulesMeta.asInstanceOf[util.List[String]])
-      }
-    }
-
-    asScalaBuffer(modules).toSeq
+  def fromDeployment(deployment: DeploymentUnit): Option[LiftMetadata] = {
+    val attachment = deployment.getAttachment(MetadataAttachmentKey)
+    if (attachment != null) Some(attachment) else None
   }
 
 }

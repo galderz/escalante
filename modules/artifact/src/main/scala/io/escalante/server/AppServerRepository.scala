@@ -7,7 +7,6 @@
 package io.escalante.server
 
 import java.io.File
-import org.jboss.as.server.deployment.DeploymentUnit
 import io.escalante.artifact.maven.{MavenArtifact, MavenDependencyResolver}
 import io.escalante.io.FileSystem._
 import io.escalante.xml.ScalaXmlParser._
@@ -34,24 +33,6 @@ class AppServerRepository(root: File) extends ArtifactRepository with Log {
       dependencies: Seq[JBossModule],
       subArtifacts: Seq[MavenArtifact]): JBossModule =
     installArtifact(artifact, None, dependencies, subArtifacts)
-
-  def attachArtifacts(
-      artifacts: Seq[MavenArtifact],
-      deployment: DeploymentUnit,
-      mountPoint: String) {
-    // TODO: Parallelize with Scala 2.10 futures...
-    // Flat map so that each maven dependencies files are then combined into
-    // a single sequence of files to add to deployment unit
-    val jars = artifacts.flatMap { artifact =>
-      MavenDependencyResolver.resolveArtifact(artifact)
-      // TODO: add more clever logic to resolveArtifact:
-      //  - if lift 2.4 + scala 2.9.2 does not exist, check is scala version is latest
-      //  - if it is, try "decreasing version", so "2.9.1"... that way all the way down
-      //  - if it's not latest, try latest and then others
-    }.distinct // Remove duplicates to avoid duplicate mount errors
-
-    Deployments.attachTo(deployment, mountPoint, jars :_*)
-  }
 
   private def installArtifact(
       artifact: MavenArtifact,

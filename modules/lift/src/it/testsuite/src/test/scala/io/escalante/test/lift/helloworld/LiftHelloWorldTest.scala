@@ -23,7 +23,7 @@ import io.escalante.test.lift.LiftWebApp
  * @since 1.0
  */
 @RunWith(classOf[Arquillian])
-class HelloWorldTest {
+class LiftHelloWorldTest {
 
   @Test
   @OperateOnDeployment("helloworld-default")
@@ -39,7 +39,7 @@ class HelloWorldTest {
 
 }
 
-object HelloWorldTest {
+object LiftHelloWorldTest {
 
   @Deployment(name = "helloworld-default", order = 1)
   def deployment: WebArchive = deployment(None)
@@ -84,7 +84,7 @@ object HelloWorldTest {
       deploymentName,
       descriptor,
       classOf[HelloWorldBoot],
-      List(classOf[HelloWorld], classOf[HelloWorldTest]),
+      List(classOf[HelloWorld], classOf[LiftHelloWorldTest]),
       Map("templates-hidden/default.html" -> ""),
       indexHtml)
   }

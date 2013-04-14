@@ -11,9 +11,8 @@ import org.jboss.msc.value.InjectedValue
 import org.jboss.msc.inject.Injector
 import io.escalante.logging.Log
 import io.escalante.{Version, Scala}
-import io.escalante.artifact.{ArtifactRepository}
+import io.escalante.artifact.ArtifactRepository
 import io.escalante.artifact.maven.MavenArtifact
-import org.jboss.as.server.deployment.DeploymentUnit
 import io.escalante.server.JBossModule
 
 /**
@@ -66,24 +65,11 @@ class LiftService extends Service[LiftService] with Log {
    *
    * @param scala [[io.escalante.Scala]] instance representing scala version
    *             to install
-   * @return a [[JBossModule]] representation of the
+   * @return a [[io.escalante.server.JBossModule]] representation of the
    *         installed Scala instance
    */
   def installScalaModule(scala: Scala): JBossModule = {
     repository.getValue.installArtifact(MavenArtifact(scala), scala.moduleXml)
-  }
-
-  /**
-   * Resolve and attach Lift jars to deployment.
-   *
-   * @param metaData [[io.escalante.lift.subsystem.LiftMetaData]] instance
-   *                containing information on the Lift jars to resolve
-   * @param deployment [[org.jboss.as.server.deployment.DeploymentUnit]]
-   *                  to which Lift jars should be attached
-   */
-  def attachLiftJars(metaData: LiftMetaData, deployment: DeploymentUnit) {
-    repository.getValue.attachArtifacts(
-      metaData.mavenArtifacts, deployment, "WEB-INF/lift-lib")
   }
 
 }

@@ -14,18 +14,17 @@ package io.escalante.util.matching
  */
 object RegularExpressions {
 
-  final val NotProvidedByServerRegex =
-//    "^(?!.*(scala-compiler|scala-library|scala-reflect|scalap|slf4j|logback|specs2*)).*$".r
-    "^(?!.*(scala-compiler|scala-library|scala-reflect|scalap|specs2*)).*$".r
+  val NotProvidedByServerRegex =
+      "^(?!.*(scala-compiler|scala-library|scala-reflect|scalap|slf4j-api|jul-to-slf4j|jcl-over-slf4j|specs2*)).*$".r
 
-  final val FileSplitRegex = "\\.(?=[^\\.]+$)".r
+  val FileSplitRegex = "\\.(?=[^\\.]+$)".r
 
-  final val ScalaFolderRegex = "(scala-*)".r
+  val ScalaFolderRegex = "(scala-*)".r
 
-  final val JarFileRegex = "(.*.jar)".r
+  val JarFileRegex = "(.*.jar)".r
 
-  final val ExecutableFilesRegex = "(.*.sh)".r
+  val ExecutableFilesRegex = "(.*.sh)".r
 
-  final val NoSisuWagonArtifactsRegex = "^(?!.*(sisu|wagon-provider-api)).*$".r
+  val NoSisuWagonArtifactsRegex = "^(?!.*(sisu|wagon-provider-api)).*$".r
 
 }

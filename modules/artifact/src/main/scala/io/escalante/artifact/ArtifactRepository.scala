@@ -8,7 +8,6 @@
 package io.escalante.artifact
 
 import maven.MavenArtifact
-import org.jboss.as.server.deployment.DeploymentUnit
 import scala.xml.Elem
 import io.escalante.server.JBossModule
 
@@ -18,14 +17,6 @@ import io.escalante.server.JBossModule
  * @since // TODO
  */
 trait ArtifactRepository {
-
-  /**
-   * resolve and add as attachment to deployment unit in mount point
-   */
-  def attachArtifacts(
-      artifacts: Seq[MavenArtifact],
-      deployment: DeploymentUnit,
-      mountPoint: String)
 
   /**
    * Install a Maven artifact in the artifact repository, returning a module

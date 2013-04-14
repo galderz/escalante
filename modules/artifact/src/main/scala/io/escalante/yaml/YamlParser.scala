@@ -10,6 +10,8 @@ package io.escalante.yaml
 import org.yaml.snakeyaml.Yaml
 import java.util
 import org.jboss.vfs.VirtualFile
+import collection.JavaConversions._
+import scala.Some
 
 /**
  * Yaml descriptor parser.
@@ -30,6 +32,52 @@ object YamlParser {
 
   def parse(contents: String): util.Map[String, Object] = {
     new Yaml().load(contents).asInstanceOf[util.Map[String, Object]]
+  }
+
+  /**
+   * Detects a framework in the descriptor data
+   *
+   * @param framework name of framework to detect
+   * @param defaultFrameworkVersion default framework version
+   * @param parsed descriptor data
+   * @return [[scala.None]] if no framework was detected, otherwise
+   *         [[scala.Some]] containing the framework version detected
+   */
+  def detectFramework(
+      framework: String,
+      defaultFrameworkVersion: String,
+      parsed: util.Map[String, Object]): Option[String] = {
+    if (parsed != null) {
+      val hasFramework = parsed.containsKey(framework)
+      val tmp = parsed.get(framework)
+      if (!hasFramework)
+        None
+      else if (hasFramework && tmp == null)
+        Some(defaultFrameworkVersion)
+      else {
+        val playMeta = tmp.asInstanceOf[util.Map[String, Object]]
+        val version = playMeta.get("version")
+        if (version != null)
+          Some(version.toString)
+        else
+          Some(defaultFrameworkVersion)
+      }
+    } else {
+      None
+    }
+  }
+
+  /**
+   * Extract dependency modules defined in parsed data
+   *
+   * @param parsed
+   * @return
+   */
+  def extractModules(parsed: util.Map[String, Object]): Seq[String] = {
+    if (parsed != null && parsed.containsKey("modules"))
+      parsed.get("modules").asInstanceOf[util.List[String]].toSeq
+    else
+      List()
   }
 
 }

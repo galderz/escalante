@@ -35,20 +35,22 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
     val root = deployment.getAttachment(Attachments.DEPLOYMENT_ROOT)
     val descriptor = root.getRoot.getChild(ESCALANTE_DESCRIPTOR)
     if (descriptor.exists()) {
-      val persistXml = root.getRoot.getChild(PERSISTENCE_XML)
-      val metaData = LiftMetaData.parse(descriptor, persistXml.exists())
-      metaData match {
-        case None => debug("Not a Lift application %s", deployment)
-        case Some(liftMetaData) =>
-          debug("Lift application detected in %s", deployment)
-          // Custom web xml for lift apps
-          addLiftMetadata(deployment, root)
-          deployment.putAttachment(LiftMetaData.ATTACHMENT_KEY, liftMetaData)
+      for (
+        metadata <- LiftMetadata.parse(descriptor,
+          root.getRoot.getChild(PERSISTENCE_XML).exists())
+      ) yield {
+        debug("Lift application detected in %s", deployment)
+        // Custom web xml for lift apps
+        addLiftMetadata(deployment, root)
+        // Attach to deployment
+        metadata.addToDeployment(deployment)
       }
     }
   }
 
-  def undeploy(deployment: DeploymentUnit) {}
+  def undeploy(deployment: DeploymentUnit) {
+    // No-op
+  }
 
   private def addLiftMetadata(deployment: DeploymentUnit, root: ResourceRoot) {
     val webXmlVirtualFile = root.getRoot.getChild(WEB_XML)

@@ -6,7 +6,7 @@
  */
 package io.escalante.lift
 
-import java.util
+import io.escalante.yaml.YamlParser
 
 /**
  * // TODO: Document this
@@ -21,31 +21,17 @@ sealed trait Lift {
 
 object Lift {
 
-  private val DEFAULT_LIFT = Lift2x("2.4")
+  private val DEFAULT = Lift2x("2.4")
 
-  def apply(): Lift = DEFAULT_LIFT
+  def apply(): Lift = DEFAULT
 
   def apply(version: String): Lift = Lift2x(version)
 
   def apply(parsed: java.util.Map[String, Object]): Option[Lift] = {
-    val liftKey = "lift"
-    if (parsed != null) {
-      val hasLift = parsed.containsKey(liftKey)
-      val tmp = parsed.get(liftKey)
-      if (!hasLift)
-        None
-      else if (hasLift && tmp == null)
-        Some(Lift())
-      else {
-        val liftMeta = tmp.asInstanceOf[util.Map[String, Object]]
-        val version = liftMeta.get("version")
-        if (version != null)
-          Some(Lift(version.toString))
-        else
-          Some(Lift())
-      }
-    } else {
-      None
+    for (
+      version <- YamlParser.detectFramework("lift", DEFAULT.version, parsed)
+    ) yield {
+      Lift(version)
     }
   }
 

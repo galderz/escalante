@@ -29,7 +29,7 @@ object PlayModule extends BuildableModule {
     val modulePath = "io/escalante/play/main"
     val archive = ModuleBuilder.buildJavaArchive(
       destDir, modulePath, "escalante-play.jar",
-      List("io/escalante/play"), List())
+      List("io/escalante/play", "play/core/server"), List())
 
     archive.addAsServiceProvider(
       classOf[Extension], classOf[PlayExtension])
@@ -44,10 +44,9 @@ object PlayModule extends BuildableModule {
     val playModuleDeps = List(
         JBossModule("org.scala-lang.scala-library"),
         JBossModule("javax.api"),
-        JBossModule("sun.jdk")
-//        ,
-//        JBossModule("org.slf4j"),
-//        JBossModule("org.jboss.logging.jul-to-slf4j-stub")
+        JBossModule("sun.jdk"),
+        JBossModule("org.slf4j"),
+        JBossModule("org.jboss.logging.jul-to-slf4j-stub")
         )
     repo.installArtifact(playArtifact, playModuleDeps, List())
 

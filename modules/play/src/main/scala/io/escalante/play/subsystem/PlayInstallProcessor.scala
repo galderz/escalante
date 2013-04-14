@@ -21,27 +21,27 @@ class PlayInstallProcessor extends DeploymentUnitProcessor with Log {
 
   def deploy(ctx: DeploymentPhaseContext) {
     val deployment = ctx.getDeploymentUnit
-    val metaData = PlayMetadata.fromDeployment(deployment).getOrElse {
-      return
+    for (
+      metadata <- PlayDeployment.metadataFromDeployment(deployment)
+    ) yield {
+      val deploymentClassLoader =
+        deployment.getAttachment(Attachments.MODULE).getClassLoader
+      val playServer = new PlayServerService(metadata.appPath, deploymentClassLoader)
+      val serviceName = PlayServerService.getServiceName(metadata.appName)
+      val serviceBuilder = ctx.getServiceTarget
+          .addService(serviceName, playServer)
+          .setInitialMode(ServiceController.Mode.ACTIVE)
+
+      // Add thread pool dependency
+      Services.addServerExecutorDependency(
+        serviceBuilder, playServer.executorInjector(), false)
+
+      serviceBuilder.install()
     }
-
-    val deploymentClassLoader =
-      deployment.getAttachment(Attachments.MODULE).getClassLoader
-    val playServer = new PlayServerService(metaData.appPath, deploymentClassLoader)
-    val serviceName = PlayServerService.getServiceName(metaData.appName)
-    val serviceBuilder = ctx.getServiceTarget
-        .addService(serviceName, playServer)
-        .setInitialMode(ServiceController.Mode.ACTIVE)
-
-    // Add thread pool dependency
-    Services.addServerExecutorDependency(
-      serviceBuilder, playServer.executorInjector(), false)
-
-    serviceBuilder.install()
   }
 
   def undeploy(context: DeploymentUnit) {
-    // TODO?
+    // No-op
   }
 
 }

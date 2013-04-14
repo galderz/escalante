@@ -18,7 +18,6 @@
       <relativePath>../../../../pom.xml</relativePath>
    </parent>
 
-   <groupId>io.escalante</groupId>
    <artifactId>escalante-testsuite-play</artifactId>
    <version>0.3.0-SNAPSHOT</version>
 
@@ -114,18 +113,12 @@
          <artifactId>play_${version.scala.artifactId}</artifactId>
          <scope>test</scope>
       </dependency>
-      <!--&lt;!&ndash; App server's Slf4j version &ndash;&gt;-->
+      <!-- App server's Slf4j version -->
       <dependency>
          <groupId>org.slf4j</groupId>
          <artifactId>slf4j-api</artifactId>
          <scope>test</scope>
       </dependency>
-      <!--<dependency>-->
-         <!--<groupId>org.jboss.logging</groupId>-->
-         <!--<artifactId>jul-to-slf4j-stub</artifactId>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
-
 
       <dependency>
          <groupId>org.seleniumhq.selenium</groupId>

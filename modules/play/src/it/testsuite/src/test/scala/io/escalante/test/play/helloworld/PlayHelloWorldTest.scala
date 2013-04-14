@@ -10,24 +10,33 @@ package io.escalante.test.play.helloworld
 import org.junit.runner.RunWith
 import org.jboss.arquillian.junit.Arquillian
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
-import io.escalante.io.FileSystem._
-import io.escalante.test.play.{PlayConsole, PlayDescriptor}
+import io.escalante.test.play.PlayWebApp
 import org.junit.{AfterClass, BeforeClass, Test}
-import org.jboss.as.controller.client.ModelControllerClient
-import org.jboss.as.controller.client.helpers.standalone.ServerDeploymentHelper
-import java.io.File
 
 /**
- * // TODO: Document this
+ * Hello World Play application test.
+ *
+ * TRACE logging for "play" category here is governed by the application
+ * server's logging configuration in standalone.xml. This is because it uses
+ * Slf4j logging. Since programmatic customization of the logging section
+ * of standalone.xml is not yet in place, the easiest to get TRACE logging is
+ * to modify [JBOSS_HOME]/standalone/configuration/standalone.xml.original
+ * and the logging configuration will be picked.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 @RunWith(classOf[Arquillian])
 class PlayHelloWorldTest {
 
+  import PlayHelloWorldTest._
+
+  // TODO: Ask David if something can be done to avoid relying on standalone.xml,
+  // why doesn't logging.properties kick in here?
+
   @Test def testHelloWorld() {
     val driver = new HtmlUnitDriver()
-    driver.get("http://localhost:9000/helloworld")
+    driver.get(s"http://localhost:9000/$AppName")
     assert(driver.getPageSource.contains("Hello (Escalante) Play!"))
   }
 
@@ -35,28 +44,18 @@ class PlayHelloWorldTest {
 
 object PlayHelloWorldTest {
 
-  val APP_NAME = "helloworld"
+  val AppName = "helloworld"
 
-  val DEPLOY_NAME = s"$APP_NAME.yml"
-
-  val APP_PATH = "modules/play/src/it/testsuite/src/test/applications/helloworld"
-
-  val SERVER_CLIENT = new ServerDeploymentHelper(
-    ModelControllerClient.Factory.create("localhost", 9999))
+  val webApp = new PlayWebApp(AppName)
 
   @BeforeClass
   def deploy() {
-    val descriptor = new PlayDescriptor(DEPLOY_NAME, APP_PATH)
-
-    // Package static Play app (reloadable apps will be supported in future)
-    PlayConsole.packageApp(APP_PATH)
-
-    SERVER_CLIENT.deploy(DEPLOY_NAME, descriptor.exportAsStream)
+    webApp.deploy(withDb = false)
   }
 
   @AfterClass
   def undeploy() {
-    SERVER_CLIENT.undeploy(DEPLOY_NAME)
+    webApp.undeploy()
   }
 
 }

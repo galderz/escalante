@@ -8,7 +8,7 @@
 package io.escalante.test.play
 
 import org.jboss.shrinkwrap.descriptor.api.Descriptor
-import java.io.{ByteArrayInputStream, InputStream, OutputStream}
+import java.io.{File, ByteArrayInputStream, InputStream, OutputStream}
 import java.nio.charset.Charset
 
 /**
@@ -16,13 +16,29 @@ import java.nio.charset.Charset
  * @author Galder Zamarreño
  * @since // TODO
  */
-class PlayDescriptor(deployName: String, appPath: String) extends Descriptor {
+class PlayDescriptor(
+    deployName: String,
+    appName: String,
+    withDb: Boolean) extends Descriptor {
 
-  def exportAsString(): String =
-    s"""
+  val appPath: File = calculateAppPath(appName)
+
+  def exportAsString(): String = {
+    if (withDb) {
+      s"""
       | play:
       |   path: $appPath
-    """.stripMargin
+      |   modules:
+      |     - play-jdbc
+      |     - anorm
+      """.stripMargin
+    } else {
+      s"""
+      | play:
+      |   path: $appPath
+      """.stripMargin
+    }
+  }
 
   def exportTo(output: OutputStream) {
     output.write(exportAsByteArray)
@@ -34,5 +50,15 @@ class PlayDescriptor(deployName: String, appPath: String) extends Descriptor {
 
   private def exportAsByteArray: Array[Byte] =
     exportAsString().getBytes(Charset.forName("UTF-8"))
+
+  private def calculateAppPath(appName: String): File = {
+    val commandLinePath = s"src/test/applications/$appName"
+    val ideFriendlyPath = s"modules/play/src/it/testsuite/$commandLinePath"
+    val ideFriendlyFile = new File(ideFriendlyPath)
+    if (ideFriendlyFile.exists())
+      ideFriendlyFile.getAbsoluteFile
+    else
+      new File(commandLinePath).getAbsoluteFile
+  }
 
 }

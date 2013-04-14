@@ -1,15 +1,14 @@
 package io.escalante.play.subsystem
 
 import org.jboss.msc.service._
-import play.core.server.NettyServer
+import play.core.server.EmbeddedNettyServer
 import java.io.File
 import org.jboss.msc.inject.Injector
 import java.util.concurrent.ExecutorService
 import org.jboss.msc.value.InjectedValue
 import io.escalante.logging.Log
-import play.core.ApplicationProvider
-import play.api.{Play, Mode, DefaultApplication, Application}
 import io.escalante.util.classload.ClassLoading
+import org.jboss.logmanager.{Logger, LogContext}
 
 /**
  * Netty server service for Play applications.
@@ -18,11 +17,11 @@ import io.escalante.util.classload.ClassLoading
  * @since 1.0
  */
 class PlayServerService(appPath: File, deploymentClassLoader: ClassLoader)
-    extends Service[NettyServer] with Log {
+    extends Service[EmbeddedNettyServer] with Log {
 
   private val executor = new InjectedValue[ExecutorService]()
 
-  private var server: NettyServer = _
+  private var server: EmbeddedNettyServer = _
 
   def start(ctx: StartContext) {
     debug("Starting Play server")
@@ -64,12 +63,21 @@ class PlayServerService(appPath: File, deploymentClassLoader: ClassLoader)
           // the properties it needs, which are located in akka.jar/reference.conf
           ClassLoading.withContextClassLoader(deploymentClassLoader) {
             // TODO: Make ports and addresses configurable in deployment descriptor
-            server = new NettyServer(
-              new DeploymentStaticApplication,
+
+            // Get root handlers before Play's Server trait constructor removes them!!
+            // Pass them to constructor so that they can be reset upon construction
+            val rootHandlers = Option(java.util.logging.Logger.getLogger(""))
+                .map(_.getHandlers)
+
+            server = new EmbeddedNettyServer(
+              appPath, deploymentClassLoader,
               Option(System.getProperty("http.port")).map(Integer.parseInt(_)).getOrElse(9000),
               Option(System.getProperty("https.port")).map(Integer.parseInt(_)),
-              Option(System.getProperty("http.address")).getOrElse("0.0.0.0")
+              Option(System.getProperty("http.address")).getOrElse("0.0.0.0"),
+              rootHandlers
             )
+
+            server.start()
           }
         }
         catch {
@@ -96,28 +104,9 @@ class PlayServerService(appPath: File, deploymentClassLoader: ClassLoader)
     })
   }
 
-  def getValue: NettyServer = server
+  def getValue: EmbeddedNettyServer = server
 
   def executorInjector(): Injector[ExecutorService] = executor
-
-  /**
-   * Defines how a static Play application deployed in Escalante gets
-   * initialised. It uses the application path provided in the deployment
-   * descriptor, and the [[java.lang.ClassLoader]] of the web app where
-   * it can locate classes and configuration files.
-   */
-  private class DeploymentStaticApplication extends ApplicationProvider {
-
-    val application = new DefaultApplication(
-      appPath, deploymentClassLoader, None, Mode.Dev)
-
-    Play.start(application)
-
-    def get: Either[Throwable, Application] = Right(application)
-
-    def path: File = appPath
-
-  }
 
 }
 

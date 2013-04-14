@@ -14,7 +14,6 @@ import org.junit.runner.RunWith
 import org.jboss.arquillian.junit.Arquillian
 import org.openqa.selenium.By
 import collection.JavaConversions._
-import io.escalante.Scala
 import io.escalante.test.lift.LiftWebApp
 import io.escalante.lift.mapper.model.User
 

@@ -19,24 +19,27 @@ import io.escalante.logging.Log
  */
 object PlayConsole extends Log {
 
-  def packageApp(appPath: String) {
+//  def main(args: Array[String]) {
+//    packageApp(new File("/Users/g/Go/code/escalante.git/modules/play/src/it/testsuite/src/test/applications/persistdb"))
+//  }
+
+  def packageApp(appPath: File) {
     // TODO: Rather the executing a process, could SBT be called programmatically?
     // Looks doable, but you need to get access to the Ivy repository where SBT
     // is released (i.e. http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/launcher/),
     // for which the ivy-maven-plugin is needed: http://evgeny-goldin.com/wiki/Ivy-maven-plugin
 
     // TODO: Avoid reliance on user environment, i.e. unzip play distro to tmp?
-//    execute(List("/opt/play/play", "clean", "package"), appPath)
     execute(List("/opt/play/play", "package"), appPath)
+//    execute(List("/opt/play/play", "package"), appPath)
   }
 
-  private def execute(args: Seq[String], appPath: String) {
+  private def execute(args: Seq[String], appPath: File) {
     val fullCommand = "$ " + args.mkString(" ")
     info(s"Execute: [$fullCommand] in $appPath")
     val builder = new ProcessBuilder(args : _*)
     builder.redirectErrorStream(true)
-    // builder.environment().putAll(env)
-    builder.directory(new File(appPath).getAbsoluteFile)
+    builder.directory(appPath)
     val process = builder.start()
     val stdout = process.getInputStream
     val consoleConsumer = new ConsoleConsumer(stdout, System.out)

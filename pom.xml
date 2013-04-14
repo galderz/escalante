@@ -140,6 +140,7 @@
       <module>modules/core</module>
       <module>modules/artifact</module>
       <module>modules/lift</module>
+      <module>modules/play</module>
       <module>assembly</module>
       <module>dist</module>
    </modules>
@@ -511,25 +512,25 @@
                   <groupId>org.apache.httpcomponents</groupId>
                   <artifactId>httpcore</artifactId>
                </exclusion>
-               <!--&lt;!&ndash; Exclude Slf4j dependency so that app server's older-->
-               <!--version is added to classpath for easier debugging &ndash;&gt;-->
+               <!-- Exclude Slf4j dependency so that app server's older
+               version is added to classpath for easier debugging -->
                <exclusion>
                   <groupId>org.slf4j</groupId>
                   <artifactId>slf4j-api</artifactId>
                </exclusion>
             </exclusions>
          </dependency>
-         <!--&lt;!&ndash; App server's Slf4j version &ndash;&gt;-->
+         <dependency>
+            <groupId>play</groupId>
+            <artifactId>play-jdbc_${version.scala.artifactId}</artifactId>
+            <version>${version.play}</version>
+         </dependency>
+         <!-- App server's Slf4j version -->
          <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.6.6</version>
+            <version>1.6.1</version>
          </dependency>
-         <!--<dependency>-->
-            <!--<groupId>org.jboss.logging</groupId>-->
-            <!--<artifactId>jul-to-slf4j-stub</artifactId>-->
-            <!--<version>1.0.0.Final</version>-->
-         <!--</dependency>-->
 
          <!--<dependency>-->
             <!--<groupId>com.typesafe.sbt</groupId>-->
