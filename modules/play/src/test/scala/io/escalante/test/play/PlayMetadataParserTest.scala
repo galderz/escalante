@@ -47,7 +47,7 @@ class PlayMetadataParserTest extends AssertionsForJUnit {
         |   path: /path/to/application
       """.stripMargin
     val meta = PlayMetadata.parse(descriptor, "your-app").get
-    assert(Scala("2.10.0") === meta.scalaVersion)
+    assert(Scala("2.10.1") === meta.scalaVersion)
     assert("your-app" === meta.appName)
     assert(new File("/path/to/application") === meta.appPath)
     assert(List() === meta.modules)

@@ -37,7 +37,7 @@ sealed trait Scala {
 
 object Scala {
 
-  private val DEFAULT_SCALA = Scala2x("2.10.0", isMain = true)
+  private val DEFAULT_SCALA = Scala2x("2.10.1", isMain = true)
 
   def apply(): Scala = DEFAULT_SCALA
 
