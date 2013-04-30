@@ -8,6 +8,7 @@
 import io.escalante.test.AppServer
 import io.escalante.test.artifact.ArtifactModule
 import io.escalante.test.lift.LiftModule
+import io.escalante.test.play.PlayModule
 import java.io.File
 import io.escalante.io.FileSystem._
 
@@ -37,7 +38,7 @@ AppServer.unzipAppServer(escalanteHome, jbossVersion)
 
 // 2. Build Escalante, reusing the code used to unit test Escalante (how cool!!!)
 println("Build modules and apply XML configuration changes")
-AppServer.distSetUp(escalanteHome, List(ArtifactModule, LiftModule))
+AppServer.distSetUp(escalanteHome, List(ArtifactModule, LiftModule, PlayModule))
 
 // 3. Copy xsd files
 println("Copy susystem XML schema files")
