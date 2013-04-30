@@ -7,10 +7,13 @@
 
 package io.escalante.test.play
 
-import java.io.{IOException, PrintStream, InputStream, File}
+import java.io._
 import java.lang.InterruptedException
 import org.jboss.as.protocol.StreamUtils
 import io.escalante.logging.Log
+import java.net.{HttpURLConnection, URL}
+import io.escalante.io.FileSystem
+import io.escalante.play.Play
 
 /**
  * // TODO: Document this
@@ -29,9 +32,34 @@ object PlayConsole extends Log {
     // is released (i.e. http://repo.typesafe.com/typesafe/ivy-releases/org.scala-sbt/launcher/),
     // for which the ivy-maven-plugin is needed: http://evgeny-goldin.com/wiki/Ivy-maven-plugin
 
-    // TODO: Avoid reliance on user environment, i.e. unzip play distro to tmp?
-    execute(List("/opt/play/play", "package"), appPath)
-//    execute(List("/opt/play/play", "package"), appPath)
+    val playExec = unzipPlay()
+    execute(List(playExec.getAbsolutePath, "package"), appPath)
+  }
+
+  private def unzipPlay(): File = {
+    val playVersion = Play().version
+    val tmp = System.getProperty("java.io.tmpdir")
+    val playTarget = new File(tmp, s"play-$playVersion")
+    val playExecutable = new File(playTarget, "play")
+    val playZipTarget = new File(tmp, s"play-$playVersion.zip")
+    // Download if zip not present
+    if (!playZipTarget.exists()) {
+      debug("Download Play 2.1.1 distribution for testing")
+      val url = new URL(s"http://downloads.typesafe.com/play/$playVersion/play-$playVersion.zip")
+      val connection = url.openConnection().asInstanceOf[HttpURLConnection]
+      connection.setRequestMethod("GET")
+      FileSystem.copy(connection.getInputStream, new FileOutputStream(playZipTarget))
+    }
+    // Unzip if not expanded
+    if (!playExecutable.exists()) {
+      debug("Unzip Play distribution")
+      FileSystem.unzip(playZipTarget, new File(tmp))
+      playExecutable.setExecutable(true)
+      // Make other files executable
+      new File(playTarget, "framework/build").setExecutable(true)
+    }
+
+    playExecutable
   }
 
   private def execute(args: Seq[String], appPath: File) {
