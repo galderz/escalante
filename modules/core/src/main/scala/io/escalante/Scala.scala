@@ -33,6 +33,8 @@ sealed trait Scala {
 
   def isMain: Boolean
 
+  def slot: String
+
 }
 
 object Scala {
@@ -81,8 +83,9 @@ object Scala {
 
     def artifactIdVersion: String = scalaMinorVersion
 
+    def slot: String = if (isMain) "main" else version
+
     def moduleXml: Elem = {
-      val slot = if (isMain) "main" else version
       <module name="org.scala-lang.scala-library" slot={slot}
               xmlns="urn:jboss:module:1.1">
         <resources>

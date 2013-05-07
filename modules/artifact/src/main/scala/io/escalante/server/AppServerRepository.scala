@@ -15,6 +15,7 @@ import io.escalante.logging.Log
 import io.escalante.artifact.ArtifactRepository
 import scala.Some
 import io.escalante.util.matching.RegularExpressions
+import io.escalante.Scala
 
 /**
  * // TODO: Document this
@@ -23,26 +24,23 @@ import io.escalante.util.matching.RegularExpressions
  */
 class AppServerRepository(root: File) extends ArtifactRepository with Log {
 
-  def installArtifact(
-      artifact: MavenArtifact,
-      moduleXml: Elem): JBossModule =
-    installArtifact(artifact, Some(moduleXml), List(), List())
-
-  def installArtifact(
+  override def installArtifact(
       artifact: MavenArtifact,
       dependencies: Seq[JBossModule],
       subArtifacts: Seq[MavenArtifact]): JBossModule =
-    installArtifact(artifact, None, dependencies, subArtifacts)
+    installArtifact(JBossModule(artifact), artifact, None, dependencies, subArtifacts)
+
+  override def installArtifact(scala: Scala): JBossModule =
+    installArtifact(JBossModule(scala), MavenArtifact(scala), Some(scala.moduleXml), List(), List())
 
   private def installArtifact(
+      module: JBossModule,
       artifact: MavenArtifact,
       moduleXml: Option[Elem],
       dependencies: Seq[JBossModule],
       subArtifacts: Seq[MavenArtifact]): JBossModule = {
-    // Start by creating a JBoss module out of the Maven artifact
-    val module = JBossModule(artifact)
+    // Get module directory and verify if Maven resolution is required
     val moduleDir = new File(root, module.moduleDirName)
-    // Check if maven resolution necessary
     if (requiresMavenResolution(moduleDir)) {
       val dir = mkDirs(root, module.moduleDirName)
 

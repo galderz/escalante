@@ -57,7 +57,7 @@ object JBossModule {
   def apply(scala: Scala): JBossModule = {
     val groupId = scala.groupId
     val artifactId = scala.artifactId
-    apply(s"$groupId.$artifactId")
+    new JBossModule(s"$groupId.$artifactId", false, scala.slot, NONE)
   }
 
   private def moduleName(artifact: MavenArtifact): String =

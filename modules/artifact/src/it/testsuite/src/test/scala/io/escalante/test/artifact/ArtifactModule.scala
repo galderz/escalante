@@ -65,8 +65,7 @@ object ArtifactModule extends BuildableModule {
       classOf[Extension], classOf[ArtifactExtension])
 
     val repo = new AppServerRepository(destDir)
-    val scala = Scala()
-    repo.installArtifact(MavenArtifact(scala), scala.moduleXml)
+    repo.installArtifact(Scala())
 
     val subArtifacts =
       new MavenArtifact("org.apache.maven", "maven-settings", "3.0.4",

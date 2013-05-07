@@ -1,7 +1,7 @@
 package io.escalante.test.artifact.maven
 
-import org.junit.Test
 import io.escalante.artifact.maven.{MavenArtifact, MavenDependencyResolver}
+import org.junit.Test
 
 /**
  * Basic test to resolve a Maven artifact.

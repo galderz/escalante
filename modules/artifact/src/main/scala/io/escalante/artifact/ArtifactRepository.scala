@@ -10,11 +10,13 @@ package io.escalante.artifact
 import maven.MavenArtifact
 import scala.xml.Elem
 import io.escalante.server.JBossModule
+import io.escalante.Scala
 
 /**
- * // TODO: Document this
+ * Artifact repository
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 trait ArtifactRepository {
 
@@ -36,15 +38,13 @@ trait ArtifactRepository {
       subArtifacts: Seq[MavenArtifact] = List()): JBossModule
 
   /**
-   * Install a Maven artifact in the artifact repository, returning a module
-   * metadata represented as an instance of JBossModule.
+   * Install Scala library artifact in the artifact repository, returning a
+   * module metadata represented as an instance of JBossModule.
    *
-   * @param artifact maven artifact to install as JBoss Module
-   * @param moduleXml module.xml for this JBoss module
+   * @param scala Scala library to install as JBoss Module
    * @return a JBossModule representing the installed JBoss module
    */
-  def installArtifact(
-      artifact: MavenArtifact,
-      moduleXml: Elem): JBossModule
+  // Required so that slot can be correctly resolved by JBoss Module constructor
+  def installArtifact(scala: Scala): JBossModule
 
 }

@@ -68,9 +68,8 @@ class LiftService extends Service[LiftService] with Log {
    * @return a [[io.escalante.server.JBossModule]] representation of the
    *         installed Scala instance
    */
-  def installScalaModule(scala: Scala): JBossModule = {
-    repository.getValue.installArtifact(MavenArtifact(scala), scala.moduleXml)
-  }
+  def installScalaModule(scala: Scala): JBossModule =
+    repository.getValue.installArtifact(scala)
 
 }
 
