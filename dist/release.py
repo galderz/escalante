@@ -173,7 +173,7 @@ def update_versions(base_dir, version):
             modified_files.append(pom)
 
     ## Now look for Version.java
-    version_java = "./core/src/main/scala/io/escalante/Version.scala"
+    version_java = "./modules/core/src/main/scala/io/escalante/Version.scala"
     modified_files.append(version_java)
 
     f_in = open(version_java)
