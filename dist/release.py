@@ -155,9 +155,9 @@ def get_poms_to_patch(working_dir):
     poms_to_patch = [working_dir + "/pom.xml"]
     for m in modules:
         poms_to_patch.append(working_dir + "/" + m + "/pom.xml")
-        # Look for additional POMs that are not directly referenced!
+    # Look for additional POMs that are not directly referenced!
     for additionalPom in GlobDirectoryWalker(working_dir, 'pom.xml'):
-        if additionalPom not in poms_to_patch:
+        if additionalPom not in poms_to_patch and not "target" in additionalPom:
             poms_to_patch.append(additionalPom)
 
     return poms_to_patch
