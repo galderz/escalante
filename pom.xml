@@ -1,12 +1,5 @@
-<!--
-  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
-  ~
-  ~ Licensed under the Eclipse Public License version 1.0, available at
-  ~ http://www.eclipse.org/legal/epl-v10.html
-  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
    <modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +11,7 @@
 
    <groupId>io.escalante</groupId>
    <artifactId>escalante</artifactId>
-   <version>0.3.0-SNAPSHOT</version>
+   <version>0.3.0</version>
    <packaging>pom</packaging>
    <name>Escalante</name>
 
@@ -68,16 +61,16 @@
       <system>jira</system>
       <url>https://jira.jboss.com/jira/browse/ESC</url>
    </issueManagement>
-   <!--<ciManagement>-->
-      <!--<system>hudson</system>-->
-      <!--<url>http://hudson.jboss.org/hudson/view/Infinispan</url>-->
-      <!--<notifiers>-->
-         <!--<notifier>-->
-            <!--<type>mail</type>-->
-            <!--<address>infinispan-commits@lists.jboss.org</address>-->
-         <!--</notifier>-->
-      <!--</notifiers>-->
-   <!--</ciManagement>-->
+   
+      
+      
+      
+         
+            
+            
+         
+      
+   
 
    <distributionManagement>
       <repository>
@@ -98,19 +91,19 @@
       <version.arquillian>1.0.1.Final</version.arquillian>
       <version.javax.persistence>1.0.1.Final</version.javax.persistence>
 
-      <!-- Commit hash: 84ce0a021e3c8e909cf7f50328938bda3db9edd7 -->
+      
       <version.jboss.as>7.x.incremental.667</version.jboss.as>
-      <!--<version.jboss.as>7.2.0.Alpha1-SNAPSHOT</version.jboss.as>-->
+      
 
       <version.jboss.logging>3.1.0.GA</version.jboss.logging>
       <version.junit>4.8.2</version.junit>
       <version.lift>2.5-RC4</version.lift>
-      <!--<version.pegdown>1.1.0</version.pegdown>-->
+      
       <version.play>2.1.1</version.play>
-      <!--<version.sbt.inc.compiler>0.12.2</version.sbt.inc.compiler>-->
+      
       <version.selenium>2.21.0</version.selenium>
 
-      <!-- Scala properties -->
+      
       <version.scala>${version.scala.minor}.1</version.scala>
       <version.scala.minor>2.10</version.scala.minor>
       <version.scala.artifactId>${version.scala.minor}</version.scala.artifactId>
@@ -119,7 +112,7 @@
       <version.scalatest>1.9.1</version.scalatest>
       <version.scalajpa>1.4</version.scalajpa>
       <version.shrinkwrap.resolver>1.1.0-alpha-3</version.shrinkwrap.resolver>
-      <!-- Keep Snake Yaml version in synch with what AS uses -->
+      
       <version.snakeyaml>1.8</version.snakeyaml>
       <version.sonatype.aether>1.13.1</version.sonatype.aether>
       <version.xnio>3.0.7.GA</version.xnio>
@@ -242,8 +235,7 @@
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_${version.scala.artifactId}</artifactId>
             <version>${version.scalatest}</version>
-            <!-- Do not add exclusion for org.scala-lang:scala-library,
-                 otherwise FSC from IDE does not work -->
+            
          </dependency>
 
          <dependency>
@@ -384,7 +376,7 @@
                </exclusion>
             </exclusions>
          </dependency>
-         <!-- TODO: use jboss-as-arquillian-container-embedded when AS7-6440 integrated -->
+         
          <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-arquillian-container-embedded</artifactId>
@@ -465,16 +457,13 @@
                </exclusion>
             </exclusions>
          </dependency>
-         <!-- Required so that Shrinkwrap resolver can resolve without explicit version -->
+         
          <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-htmlunit-driver</artifactId>
             <version>${version.selenium}</version>
             <exclusions>
-               <!-- Exclude commons-codec since it interferes with Lift which
-               requires a more recent commons-codec (1.6), and selenium's
-               old commons-codec (1.4) was sneaking into the WAR deployment
-               archive -->
+               
                <exclusion>
                   <groupId>commons-codec</groupId>
                   <artifactId>commons-codec</artifactId>
@@ -503,17 +492,12 @@
             <artifactId>play_${version.scala.artifactId}</artifactId>
             <version>${version.play}</version>
             <exclusions>
-               <!-- Play uses an older version of Apache HTTP core (v 4.0.1)
-               compared to Selenium (v 4.1.2), and it gets picked before.
-               The problem comes when Selenium tries to load
-               org/apache/http/protocol/ImmutableHttpProcessor which is only
-               present in more recent HTTP core versions. -->
+               
                <exclusion>
                   <groupId>org.apache.httpcomponents</groupId>
                   <artifactId>httpcore</artifactId>
                </exclusion>
-               <!-- Exclude Slf4j dependency so that app server's older
-               version is added to classpath for easier debugging -->
+               
                <exclusion>
                   <groupId>org.slf4j</groupId>
                   <artifactId>slf4j-api</artifactId>
@@ -525,23 +509,23 @@
             <artifactId>play-jdbc_${version.scala.artifactId}</artifactId>
             <version>${version.play}</version>
          </dependency>
-         <!-- App server's Slf4j version -->
+         
          <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.6.1</version>
          </dependency>
 
-         <!--<dependency>-->
-            <!--<groupId>com.typesafe.sbt</groupId>-->
-            <!--<artifactId>incremental-compiler</artifactId>-->
-            <!--<version>${version.sbt.inc.compiler}</version>-->
-         <!--</dependency>-->
-         <!--<dependency>-->
-            <!--<groupId>org.pegdown</groupId>-->
-            <!--<artifactId>pegdown</artifactId>-->
-            <!--<version>${version.pegdown}</version>-->
-         <!--</dependency>-->
+         
+            
+            
+            
+         
+         
+            
+            
+            
+         
 
       </dependencies>
    </dependencyManagement>
@@ -571,7 +555,7 @@
                <version>${version.plugin.maven.surefire}</version>
                <configuration>
                   <argLine>-Xmx512m -XX:MaxPermSize=256m -Djava.util.logging.manager=org.jboss.logmanager.LogManager</argLine>
-                  <!--<debugForkedProcess>true</debugForkedProcess>-->
+                  
                </configuration>
             </plugin>
             <plugin>
@@ -604,7 +588,7 @@
                      <goal>install</goal>
                   </goals>
                   <properties>
-                     <!-- Skip tests parent's tests are skipped -->
+                     
                      <maven.test.skip.exec>${maven.test.skip.exec}</maven.test.skip.exec>
                   </properties>
                </configuration>
@@ -619,10 +603,9 @@
                </executions>
             </plugin>
 
-            <!-- Plugins for Tattletale -->
+            
             <plugin>
-               <!-- Tattletale is expecting a folder with jars in it,
-                    so I need to gather those together -->
+               
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-dependency-plugin</artifactId>
                <version>${version.plugin.maven.dependency}</version>
@@ -640,7 +623,7 @@
                </executions>
             </plugin>
             <plugin>
-               <!-- ... gather up the last jars -->
+               
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-resources-plugin</artifactId>
                <version>${version.plugin.maven.resources}</version>
@@ -680,7 +663,7 @@
                <executions>
                   <execution>
                      <id>run-tattletale-report</id>
-                     <!-- mvn clean package site -Dmaven.test.skip.exec=true -Dinvoker.skip=true -->
+                     
                      <phase>site</phase>
                      <goals>
                         <goal>report</goal>

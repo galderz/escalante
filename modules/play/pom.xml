@@ -1,25 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright 2012 Red Hat, Inc. and/or its affiliates.
-  ~
-  ~ Licensed under the Eclipse Public License version 1.0, available at
-  ~ http://www.eclipse.org/legal/epl-v10.html
-  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
       <groupId>io.escalante</groupId>
       <artifactId>escalante-modules</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
+      <version>0.3.0</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
    <groupId>io.escalante</groupId>
    <artifactId>escalante-play</artifactId>
-   <version>0.3.0-SNAPSHOT</version>
+   <version>0.3.0</version>
 
    <name>Escalante Play Module</name>
 
@@ -80,7 +72,7 @@
          <scope>provided</scope>
       </dependency>
 
-      <!-- TODO: Avoid Play subsystem depending on a specific Play version -->
+      
       <dependency>
          <groupId>play</groupId>
          <artifactId>play_${version.scala.artifactId}</artifactId>
@@ -91,29 +83,29 @@
          <artifactId>play-jdbc_${version.scala.artifactId}</artifactId>
          <scope>provided</scope>
       </dependency>
-      <!--<dependency>-->
-         <!--<groupId>com.typesafe.sbt</groupId>-->
-         <!--<artifactId>incremental-compiler</artifactId>-->
-         <!--<scope>provided</scope>-->
-      <!--</dependency>-->
-      <!--<dependency>-->
-         <!--<groupId>org.pegdown</groupId>-->
-         <!--<artifactId>pegdown</artifactId>-->
-         <!--<scope>provided</scope>-->
-      <!--</dependency>-->
+      
+         
+         
+         
+      
+      
+         
+         
+         
+      
 
-      <!--&lt;!&ndash; Test dependencies &ndash;&gt;-->
-      <!--<dependency>-->
-         <!--<groupId>${project.groupId}</groupId>-->
-         <!--<artifactId>escalante-artifact</artifactId>-->
-         <!--<type>test-jar</type>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
-      <!--<dependency>-->
-         <!--<groupId>org.jboss.as</groupId>-->
-         <!--<artifactId>jboss-as-subsystem-test</artifactId>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
+      
+      
+         
+         
+         
+         
+      
+      
+         
+         
+         
+      
    </dependencies>
 
    <build>

@@ -1,31 +1,23 @@
-<!--
-  ~ Copyright 2013 Red Hat, Inc. and/or its affiliates.
-  ~
-  ~ Licensed under the Eclipse Public License version 1.0, available at
-  ~ http://www.eclipse.org/legal/epl-v10.html
-  -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
       <groupId>io.escalante</groupId>
       <artifactId>escalante</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
+      <version>0.3.0</version>
       <relativePath>../pom.xml</relativePath>
    </parent>
 
    <artifactId>escalante-assembly</artifactId>
-   <version>0.3.0-SNAPSHOT</version>
+   <version>0.3.0</version>
 
    <name>Escalante Assembly</name>
 
    <packaging>pom</packaging>
 
-   <!-- Provided scopes won't work here!!! -->
+   
    <dependencies>
       <dependency>
          <groupId>org.scala-lang</groupId>
@@ -138,11 +130,9 @@
                   </goals>
                   <configuration>
                      <keepGeneratedScript>true</keepGeneratedScript>
-                     <!-- To debug script, run with: mvnDebug -->
+                     
                      <scriptFile>assemble.scala</scriptFile>
-                     <!-- Transitive Scala 2.9.2 dependency conflicting
-                     with Scala 2.10. Exclude old Scala dependency to avoid
-                     runtime NoMethodError. -->
+                     
                      <removeFromClasspath>scala-library-2.9.2</removeFromClasspath>
                   </configuration>
                </execution>
