@@ -33,10 +33,11 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         |     - mongodb
       """.stripMargin
 
-    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false)
-    assert(Lift("2.3") === meta.get.liftVersion)
-    assert(Scala("2.9.2") === meta.get.scalaVersion)
-    assert(List("record", "mongodb") === meta.get.modules)
+    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false).get
+    assert(Lift("2.3") === meta.liftVersion)
+    assert(Scala("2.9.2") === meta.scalaVersion)
+    assert(List("record", "mongodb") === meta.modules)
+    assert(false === meta.replication)
 
     assert(LiftMetadata.parse(descriptor, isImplicitJpa = true).get.modules
       === List("jpa", "record", "mongodb"))
@@ -69,10 +70,11 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         | lift:
       """.stripMargin
 
-    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false)
-    assert(Lift() === meta.get.liftVersion)
-    assert(Scala() === meta.get.scalaVersion)
-    assert(List() === meta.get.modules)
+    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false).get
+    assert(Lift() === meta.liftVersion)
+    assert(Scala() === meta.scalaVersion)
+    assert(List() === meta.modules)
+    assert(false === meta.replication)
   }
 
   @Test def testLiftOnlyVersionDescriptor() {
@@ -82,10 +84,11 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         |   version: 2.2
       """.stripMargin
 
-    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false)
-    assert(Lift("2.2") === meta.get.liftVersion)
-    assert(Scala() === meta.get.scalaVersion)
-    assert(List() === meta.get.modules)
+    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false).get
+    assert(Lift("2.2") === meta.liftVersion)
+    assert(Scala() === meta.scalaVersion)
+    assert(List() === meta.modules)
+    assert(false === meta.replication)
   }
 
   @Test def testLiftOnlyModulesDescriptor() {
@@ -96,10 +99,11 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         |     - mapper
       """.stripMargin
 
-    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false)
-    assert(Lift() === meta.get.liftVersion)
-    assert(Scala() === meta.get.scalaVersion)
-    assert(List("mapper") === meta.get.modules)
+    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false).get
+    assert(Lift() === meta.liftVersion)
+    assert(Scala() === meta.scalaVersion)
+    assert(List("mapper") === meta.modules)
+    assert(false === meta.replication)
   }
 
   @Test def testLiftJpaModuleDescriptor() {
@@ -110,14 +114,35 @@ class LiftMetadataParserTest extends AssertionsForJUnit {
         |     - jpa
       """.stripMargin
 
-    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false)
-    assert(List("jpa") === meta.get.modules)
+    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false).get
+    assert(List("jpa") === meta.modules)
+    assert(false === meta.replication)
   }
 
   @Test def testEmptyDescriptor() {
     val descriptor = ""
     val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false)
     assert(None === meta)
+  }
+
+  @Test def testExplicitLiftDistributable() {
+    val descriptor =
+      """
+        | scala:
+        |   version: 2.9.2
+        | lift:
+        |   version: 2.3
+        |   replication:
+        |   modules:
+        |     - record
+        |     - mongodb
+      """.stripMargin
+
+    val meta = LiftMetadata.parse(descriptor, isImplicitJpa = false).get
+    assert(Lift("2.3") === meta.liftVersion)
+    assert(Scala("2.9.2") === meta.scalaVersion)
+    assert(List("record", "mongodb") === meta.modules)
+    assert(true === meta.replication)
   }
 
 }

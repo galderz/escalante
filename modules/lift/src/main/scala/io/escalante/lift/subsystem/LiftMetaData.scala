@@ -28,7 +28,8 @@ import io.escalante.util.matching.RegularExpressions
 case class LiftMetadata(
   liftVersion: Lift,
   scalaVersion: Scala,
-  modules: Seq[String]) {
+  modules: Seq[String],
+  replication: Boolean) {
 
   import LiftMetadata._
 
@@ -110,10 +111,11 @@ object LiftMetadata {
       lift <- Lift(parsed)
     ) yield {
       // If lift key found, check if modules present
-      val liftMeta = parsed.get("lift").asInstanceOf[util.Map[String, Object]]
-      val modules = YamlParser.extractModules(liftMeta)
+      val liftMeta = Option(parsed.get("lift").asInstanceOf[util.Map[String, Object]])
+      val modules = YamlParser.extractModules(liftMeta).getOrElse(List())
+      val replication = liftMeta.exists(_.containsKey("replication"))
       LiftMetadata(lift, Scala(parsed),
-          if (isImplicitJpa) "jpa" +: modules else modules)
+          if (isImplicitJpa) "jpa" +: modules else modules, replication)
     }
   }
 

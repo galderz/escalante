@@ -34,7 +34,7 @@ class ArquillianListener extends LoadableExtension with Log {
 
   def executeBeforeSetup(@Observes event: BeforeSetup) {
     info("Execute BeforeSetup for Play")
-    AppServer.testUnzipAppServer()
+    AppServer.setUpAppServer()
   }
 
   def executeBeforeStart(@Observes event: BeforeStart) {
@@ -42,12 +42,12 @@ class ArquillianListener extends LoadableExtension with Log {
     // Artifact module not currently in use, but when multiple Play versions
     // are supported, it will be handy to download Play dependencies and
     // compile on the fly the required SPIs.
-    AppServer.testSetUp(List(ArtifactModule, PlayModule))
+    AppServer.setUpModules(List(ArtifactModule, PlayModule))
   }
 
   def executeAfterStop(@Observes event: AfterStop) {
     info("Execute afterStop for Play")
-    AppServer.tearDown()
+    AppServer.tearDownAppServer()
   }
 
 }

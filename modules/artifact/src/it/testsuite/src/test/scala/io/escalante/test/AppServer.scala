@@ -7,19 +7,19 @@
 
 package io.escalante.test
 
-import io.escalante.logging.Log
-import io.escalante.io.FileSystem._
-import io.escalante.io.Closeable._
-import java.io.File
-import org.jboss.dmr.ModelNode
-import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
-import org.scalatest.junit.AssertionsForJUnit
-import org.jboss.as.controller.client.ModelControllerClient
-import java.net.InetAddress
-import scala.xml.{XML, Node}
-import io.escalante.xml.ScalaXmlParser._
 import annotation.tailrec
+import io.escalante.io.Closeable._
+import io.escalante.io.FileSystem._
+import io.escalante.logging.Log
 import io.escalante.util.matching.RegularExpressions
+import io.escalante.xml.ScalaXmlParser._
+import java.io.File
+import java.net.InetAddress
+import org.jboss.as.controller.client.ModelControllerClient
+import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
+import org.jboss.dmr.ModelNode
+import org.scalatest.junit.AssertionsForJUnit
+import scala.xml.{XML, Node}
 
 /**
  * Set up and tear down helper methods for the application server
@@ -30,26 +30,47 @@ import io.escalante.util.matching.RegularExpressions
  */
 object AppServer extends Log with AssertionsForJUnit {
 
-  final val Version = "7.x.incremental.667" // TODO: Avoid duplication with root pom
+  private final val Version = "7.x.incremental.667" // TODO: Avoid duplication with root pom
 
-  final val TmpDir = System.getProperty("java.io.tmpdir")
+  private final val TmpDir = System.getProperty("java.io.tmpdir")
 
-  final val TestHome = new File(TmpDir, "jboss-as")
+  private final val TestHome = new File(TmpDir, "jboss-as")
 
-  def testUnzipAppServer() {
+  private final val TestHomeContainer0 = new File(TmpDir, "jboss-as-clustering-0")
+
+  private final val TestHomeContainer1 = new File(TmpDir, "jboss-as-clustering-1")
+
+  private final val TestModulesDir = new File(TmpDir, "test-module")
+
+  private final val TestModulesDirContainer0 = new File(TmpDir, "test-module-clustering-0")
+
+  private final val TestModulesDirContainer1 = new File(TmpDir, "test-module-clustering-1")
+
+  private final val TestStandaloneXml = standaloneXmlPath(TestHome)
+
+  private final val TestStandaloneHaXmlContainer0 = standaloneHaXmlPath(TestHomeContainer0)
+
+  private final val TestStandaloneHaXmlContainer1 = standaloneHaXmlPath(TestHomeContainer1)
+
+  def setUpAppServer() {
     unzipAppServer(TestHome, Version)
   }
 
-  def unzipAppServer(home: File, version: String) {
-    val xml = standaloneXmlPath(home)
+  def setUpAppServerCluster() {
+    setUpAppServer()
+    // Make two copies of the unzipped server for clustering
+    copy(TestHome, TestHomeContainer0)
+    copy(TestHome, TestHomeContainer1)
+  }
 
-    if (xml.exists())
-      info("Base JBoss AS distribution already extracted")
+  def unzipAppServer(home: File, version: String) {
+    if (standaloneXmlPath(home).exists())
+      println("Base JBoss AS distribution already extracted")
     else {
-      info(s"Unzip base JBoss AS distribution to ${home.getCanonicalPath}")
+      println(s"Unzip base JBoss AS distribution to ${home.getCanonicalPath}")
 
       if (home.exists()) {
-        info("Old JBoss AS distribution exists, clean it up first")
+        println("Old JBoss AS distribution exists, clean it up first")
         deleteDirectory(home)
       }
 
@@ -71,7 +92,7 @@ object AppServer extends Log with AssertionsForJUnit {
     }
   }
 
-  def testSetUp(modules: List[BuildableModule]) {
+  def setUpModules(modules: List[BuildableModule], configs: List[File] = List(TestStandaloneXml)) {
     val home = TestHome
     val modulesDir = new File(TmpDir, "test-module")
 
@@ -82,17 +103,32 @@ object AppServer extends Log with AssertionsForJUnit {
     mkDirs(modulesDir, deleteIfPresent = true)
 
     // Set up modules
-    setUp(home, modulesDir, modules, isTest = true)
+    setUp(home, modulesDir, modules, isTest = true, configs)
+  }
+
+  def setUpModulesCluster(modules: List[BuildableModule]) {
+    setUpModules(modules, List(TestStandaloneHaXmlContainer0, TestStandaloneHaXmlContainer1))
+    copy(TestModulesDir, TestModulesDirContainer0)
+    copy(TestModulesDir, TestModulesDirContainer1)
   }
 
   def distSetUp(home: File, modules: List[BuildableModule]) {
-    setUp(home, new File(s"$home/modules"), modules, isTest = false)
+    setUp(home, new File(s"$home/modules"), modules, isTest = false,
+      List(standaloneXmlPath(home), standaloneHaXmlPath(home)))
   }
 
-  def tearDown() {
-    val stdCfg = standaloneXmlPath(TestHome)
-    val stdCfgOriginal = new File(s"${stdCfg.getCanonicalPath}.original")
-    copy(stdCfgOriginal, stdCfg) // Restore original standalone config
+  def tearDownAppServer() {
+    restoreStandaloneXml(TestStandaloneXml)
+  }
+
+  def tearDownAppServerCluster() {
+    restoreStandaloneXml(TestStandaloneHaXmlContainer0)
+    restoreStandaloneXml(TestStandaloneHaXmlContainer1)
+  }
+
+  private def restoreStandaloneXml(standaloneXml: File) {
+    val stdCfgOriginal = new File(s"${standaloneXml.getCanonicalPath}.original")
+    copy(stdCfgOriginal, standaloneXml) // Restore original standalone config
   }
 
   def assertExtensionInstalled(extensionName: String) {
@@ -112,22 +148,24 @@ object AppServer extends Log with AssertionsForJUnit {
       home: File,
       modulesDir: File,
       modules: List[BuildableModule],
-      isTest: Boolean) {
-    info("Build modules %s into %s", modules, modulesDir)
+      isTest: Boolean,
+      appServerConfigs: List[File]) {
+    info("Build modules %s into %s and apply changes in %s", modules, modulesDir, appServerConfigs)
 
+    appServerConfigs.foreach { cfg =>
     // Backup standalone configuration
-    val (xml, xmlBackup) = backupStandaloneXml(home)
-    val xmlForEdit: Node = XML.loadFile(xmlBackup)
+      val (xml, xmlBackup) = backupStandaloneXml(cfg)
+      val xmlForEdit: Node = XML.loadFile(xmlBackup)
 
-    // Build each module and let it apply changes to XML
-    val config = buildModules(modulesDir, modules, xmlForEdit)
+      // Build each module and let it apply changes to XML
+      val config = buildModules(modulesDir, modules, xmlForEdit)
 
-    // Save the XML
-    saveXml(xml, config)
+      // Save the XML
+      saveXml(xml, config)
+    }
   }
 
-  private def backupStandaloneXml(home: File): (File, File) = {
-    val cfg = standaloneXmlPath(home)
+  private def backupStandaloneXml(cfg: File): (File, File) = {
     val cfgBackup = standaloneXmlBackupFile(cfg)
     if (!cfgBackup.exists())
       copy(cfg, cfgBackup) // Backup original standalone config
@@ -155,7 +193,7 @@ object AppServer extends Log with AssertionsForJUnit {
         // If duplicate resource found, it could be due to test not
         // having finished properly, so clean up before propagating failure
         info("Duplicate extension found, carry on...")
-        tearDown()
+        tearDownAppServer()
       }
       fail(r.toString)
       null
@@ -167,6 +205,9 @@ object AppServer extends Log with AssertionsForJUnit {
 
   private def standaloneXmlPath(home: File) = new File(
     s"$home/standalone/configuration/standalone.xml")
+
+  private def standaloneHaXmlPath(home: File) = new File(
+    s"$home/standalone/configuration/standalone-ha.xml")
 
   private def standaloneXmlBackupFile(cfg: File): File =
     new File(s"${cfg.getCanonicalPath}.original")

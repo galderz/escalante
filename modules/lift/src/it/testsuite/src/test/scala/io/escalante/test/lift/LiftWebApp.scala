@@ -11,13 +11,14 @@ import java.io.File
 import org.jboss.shrinkwrap.api.spec.WebArchive
 import org.jboss.shrinkwrap.api.{GenericArchive, ShrinkWrap}
 import io.escalante.logging.Log
-import scala.xml.Elem
+import scala.xml.{Node, Elem}
 import org.jboss.shrinkwrap.api.asset.{StringAsset, ClassLoaderAsset, Asset}
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver
 import scala.collection.JavaConversions._
 import io.escalante.Scala
 import io.escalante.lift.Lift
+import io.escalante.xml.ScalaXmlParser._
 
 /**
  * Builds a Lift web app for testing.
@@ -38,13 +39,14 @@ object LiftWebApp extends Log {
       bootClass: Class[_ <: AnyRef],
       classes: Seq[Class[_]],
       webResources: Map[String, String],
-      indexHtml: Elem): WebArchive = {
+      indexHtml: Elem,
+      replication: Boolean = false): WebArchive = {
     // Create deployment name
     val war = ShrinkWrap.create(classOf[WebArchive], deployName)
     info("Create war deployment: %s", deployName)
 
     val indexHtmlContent = xml(indexHtml)
-    val webXmlContent = xml(webXml(bootClass.getName))
+    val webXmlContent = xml(webXml(bootClass.getName, replication))
 
     val ideFriendlyPath = "modules/lift/src/it/testsuite/pom.xml"
     // Figure out an IDE and Maven friendly path:
@@ -81,15 +83,15 @@ object LiftWebApp extends Log {
     war
   }
 
-  private def xml(e: Elem): Asset = new StringAsset(e.toString())
+  private def xml(n: Node): Asset = new StringAsset(n.toString())
 
   private def resource(resource: String): Asset = new ClassLoaderAsset(resource)
 
-  private def webXml(bootLoader: String): Elem = {
-    <web-app version="2.5"
-             xmlns="http://java.sun.com/xml/ns/javaee"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+  private def webXml(bootLoader: String, replication: Boolean): Node = {
+    val baseWebXml = <web-app version="2.5"
+                              xmlns="http://java.sun.com/xml/ns/javaee"
+                              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
       <filter>
         <filter-name>LiftFilter</filter-name>
@@ -106,6 +108,11 @@ object LiftWebApp extends Log {
         <url-pattern>/*</url-pattern>
       </filter-mapping>
     </web-app>
+
+    if (replication)
+      addXmlElements("web-app", List(<distributable/>), baseWebXml)
+    else
+      baseWebXml
   }
 
 }

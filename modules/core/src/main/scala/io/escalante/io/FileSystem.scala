@@ -67,11 +67,9 @@ object FileSystem extends Log {
   def copy(src: File, dest: File) {
     if (src.isDirectory) {
       // If directory not exists, create it
-      if (!dest.exists()) {
+      if (!dest.exists())
         dest.mkdir()
-        debug("Directory copied from %s to %s",
-          src.getCanonicalPath, dest.getCanonicalPath)
-      }
+
       // List all the directory contents
       asScalaIterator(src.list().iterator).foreach {
         file =>
@@ -80,8 +78,6 @@ object FileSystem extends Log {
       }
     } else {
       copy(new FileInputStream(src), new FileOutputStream(dest))
-      debug("File copied from %s to %s",
-        src.getCanonicalPath, dest.getCanonicalPath)
     }
   }
 

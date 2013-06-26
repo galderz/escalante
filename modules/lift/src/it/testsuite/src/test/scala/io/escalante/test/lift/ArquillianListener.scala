@@ -28,23 +28,23 @@ class ArquillianListener extends LoadableExtension with Log {
    * Registers Arquillian test lifecycle implementation
    * that deals with set up and tear down of extension.
    */
-  def register(builder: ExtensionBuilder) {
+  override def register(builder: ExtensionBuilder) {
     builder.observer(classOf[ArquillianListener])
   }
 
   def executeBeforeSetup(@Observes event: BeforeSetup) {
     info("Execute BeforeSetup for Lift")
-    AppServer.testUnzipAppServer()
+    AppServer.setUpAppServer()
   }
 
   def executeBeforeStart(@Observes event: BeforeStart) {
     info("Execute beforeStart for Lift")
-    AppServer.testSetUp(List(ArtifactModule, LiftModule))
+    AppServer.setUpModules(List(ArtifactModule, LiftModule))
   }
 
   def executeAfterStop(@Observes event: AfterStop) {
     info("Execute afterStop for Lift")
-    AppServer.tearDown()
+    AppServer.tearDownAppServer()
   }
 
 }

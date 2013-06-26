@@ -34,6 +34,7 @@ println(s"""|-------------------
 // 1. Extract JBoss AS distro, if necessary...
 val escalanteDirName = escalantePrefix + projectVersion
 val escalanteHome = new File(s"$targetDir/$escalanteDirName")
+println("")
 AppServer.unzipAppServer(escalanteHome, jbossVersion)
 
 // 2. Build Escalante, reusing the code used to unit test Escalante (how cool!!!)
@@ -41,7 +42,7 @@ println("Build modules and apply XML configuration changes")
 AppServer.distSetUp(escalanteHome, List(ArtifactModule, LiftModule, PlayModule))
 
 // 3. Copy xsd files
-println("Copy susystem XML schema files")
+println("Copy subsystem XML schema files")
 for (module <- List("lift", "artifact"))
 yield {
   val canonicalPath = escalanteHome.getCanonicalPath

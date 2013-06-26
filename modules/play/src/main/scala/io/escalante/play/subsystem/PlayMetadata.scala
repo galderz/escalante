@@ -102,11 +102,11 @@ object PlayMetadata {
     for (
       play <- Play(parsed)
     ) yield {
-      val playMeta = parsed.get("play").asInstanceOf[util.Map[String, Object]]
-      if (playMeta != null && playMeta.containsKey("path")) {
-        val path = playMeta.get("path")
+      val playMeta = Option(parsed.get("play").asInstanceOf[util.Map[String, Object]])
+      if (playMeta.exists(_.containsKey("path"))) {
+        val path = playMeta.get.get("path")
         PlayMetadata(play, Scala(parsed), appName,
-          new File(path.toString), YamlParser.extractModules(playMeta))
+          new File(path.toString), YamlParser.extractModules(playMeta).getOrElse(List()))
       } else {
         throw new DeploymentUnitProcessingException(
           "Play application path required")

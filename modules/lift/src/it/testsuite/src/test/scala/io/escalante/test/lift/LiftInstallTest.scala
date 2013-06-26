@@ -6,21 +6,17 @@
  */
 package io.escalante.test.lift
 
-import org.junit.runner.RunWith
-import org.jboss.arquillian.junit.Arquillian
-import org.junit.Test
-import org.jboss.as.controller.client.ModelControllerClient
-import org.jboss.as.controller.descriptions.ModelDescriptionConstants._
-import org.jboss.dmr.ModelNode
-import java.net.InetAddress
-import io.escalante.io.Closeable._
 import io.escalante.logging.Log
 import io.escalante.test.AppServer
+import org.jboss.arquillian.junit.Arquillian
+import org.junit.Test
+import org.junit.runner.RunWith
 
 /**
- * // TODO: Document this
+ * Tests the presence of Lift and Artifact modules installed.
+ *
  * @author Galder Zamarreño
- * @since // TODO
+ * @since 1.0
  */
 @RunWith(classOf[Arquillian])
 class LiftInstallTest extends Log {

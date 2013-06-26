@@ -70,14 +70,16 @@ object YamlParser {
   /**
    * Extract dependency modules defined in parsed data
    *
-   * @param parsed
-   * @return
+   * @param parsed optional set of modules
+   * @return optional list of modules
    */
-  def extractModules(parsed: util.Map[String, Object]): Seq[String] = {
-    if (parsed != null && parsed.containsKey("modules"))
-      parsed.get("modules").asInstanceOf[util.List[String]].toSeq
-    else
-      List()
+  def extractModules(parsed: Option[util.Map[String, Object]]): Option[Seq[String]] = {
+    for {
+      modulesMap <- parsed
+      modules <- Option(modulesMap.get("modules"))
+    } yield {
+      modules.asInstanceOf[util.List[String]].toSeq
+    }
   }
 
 }

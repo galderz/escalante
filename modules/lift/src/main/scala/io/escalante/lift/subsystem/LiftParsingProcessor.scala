@@ -15,6 +15,8 @@ import org.jboss.as.web.deployment.WarMetaData
 import java.io.StringReader
 import org.jboss.as.ee.structure.{SpecDescriptorPropertyReplacement, DeploymentType, DeploymentTypeMarker}
 import org.jboss.as.server.deployment.module.ResourceRoot
+import scala.xml.Node
+import io.escalante.xml.ScalaXmlParser._
 
 /**
  * Lift metadata descriptor processor
@@ -41,7 +43,7 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
       ) yield {
         debug("Lift application detected in %s", deployment)
         // Custom web xml for lift apps
-        addLiftMetadata(deployment, root)
+        addLiftMetadata(deployment, root, metadata)
         // Attach to deployment
         metadata.addToDeployment(deployment)
       }
@@ -52,7 +54,7 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
     // No-op
   }
 
-  private def addLiftMetadata(deployment: DeploymentUnit, root: ResourceRoot) {
+  private def addLiftMetadata(deployment: DeploymentUnit, root: ResourceRoot, meta: LiftMetadata) {
     val webXmlVirtualFile = root.getRoot.getChild(WEB_XML)
     val dtdInfo = new MetaDataElementParser.DTDInfo()
     val inputFactory = XMLInputFactory.newInstance()
@@ -91,6 +93,29 @@ class LiftParsingProcessor extends DeploymentUnitProcessor {
       SpecDescriptorPropertyReplacement.propertyReplacer(deployment))
     val warMetaData = deployment.getAttachment(WarMetaData.ATTACHMENT_KEY)
     warMetaData.setWebMetaData(webMetaData)
+  }
+
+  private[escalante] def generateWebXml(meta: LiftMetadata): Node = {
+    val baseWebXml =
+      <web-app version="2.5"
+               xmlns="http://java.sun.com/xml/ns/javaee"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                        http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+        <filter>
+          <filter-name>LiftFilter</filter-name>
+          <filter-class>net.liftweb.http.LiftFilter</filter-class>
+        </filter>
+        <filter-mapping>
+          <filter-name>LiftFilter</filter-name>
+          <url-pattern>/*</url-pattern>
+        </filter-mapping>
+      </web-app>
+
+    if (meta.replication)
+      addXmlElements("web-app", List(<distributable/>), baseWebXml)
+    else
+      baseWebXml
   }
 
 }

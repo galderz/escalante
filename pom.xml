@@ -248,6 +248,11 @@
 
          <dependency>
             <groupId>net.liftweb</groupId>
+            <artifactId>lift-webkit_${version.scala.artifactId}</artifactId>
+            <version>${version.lift}</version>
+         </dependency>
+         <dependency>
+            <groupId>net.liftweb</groupId>
             <artifactId>lift-mapper_${version.scala.artifactId}</artifactId>
             <version>${version.lift}</version>
          </dependency>
