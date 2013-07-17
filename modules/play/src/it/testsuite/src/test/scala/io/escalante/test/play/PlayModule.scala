@@ -70,6 +70,7 @@ object PlayModule extends BuildableModule {
           <module name="org.apache.maven.maven-aether-provider"/>
           <!-- Play dependencies -->
           <module name="org.jboss.vfs"/>
+          <module name="org.jboss.modules"/>
           <module name="play.play_2_10"/>
         </dependencies>
       </module>
