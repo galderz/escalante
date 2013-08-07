@@ -84,7 +84,7 @@ object LiftHelloWorldTest {
       deploymentName,
       descriptor,
       classOf[HelloWorldBoot],
-      List(classOf[HelloWorld], classOf[LiftHelloWorldTest]),
+      List("helloworld", "helloworld.snippet"),
       Map("templates-hidden/default.html" -> ""),
       indexHtml)
   }

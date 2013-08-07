@@ -30,14 +30,14 @@ object LiftWebApp extends Log {
 
   val SCALA_VERSION: Scala = Scala()
 
-  val LIFT_VERSION: String = Lift("2.5-RC4").version
+  val LIFT_VERSION: String = Lift("2.5").version
 
   def apply(
       appName: String,
       deployName: String,
       descriptor: String,
       bootClass: Class[_ <: AnyRef],
-      classes: Seq[Class[_]],
+      packages: Seq[String],
       webResources: Map[String, String],
       indexHtml: Elem,
       replication: Boolean = false): WebArchive = {
@@ -69,7 +69,7 @@ object LiftWebApp extends Log {
             "META-INF/escalante.yml")
         .addAsWebResource(webXmlContent, "WEB-INF/web.xml")
         .addClasses(bootClass)
-        .addClasses(classes: _ *)
+        .addPackages(false, packages.map("io.escalante.test.lift." +) : _ *)
         .addClasses(classOf[Log])
         .addAsLibraries(resolver
         .artifacts("org.seleniumhq.selenium:selenium-htmlunit-driver")

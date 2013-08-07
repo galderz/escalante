@@ -21,7 +21,7 @@ sealed trait Lift {
 
 object Lift {
 
-  private val DEFAULT = Lift2x("2.4")
+  private val DEFAULT = Lift2x("2.5")
 
   def apply(): Lift = DEFAULT
 

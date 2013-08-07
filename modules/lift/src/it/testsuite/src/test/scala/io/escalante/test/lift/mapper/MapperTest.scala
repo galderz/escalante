@@ -15,7 +15,6 @@ import org.jboss.arquillian.junit.Arquillian
 import org.openqa.selenium.By
 import collection.JavaConversions._
 import io.escalante.test.lift.LiftWebApp
-import io.escalante.lift.mapper.model.User
 
 /**
  * Test for a Lift ORM model based application.
@@ -115,7 +114,10 @@ object MapperTest {
       deploymentName,
       descriptor,
       classOf[MapperBoot],
-      List(classOf[User], classOf[MapperTest]),
+      List(
+        "mapper",
+        "mapper.model"
+      ),
       Map(
         "templates-hidden/default.html" -> "",
         "templates-hidden/wizard-all.html" -> "",

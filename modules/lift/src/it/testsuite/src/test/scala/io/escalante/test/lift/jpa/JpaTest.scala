@@ -14,9 +14,7 @@ import org.junit.runner.RunWith
 import org.jboss.arquillian.junit.Arquillian
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.openqa.selenium.By
-import io.escalante.Scala
 import io.escalante.test.lift.LiftWebApp
-import snippet.{Books, Authors}
 
 /**
  * Library JPA test
@@ -87,8 +85,7 @@ object JpaTest {
       deploymentName,
       descriptor,
       classOf[JpaBoot],
-      List(classOf[Author], classOf[Book], classOf[Model],
-        classOf[Authors], classOf[Books]),
+      List("jpa", "jpa.snippet"),
       Map(
         "templates-hidden/default.html" -> "",
         "templates-hidden/_sidebar.html" -> "",

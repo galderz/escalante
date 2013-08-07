@@ -26,7 +26,7 @@ class LiftDependencyProcessor extends DeploymentUnitProcessor with Log {
     for (
       liftMetadata <- LiftMetadata.fromDeployment(deployment)
     ) yield {
-      debug("Metadata is: %s", liftMetadata)
+      info("Lift metadata: %s", liftMetadata)
 
       val moduleSpec = deployment.getAttachment(Attachments.MODULE_SPECIFICATION)
 

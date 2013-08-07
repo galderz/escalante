@@ -62,12 +62,6 @@
          <artifactId>escalante-testsuite-lift</artifactId>
          <type>test-jar</type>
          <scope>test</scope>
-         <!--<exclusions>-->
-            <!--<exclusion>-->
-               <!--<groupId>org.jboss.as</groupId>-->
-               <!--<artifactId>jboss-as-arquillian-container-embedded</artifactId>-->
-            <!--</exclusion>-->
-         <!--</exclusions>-->
       </dependency>
 
       <dependency>
@@ -119,37 +113,11 @@
          <scope>test</scope>
       </dependency>
 
-      <!--<dependency>-->
-         <!--<groupId>org.hibernate.javax.persistence</groupId>-->
-         <!--<artifactId>hibernate-jpa-2.0-api</artifactId>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
-      <!--<dependency>-->
-         <!--<groupId>javax.validation</groupId>-->
-         <!--<artifactId>validation-api</artifactId>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
-      <!--<dependency>-->
-         <!--<groupId>org.jboss.spec.javax.transaction</groupId>-->
-         <!--<artifactId>jboss-transaction-api_1.1_spec</artifactId>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
-
       <dependency>
          <groupId>net.liftweb</groupId>
          <artifactId>lift-webkit_${version.scala.artifactId}</artifactId>
          <scope>test</scope>
       </dependency>
-      <!--<dependency>-->
-         <!--<groupId>net.liftweb</groupId>-->
-         <!--<artifactId>lift-mapper_${version.scala.artifactId}</artifactId>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
-      <!--<dependency>-->
-         <!--<groupId>net.liftweb</groupId>-->
-         <!--<artifactId>lift-jpa_${version.scala.artifactId}</artifactId>-->
-         <!--<scope>test</scope>-->
-      <!--</dependency>-->
 
       <dependency>
          <groupId>org.seleniumhq.selenium</groupId>

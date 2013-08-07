@@ -118,7 +118,10 @@ object ClusterContainerVarTest {
       deploymentName,
       descriptor,
       classOf[ClusterContainerVarBoot],
-      List(classOf[Words], classOf[ClusterContainerVarTest]),
+      List(
+        "cluster.containervar",
+        "cluster.containervar.snippet"
+      ),
       Map("templates-hidden/default.html" -> ""),
       indexHtml,
       replication = true)
